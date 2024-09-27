@@ -1,0 +1,1 @@
+TextLabels can be extended to work with non-string values using a Formatter function. Several simple numeric and date formatters are provided in the foundation library, and others may be added easily (for example, using the Days service). 

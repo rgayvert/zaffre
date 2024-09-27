@@ -1,0 +1,3 @@
+Tiles is a classic puzzle consisting of an n x n grid of numbered squares, where one square is empty. The goal is to get the tiles in numerical order from 0 to n^2 - 1. When you click on a numbered tile that is in the same row or column as the empty tile, the tiles between that tile and the empty tile will be shifted.
+
+There is an option to create the UI using either box with absolutely positioned tiles, or as a Grid. The Grid version is simpler, but does not have a way of smoothly moving the tiles.

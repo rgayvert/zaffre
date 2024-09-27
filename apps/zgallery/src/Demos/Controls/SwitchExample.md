@@ -1,0 +1,3 @@
+A Switch is a simple on/off control which uses a ToggleAtom. It consists of a nested pair of rounded boxes. The background of the outer box and the position of the inner box change when the visible portion of the outer box is clicked. A standard CSS transition is used to make the toggling smooth. 
+
+This example shows three switches controlled by the same reactive value, so when one changes, they all change. The sizes of these switches is dictated by the "controlSize" option, which can be used with any control.

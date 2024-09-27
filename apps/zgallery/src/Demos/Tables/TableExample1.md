@@ -1,0 +1,3 @@
+This is a trivial example that shows the result of using a Table with minimal defaults. A random table model is created using loremTable, which generates some reasonable columns with simple types. 
+
+A table is implemented as a Grid of cell views, backed by a TableModel. The table model is provides reactive lists of data cells and columns; changing these lists in the model will change the number of rows and columns seen in the table.

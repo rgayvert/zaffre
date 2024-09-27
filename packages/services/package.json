@@ -1,0 +1,16 @@
+{
+  "name": "services",
+  "version": "1.0.0",
+  "description": "Zaffre services",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@types/youtube": "^0.0.50",
+    "dayjs": "^1.11.12"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "url.google-fonts": "https://fonts.googleapis.com/css2?family=",
+  "url.codicons": "css/codicon.css",
+  "url.highlight": "css/highlight.min.css",
+  "url.dompurify": "js/purify.min.js",
+  "url.markdownit": "js/markdown-it.13.0.1.min.js",
+  "url.strftime": "js/strftime-min.js",
+  
+  "icon.chevron-down": "material-symbols-outlined-expand_more",
+  "icon.square-box-checked": "material-symbols-outlined-check_box",
+  "icon.square-box-unchecked": "material-symbols-outlined-check_box_outline_blank",
+
+  "icon.search": "material-symbols-outlined-search",
+  "icon.bold": "codicon codicon-bold",
+
+  "image.zaffre": "image/zaffre.png"
+}

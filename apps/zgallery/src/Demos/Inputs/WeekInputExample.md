@@ -1,0 +1,1 @@
+A WeekInput uses a Week object, which contains a year and week number, and has a string representation in ISO8601 format (e.g. 2024-W12).

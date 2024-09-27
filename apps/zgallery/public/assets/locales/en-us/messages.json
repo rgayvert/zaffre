@@ -1,0 +1,22 @@
+{
+  "hello": {
+    "message": "Hello World",
+    "description": "Hello world title"
+  },
+  "Basic Example": {
+    "message": "Basic Example",
+    "description": "examples title"
+  },
+  "Containers": {
+    "message": "Containers"
+  },
+  "error": {
+    "message": "error"
+  },
+  "spinning_newspaper": {
+    "message": "Spinning newspaper<br>causes dizziness"
+  },
+  "md_dragstart": {
+    "message": "# HTMLElement: dragstart event\n\nThe `dragstart` event is fired when the user starts dragging an element or text selection.\n\n## Syntax\n\nUse the event name in methods like addEventListener(), or set an event handler property.\n\n## Heading 2"
+  }
+}

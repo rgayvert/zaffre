@@ -1,0 +1,1 @@
+In this example, we have email input with a custom validation check. Rather than using the browser validation, we use a regular expression to check the input.

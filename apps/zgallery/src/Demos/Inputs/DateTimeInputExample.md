@@ -1,0 +1,1 @@
+A DateTime input shows date and time, and requires an Atom<Date>. This component manages the conversions between the Date and the string representation, so the value is always valid.

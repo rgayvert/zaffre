@@ -1,0 +1,1 @@
+In this example we have a 3x3 table with simple string values, and the table is configured to be editable. When an editable data cell view is double-clicked, the cell view will create an editor view to allow the contents to be modified. Currently, only string cell views implement editing.

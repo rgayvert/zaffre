@@ -1,0 +1,1 @@
+A Button component may also have left and right icons. In this example we have some icons from the Material Symbols font icon set. Note that the label and URI options may be atoms.

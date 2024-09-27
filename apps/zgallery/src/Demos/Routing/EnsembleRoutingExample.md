@@ -1,0 +1,1 @@
+Zaffre routing is centered around Ensemble views with RouteAtoms. In this example, a RouteAtom named 'color' is given to an Ensemble view. When this atom changes value, the current path will be extended by 'color/[colorName]'.

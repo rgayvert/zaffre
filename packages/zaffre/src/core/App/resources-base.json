@@ -1,0 +1,21 @@
+{
+  "url.google-fonts": "https://fonts.googleapis.com/css2?family=",
+  "url.codicons": "css/codicon.css",
+  "url.highlight": "css/highlight.min.css",
+  "url.dompurify": "js/purify.min.js",
+  "url.markdownit": "js/markdown-it.13.0.1.min.js",
+
+  "icon.search": "icon/search.svg",
+  "icon.radio-button-on": "icon/radio-button-checked.svg",
+  "icon.radio-button-off": "icon/radio-button-unchecked.svg",
+
+  "icon.checkbox-on": "icon/checkbox-on.svg",
+  "icon.checkbox-off": "icon/checkbox-off.svg",
+  
+  "icon.check": "icon/check.svg",
+  "icon.calendar": "icon/calendar.svg",
+  "icon.clock": "icon/schedule.svg",
+  "icon.folder": "icon/folder.svg",
+  
+  "image.zaffre": "image/zaffre.png"
+}

@@ -1,0 +1,3 @@
+A ListBox may be virtualized in order to support very large arrays. A virtual list creates only enough children to fill the space available on the screen.
+
+In this example, the source array contains 10,000 strings, but only 11 text labels are created initially. As the list is scrolled, the children are updated to show the appropriate range, but you will still see only 11 text labels in the inner stack.

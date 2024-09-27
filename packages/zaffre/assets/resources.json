@@ -1,0 +1,14 @@
+{
+    "icon.chevron-left": "icon/chevron-left.svg",
+    "icon.chevron-right": "icon/chevron-right.svg",
+    "icon.checkbox-on": "icon/checkbox-on.svg",
+    "icon.checkbox-off": "icon/checkbox-off.svg",
+    "icon.radio-button-checked": "icon/radio-button-checked.svg",
+    "icon.radio-button-unchecked": "icon/radio-button-unchecked.svg",
+
+    "icon.calendar": "icon/calendar.svg",
+    "icon.check": "icon/check.svg",
+    "icon.folder": "icon/folder.svg",
+    "icon.schedule": "icon/schedule.svg",
+    "icon.search": "icon/search.svg"
+}

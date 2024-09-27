@@ -1,0 +1,1 @@
+A FileInput requires an Atom<File[]> or ArrayAtom<File>. If the file dialog is canceled, this array will be empty; otherwise, it will contain one or more File instances, depending on whether multiple files are allowed and selected.

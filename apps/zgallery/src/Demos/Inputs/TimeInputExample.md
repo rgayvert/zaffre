@@ -1,0 +1,1 @@
+A TimeInput uses a TimeOfDay object, which contains an hour, minute and second.

@@ -1,0 +1,1 @@
+Another simple example, showing a URL input with standard validation.

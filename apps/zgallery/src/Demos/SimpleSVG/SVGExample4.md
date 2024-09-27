@@ -1,0 +1,3 @@
+This example shows how you can define and reuse an SVGGroup. A group is created like other components, and other SVG components appended to it. To reuse it, you create an SVGUse component with an nref value of the identifier of the group. Here we move the SVGUse components by changing the x and/or y value.
+
+In addition, we show how the stroke-linejoin attribute can be specified to yield different effects on the paths.

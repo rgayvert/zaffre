@@ -1,0 +1,62 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
+    "outDir": "lib",
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "./types",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    //"noUnusedLocals": true,
+    //"typeRoots": ["node_modules/@types"],
+    //"types": [],
+
+    "rootDir": ".",
+    "importHelpers": false,
+    "experimentalDecorators": true,
+    
+    "baseUrl": ".",
+    "paths": {
+      "zaffre": ["./packages/zaffre"],
+      ":demos/*": ["./apps/zgallery/src/Demos/*"],
+
+      ":cards": ["./packages/cards"],
+      ":services": ["./packages/services"],
+      ":todo": ["./packages/todo"],
+
+      ":components": ["./packages/zaffre/src/components"],
+      ":core": ["./packages/zaffre/src/core"],
+      ":foundation": ["./packages/zaffre/src/foundation"],
+
+      ":app": ["./packages/zaffre/src/core/App"],
+      ":attributes": ["./packages/zaffre/src/core/Attributes"],
+      ":css": ["./packages/zaffre/src/core/CSS"],
+      ":data": ["./packages/zaffre/src/core/Data"],
+      ":effect": ["./packages/zaffre/src/core/Effects"],
+      ":events": ["./packages/zaffre/src/core/Events"],
+      ":uifoundation": ["./packages/zaffre/src/core/UIFoundation"],
+      ":corehtml": ["./packages/zaffre/src/core/CoreHTML"],
+      ":coreservices": ["./packages/zaffre/src/core/Services"],
+      ":routing": ["./packages/zaffre/src/core/Routing"],
+      ":svg": ["./packages/zaffre/src/core/SVG"],
+      ":theme": ["./packages/zaffre/src/core/Theme"],
+      ":view": ["./packages/zaffre/src/core/View"],
+
+    }
+  },
+  "exclude": [
+    "*.temp",
+    "**/dist/**",
+    "**/public/**"
+  ]
+}

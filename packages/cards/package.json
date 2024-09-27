@@ -1,0 +1,15 @@
+{
+  "name": "cards",
+  "version": "1.0.0",
+  "description": "Playing Cards library",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.2.10"
+  }
+}

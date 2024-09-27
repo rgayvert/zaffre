@@ -1,0 +1,1 @@
+Here we have a telephone input, with a North American constraint pattern. A mark is placed next to the input box to indicate whether the input is valid.

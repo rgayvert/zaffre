@@ -1,0 +1,30 @@
+{
+  "name": "zgallery",
+  "version": "0.7.0",
+  "description": "Gallery of zaffre demos",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc --build",
+    "buildgithub": "rm -f dist.zip; cp envs/.env.github ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist",
+    "buildzaffre": "rm -f dist.zip; cp envs/.env.zaffre ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist",
+    "build": "rm -f dist.zip; cp envs/.env.local ./.env; vite --config vite.config.prod.js build; zip -r dist.zip dist; rm -rf dist",
+    "copysource1": "npx cpx \"src/Demos/**\" public/assets/source/Demos",
+    "copysource2": "npx cpx \"../../packages/cards/src/solitaire/**\" public/assets/source/Demos/Solitaire",
+    "copysource3": "npx cpx \"../../packages/todo/src/**/*\" public/assets/source/Demos/ToDo",
+    "copysource": "pnpm copysource1; pnpm copysource2; pnpm copysource3",
+    "circles": "npx dpdm src/zgallery.ts",
+    "clean": "rimraf dist lib",
+    "cc": "cd ../..; npm run clean; cd apps/zgallery; tsc --build"
+  },
+  "devDependencies": {
+    "@types/youtube": "^0.0.50",
+    "cpx": "^1.5.0",
+    "dayjs": "^1.11.12",
+    "path": "^0.12.7",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "vite": "5.2.10",
+    "vite-plugin-static-copy": "^1.0.3",
+    "vite-tsconfig-paths": "^4.3.2"
+  },
+  "license": "ISC"
+}

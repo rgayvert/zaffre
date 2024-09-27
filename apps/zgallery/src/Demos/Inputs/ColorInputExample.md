@@ -1,0 +1,1 @@
+For a ColorInput, you need to provide an Atom<Color> to capture the input. This value is always valid, so there is no need for a validation check.

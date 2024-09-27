@@ -1,0 +1,1 @@
+A TextBox is similar to a TextLabel, but is intended for larger strings that may wrap.

@@ -1,0 +1,1 @@
+To use a NumberInput, you need to provide an Atom<number> to capture the value.  In this sample we require the input to be between 100 and 200, and show a checkmark when the value is valid.

@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig-base.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/zaffre"
+    },
+    {
+      "path": "./packages/services"
+    },
+    {
+      "path": "./apps/hello"
+    },
+    {
+      "path": "./apps/solitaire"
+    },
+  ]
+}

@@ -1,0 +1,1 @@
+A URLText is just a TextBox which gets its contents from a URL using the Fetch API.

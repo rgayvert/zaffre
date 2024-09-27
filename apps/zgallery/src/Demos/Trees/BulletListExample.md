@@ -1,0 +1,1 @@
+A BulletList is a fully expanded SimpleTree where the items are prefixed with a bullet character that varies with the level of the corresponding node. The resulting display is similar to an HTML unordered list.

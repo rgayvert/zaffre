@@ -1,0 +1,1 @@
+A simple wrapper around an HTML \<audio> element.

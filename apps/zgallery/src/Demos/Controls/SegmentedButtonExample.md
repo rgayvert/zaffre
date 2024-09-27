@@ -1,0 +1,1 @@
+A SegmentedButton is collection of buttons arranged in a stack, at most one of which is in a selected state.

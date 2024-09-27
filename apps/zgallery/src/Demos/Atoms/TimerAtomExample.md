@@ -1,0 +1,1 @@
+TimerAtoms can be used to create a variety of clocks and timers. A TimerAtom increments its value (elapsed msec) at a fixed interval. You can use this value directly (as in a stopwatch) or evaluate a function (as in a clock). A TimerAtom has methods to start/stop/pause/resume. 

@@ -1,0 +1,5 @@
+A Tooltip is a special floating component that is used by all descendants of a particular component. Typically, an application will add a single BasicTooltip to the top-level component, so a single tooltip instance will be shared by all components which have a tooltip option. Each view can have a placement option to indicate where the tooltip should be placed. The tooltip will use this if possible, but may choose a different placement if necessary to make the tooltip visible.
+
+A tooltip appears only when the pointer is hovered over a component for a period of time (default is 1500ms), and hidden when the pointer is moved away from the component.
+
+This example shows how a component may be given a custom tooltip defined by a function which creates a view. Here, we create a red text label with a font that is larger than the default.

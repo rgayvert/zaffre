@@ -1,0 +1,13 @@
+{
+  "name": "zaffre",
+  "version": "0.7.0",
+  "description": "Zaffre library",
+  "license": "ISC",
+  "type": "module",
+  "types": "dist/zaffre.d.ts",
+  "main": "dist/zaffre.js",
+  "devDependencies": {
+    "vite-plugin-dts": "^3.9.1",
+    "vitest": "^1.5.2"
+  }
+}
