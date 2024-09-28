@@ -73,7 +73,6 @@ export class Router {
         routePointView = this.checkEnsemble(routePointView);
         !routePointView && this.redirectToErrorPage();
       } 
-      console.log("routePointView: "+routePointView);
     }
     if (routePointView) {
       routePointView.scrollIntoViewIfNeeded();

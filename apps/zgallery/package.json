@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "compile": "tsc --build",
-    "buildgithub": "rm -f dist.zip; cp envs/.env.github ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist",
-    "buildzaffre": "rm -f dist.zip; cp envs/.env.zaffre ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist",
+    "buildgithub": "rm -f dist.zip; cp envs/.env.github ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist .env",
+    "buildzaffre": "rm -f dist.zip; cp envs/.env.zaffre ./.env; vite --config vite.config.github.js build; zip -r dist.zip dist; rm -rf dist .env",
     "build": "rm -f dist.zip; cp envs/.env.local ./.env; vite --config vite.config.prod.js build; zip -r dist.zip dist; rm -rf dist",
     "copysource1": "npx cpx \"src/Demos/**\" public/assets/source/Demos",
     "copysource2": "npx cpx \"../../packages/cards/src/solitaire/**\" public/assets/source/Demos/Solitaire",

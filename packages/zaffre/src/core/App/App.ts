@@ -73,6 +73,11 @@ export class App {
   assetBase(): string {
     return this.resources.assetBase;
   }
+  linkPathPrefix(): string {
+    const hash = import.meta.env["VITE_ROUTER"] === "hash" ? "/#" : "";
+    const base = import.meta.env["VITE_BASE_URL"] || "";
+    return `${base}${hash}`;
+  }
 
   customFontNames = new Set<string>();
   useGoogleFont(...fontNames: string[]): void {
@@ -167,4 +172,7 @@ export function routeToPath(path: string): void {
 }
 export function useHashRouting(): boolean {
   return App.instance.router.useHash;
+}
+export function linkPathPrefix(): string {
+  return App.instance.linkPathPrefix();
 }

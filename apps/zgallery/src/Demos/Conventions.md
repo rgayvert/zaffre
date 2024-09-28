@@ -19,9 +19,9 @@ To follow the source code, it's helpful to know some of the naming conventions t
 
 **Terminology:**
 
-- ZType<T> = T | Atom<T>
+- ZType\<T\> = T | Atom\<T\>
   - that is, a value which is either a simple type or a reactive type
-  - ex: ZType<number> is either a number or an Atom<number>
+  - ex: ZType\<number\> is either a number or an Atom<number>
 - action = closure, often used when reactive values change
 - animation = CSS or Zaffre animation
 - atom = reactive value
@@ -85,4 +85,3 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - set up for vitest
 - used for some foundation testing
 - need lots more
--

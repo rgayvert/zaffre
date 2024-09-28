@@ -1,4 +1,4 @@
-import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode } from "zaffre";
+import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix } from "zaffre";
 import { core, defineComponentDefaults, mergeComponentDefaults } from "zaffre";
 import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 
@@ -6,7 +6,7 @@ import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
  * #Markdown
  *   - simple text display of markdown content, used for demo notes
  *   - assumes that Markdown service has been installed
- *   - content is supplied either by a URI or directly as a string 
+ *   - content is supplied either by a URI or directly as a string
  */
 
 export interface MarkdownOptions extends TextBoxOptions {
@@ -15,6 +15,7 @@ export interface MarkdownOptions extends TextBoxOptions {
   markdownStyle?: string;
   expandRelativeAssets?: boolean;
   darkModeSuffix?: string;
+  linkBasePrefix?: string;
 }
 defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
   extraClasses: "markdown-body",
@@ -24,14 +25,20 @@ defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
   padding: core.space.s3,
   userSelect: "text",
   expandRelativeAssets: true,
-  darkModeSuffix: "_dark"
+  darkModeSuffix: "_dark",
+  linkBasePrefix: "",
 });
 
 function markdownTransform(s: string): string {
   return MarkdownService.defaultInstance.renderMD(s);
 }
-function applyDarkModeSuffix(s: zstring, suffix: string): Atom<string> {
-  return atom(() => inDarkMode() ? zget(s).replaceAll("<<DM>>", suffix) : zget(s).replaceAll("<<DM>>", ""));
+function fixDarkModeAndLinkBase(s: zstring, darkModeSuffix: string): Atom<string> {
+  const linkBasePrefix = linkPathPrefix();
+  return atom(() =>
+    inDarkMode()
+      ? zget(s).replaceAll("<<DM>>", darkModeSuffix).replaceAll("<<AB>>", linkBasePrefix)
+      : zget(s).replaceAll("<<DM>>", "").replaceAll("<<AB>>", linkBasePrefix)
+  );
 }
 
 export function Markdown(inOptions: MarkdownOptions = {}): View {
@@ -49,8 +56,6 @@ export function Markdown(inOptions: MarkdownOptions = {}): View {
   } else {
     mdText = zget(options.markdown || "");
   }
-  if (options.darkModeSuffix) {
-    return TextBox(applyDarkModeSuffix(mdText, options.darkModeSuffix), options);
-  }
-  return TextBox(mdText, options);
+  return TextBox(fixDarkModeAndLinkBase(mdText, options.darkModeSuffix!), options);
+  //return TextBox(mdText, options);
 }
