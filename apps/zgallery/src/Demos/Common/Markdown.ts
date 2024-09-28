@@ -3,7 +3,7 @@ import { core, defineComponentDefaults, mergeComponentDefaults } from "zaffre";
 import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 
 /**
- * #Markdown
+ * Markdown
  *   - simple text display of markdown content, used for demo notes
  *   - assumes that Markdown service has been installed
  *   - content is supplied either by a URI or directly as a string
