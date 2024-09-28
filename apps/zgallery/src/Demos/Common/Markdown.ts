@@ -15,7 +15,6 @@ export interface MarkdownOptions extends TextBoxOptions {
   markdownStyle?: string;
   expandRelativeAssets?: boolean;
   darkModeSuffix?: string;
-  linkBasePrefix?: string;
 }
 defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
   extraClasses: "markdown-body",
@@ -26,19 +25,13 @@ defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
   userSelect: "text",
   expandRelativeAssets: true,
   darkModeSuffix: "_dark",
-  linkBasePrefix: "",
 });
 
 function markdownTransform(s: string): string {
   return MarkdownService.defaultInstance.renderMD(s);
 }
 function fixDarkModeAndLinkBase(s: zstring, darkModeSuffix: string): Atom<string> {
-  const linkBasePrefix = linkPathPrefix();
-  return atom(() =>
-    inDarkMode()
-      ? zget(s).replaceAll("<<DM>>", darkModeSuffix).replaceAll("<<AB>>", linkBasePrefix)
-      : zget(s).replaceAll("<<DM>>", "").replaceAll("<<AB>>", linkBasePrefix)
-  );
+  return atom(() => (inDarkMode() ? zget(s).replaceAll("<<DM>>", darkModeSuffix) : zget(s).replaceAll("<<DM>>", "")));
 }
 
 export function Markdown(inOptions: MarkdownOptions = {}): View {
@@ -47,15 +40,20 @@ export function Markdown(inOptions: MarkdownOptions = {}): View {
   if (options.uri) {
     let url = resolveURI(options.uri);
     if (options.expandRelativeAssets) {
+      //console.log("linkPathPrefix__="+linkPathPrefix());
       // prepend ./assets/ with the path to this file
       const path = url.split("/").slice(0, -1).join("/");
       const f = <typeof markdownTransform>options.textTransformFn;
-      options.textTransformFn = (text: string) => f(text).replaceAll("./assets/", `${path}/assets/`);
+      options.textTransformFn = (text: string) =>
+        f(text).replaceAll("./assets/", `${path}/assets/`).replaceAll("<<AB>>", linkPathPrefix());
     }
     mdText = url ? fetchTextAtom(url) : "";
   } else {
     mdText = zget(options.markdown || "");
   }
-  return TextBox(fixDarkModeAndLinkBase(mdText, options.darkModeSuffix!), options);
-  //return TextBox(mdText, options);
+  if (options.darkModeSuffix) {
+    return TextBox(fixDarkModeAndLinkBase(mdText, options.darkModeSuffix), options);
+  } else {
+    return TextBox(mdText, options);
+  }
 }
