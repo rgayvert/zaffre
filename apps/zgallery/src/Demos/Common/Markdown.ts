@@ -23,7 +23,7 @@ defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
   textTransformFn: markdownTransform,
   padding: core.space.s3,
   userSelect: "text",
-  expandRelativeAssets: true,
+  expandRelativeAssets: true, 
   darkModeSuffix: "_dark",
 });
 
@@ -31,7 +31,7 @@ function markdownTransform(s: string): string {
   return MarkdownService.defaultInstance.renderMD(s);
 }
 function fixDarkModeAndLinkBase(s: zstring, darkModeSuffix: string): Atom<string> {
-  return atom(() => (inDarkMode() ? zget(s).replaceAll("<<DM>>", darkModeSuffix) : zget(s).replaceAll("<<DM>>", "")));
+  return atom(() => (inDarkMode() ? zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", darkModeSuffix) : zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", "")));
 }
 
 export function Markdown(inOptions: MarkdownOptions = {}): View {
@@ -40,12 +40,14 @@ export function Markdown(inOptions: MarkdownOptions = {}): View {
   if (options.uri) {
     let url = resolveURI(options.uri);
     if (options.expandRelativeAssets) {
-      //console.log("linkPathPrefix__="+linkPathPrefix());
+      console.log("linkPathPrefix__="+linkPathPrefix());
       // prepend ./assets/ with the path to this file
       const path = url.split("/").slice(0, -1).join("/");
-      const f = <typeof markdownTransform>options.textTransformFn;
-      options.textTransformFn = (text: string) =>
-        f(text).replaceAll("./assets/", `${path}/assets/`).replaceAll("<<AB>>", linkPathPrefix());
+      const f = zget(options.textTransformFn)!;
+      options.textTransformFn = (text: string) => {
+        const s = text.replaceAll("./assets/", `${path}/assets/`).replaceAll("<<LINK_PREFIX>>", linkPathPrefix());
+        return f(s);
+      }
     }
     mdText = url ? fetchTextAtom(url) : "";
   } else {

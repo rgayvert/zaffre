@@ -1,4 +1,3 @@
-
 //
 // Hook for handling content security issues 
 //

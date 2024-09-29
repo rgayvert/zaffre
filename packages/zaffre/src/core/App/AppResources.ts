@@ -1,10 +1,14 @@
 import { apiAtom, zget, zstring, zutil } from ":foundation";
 
 //
+// There is a single instance of AppResources, created by the App instance. It is primarily
+// responsible for mapping application URIs into URLs, as specified in the resources.json file,
+// which is loaded when the application starts up.
 //
+// TODO: 
+//   - clean up the resolution rules
+//   - should this be called AppAssets? 
 //
-
-// TODO: clean up the resolution rules
 
 export type ResourceMap = Map<string, string>;
 

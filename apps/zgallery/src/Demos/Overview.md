@@ -2,7 +2,7 @@ Creating a web application using current development tools can be complicated. T
 
 In Zaffre you use Typecript to create a model containing reactive values, along with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
 
-<p align="center"><img src='./assets/DOM<<DM>>.png' width="40%"></p>
+<p align="center"><img src='./assets/DOM<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
  
 Here's a basic example of a Zaffre component that uses reactive content and styling.
@@ -34,7 +34,7 @@ Here's a basic example of a Zaffre component that uses reactive content and styl
 ```
 
 This produces the following result:
-<p align="center"><img src='./assets/HelloWorld1<<DM>>.png' width="40%"></p>
+<p align="center"><img src='./assets/HelloWorld1<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
 <details>
   <summary>
@@ -103,7 +103,7 @@ DOM structure can also be reactive. Below is a simple example.
 
 This produces the following result:
 
-<p align="center"><img src='./assets/HelloWorld4<<DM>>.png' width="40%"></p>
+<p align="center"><img src='./assets/HelloWorld4<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
 <details>
   <summary>
@@ -125,11 +125,11 @@ These two examples are intended to illustrate the key constructs in Zaffre. But 
 
 A Zaffre Table is a grid-based component backed by a table model with reactive rows and columns. A Form is a grid-based component contains a collection of input fields wrapped in validation boxes. An Ensemble is a component that manages the visibility of two or more components. Combining these, we get a TableFormEnsemble that looks like this when the table is visible:
 
-<p align="center"><img src='./assets/TFTable<<DM>>.png' width="90%"></p>
+<p align="center"><img src='./assets/TFTable<<DARK_MODE_SUFFIX>>.png' width="90%"></p>
 
 and 
 
-<p align="center"><img src='./assets/TFForm<<DM>>.png' width="90%"></p> 
+<p align="center"><img src='./assets/TFForm<<DARK_MODE_SUFFIX>>.png' width="90%"></p> 
 
 when the form is visible. Switching between the two views is a simple matter of changing one reactive value in the ensemble. An outline of the code for this follows.
 
@@ -171,7 +171,7 @@ See this in action
 The Zaffre library is organized into three layered subpackages: Foundation, Core and Components. The layering helps with managing dependencies and understanding levels of abstraction. Foundation deals with strictly non-UI concepts, including atoms, geometry, and data. Core deals with lower-level UI building blocks and the internal mechanics of the UI, is primarily class-based, and depends on Foundation. The Components subpackage depends on Core, and is primarily functional in nature. 
 
 <br/>
-<p align="center"><img src='./assets/LibraryStacks<<DM>>.png' controls width="50%" ></p>
+<p align="center"><img src='./assets/LibraryStacks<<DARK_MODE_SUFFIX>>.png' controls width="50%" ></p>
 
 <br/>
 <br/>

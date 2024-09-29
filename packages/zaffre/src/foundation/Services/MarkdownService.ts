@@ -1,4 +1,3 @@
-
 //
 // MarkdownService
 //   - stub for markdown conversion

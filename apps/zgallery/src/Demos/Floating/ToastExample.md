@@ -2,5 +2,5 @@ A Toast is a floating component that hides itself after some amount of time (def
 
 In this example we have two kinds of Toast items. The first one is a ToastButton, which displays a toast item when clicked. This is usually intended to indicate that some action has been performed. The second case is a more general toast stack, where once again a toast item is added each time a button is clicked. 
 
-See the [Wordle demo](/demos/wordle) or the [ToDo demo](/demos/todo) for more examples of toast.
+See the [Wordle demo](<<LINK_PREFIX>>/demos/wordle) or the [ToDo demo](<<LINK_PREFIX>>/demos/todo) for more examples of toast.
 

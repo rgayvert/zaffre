@@ -3,5 +3,7 @@ export * from "./Decorators";
 export * from "./Download";
 export * from "./Exception";
 export * from "./Formatter";
+export * from "./Header";
+export * from "./Script";
 export * from "./SharedModel";
 export * from "./Undo";

@@ -1,15 +1,21 @@
-import { atom, toggleAtom, ToggleAtom, Tuple2, zstring, zutil } from ":foundation";
+import { addDocumentHeaderLink, atom, toggleAtom, ToggleAtom, Tuple2, zstring, zutil } from ":foundation";
 import { ZWindow, ColorMode } from ":uifoundation";
 import { View, ViewCreator } from ":view";
 import { Theme, defaultCoreTheme } from ":theme";
 import { HTMLDelegate } from ":corehtml";
-import { Loader } from "./Loader";
 import { I18n } from "./I18n";
 import { AppResources } from "./AppResources";
 import { Router } from "./Router";
 
 //
-//
+// There is a single instance of App for a given application. The entry point to the application
+// (<appname.ts>) will normally create a subclass of App. An App is responsible for:
+//   - creating a resource manager (AppResources)
+//   - creating a router
+//   - establishing the default theme
+//   - setting up window breakpoints
+//   - adding initial header links (e.g. fonts)
+//   - creating any necessary services
 //
 
 
@@ -83,13 +89,13 @@ export class App {
   useGoogleFont(...fontNames: string[]): void {
     for (const fontName of fontNames) {
       if (!this.customFontNames.has(fontName)) {
-        this.addHeaderLink(`${this.resolveResource("url.google-fonts")}${fontName}`);
+        addDocumentHeaderLink(`${this.resolveResource("url.google-fonts")}${fontName}`);
         this.customFontNames.add(fontName);
       }
     }
   }
   protected useCodicons(): void {
-    this.addHeaderLink(this.resolveResource("url.codicons")!);
+    addDocumentHeaderLink(this.resolveResource("url.codicons")!);
   }
 
   async baseInitialize(): Promise<void> {
@@ -144,12 +150,12 @@ export class App {
     return this.instance.useFluidFonts;
   }
 
-  addHeaderLink(url: string): void {
-    return Loader.getInstance().addHeaderLink(url);
-  }
-  addScript(url: string): Promise<unknown> {
-    return Loader.getInstance().addScript(url);
-  }
+  // addHeaderLink(url: string): void {
+  //   return addDocumentHeaderLink(url);
+  // }
+  // addScript(url: string): Promise<unknown> {
+  //   return Loader.instance.addScript(url);
+  // }
 }
 
 export function isWebContext(): boolean {

@@ -1,4 +1,4 @@
-import { atom, Loader, Atom, resolveURI, Tuple2, Tuple4, BasicAction } from "zaffre";
+import { atom, Atom, resolveURI, Tuple2, Tuple4, BasicAction, addDocumentBodyScript } from "zaffre";
 
 // TODO: finish support for other player functions
 
@@ -16,24 +16,18 @@ let installingYouTubeAPI = false;
 console.log("installingYouTubeAPI=" + installingYouTubeAPI);
 
 function onYouTubeIframeAPIReady(): void {
-  //console.log("onYouTubeIframeAPIReady: true")
   youTubeAPIInstalled.set(true);
 }
 async function installYouTubeAPI(): Promise<void> {
-  //console.log("installYouTubeAPI: installingYouTubeAPI="+installingYouTubeAPI);
-
   if (!installingYouTubeAPI) {
-    //console.log("installYouTubeAPI: installing");
     installingYouTubeAPI = true;
     (window as any).onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-    const loader = Loader.getInstance();
     const url = resolveURI("url.youtube-iframe-api");
-    await loader.addScript(url, true);
+    await addDocumentBodyScript(url, true);
   }
 }
 
 export function createYouTubePlayer(player: YTPlayer, config: YouTubePlayerConfig): Atom<YT.Player | undefined> {
-  //console.log("createYouTubePlayer: youTubeAPIInstalled="+youTubeAPIInstalled.get());
 
   installYouTubeAPI();
   if (!youTubeAPIInstalled.get()) {
@@ -43,14 +37,11 @@ export function createYouTubePlayer(player: YTPlayer, config: YouTubePlayerConfi
   }
 
   function onPlayerReady(player: YTPlayer): void {
-    //console.log("onPlayerReady");
     player.ready.set(true);
     config.ready.set(true);
   }
   function onPlayerStateChange(e: YT.PlayerEvent): void {}
   function createPlayer(player: YTPlayer): void {
-    //console.log("createPlayer: elt=" + config.boxElement.id);
-
     player.set(
       new YT.Player(config.boxElement, {
         videoId: config.videoID,

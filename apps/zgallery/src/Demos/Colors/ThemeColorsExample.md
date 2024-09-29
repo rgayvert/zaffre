@@ -6,6 +6,6 @@ Each token has a coresponding CSS properties, which change when the theme change
 
 The key colors are used to general tonal palettes, which allow you to specify different tones/shades ranging from black (0) to white (100).
 
-Rather than using "on" tokens to specify contrasting colors, Zaffre allows the contrast level for a theme to be defined dynamically. See the [Contrast](/demos/contrast)  demo for more details.
+Rather than using "on" tokens to specify contrasting colors, Zaffre allows the contrast level for a theme to be defined dynamically. See the [Contrast](<<LINK_PREFIX>>/demos/contrast)  demo for more details.
 
 Finally, note that a theme may be located at any point in the DOM, as well as at the root level. In this example, the theme changes apply only to the demo component and its descendants.

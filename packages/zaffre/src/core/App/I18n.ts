@@ -1,14 +1,13 @@
 import { zutil, zget, atom, Atom, apiAtom, lazyinit } from ":foundation";
 
 //
+// An instance of I18n provides string translations for a single locale.
+// The translations for each locale are assumed to contained in a file located at
+//       /resources/locales/[localeID]/messages.json
 //
+// These are used by t() to perform string translations for content components.
 //
 
-/**
- * An instance of I18n provides string translations for a single locale.
- * The translations for each locale are assumed to contained in a file located at
- *       /resources/locales/[localeID]/messages.json
- */
 export class I18n {
   static preferredLanguage(): string {
     return window.navigator.language;

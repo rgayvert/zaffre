@@ -1,4 +1,3 @@
-
 //
 // SanitizeService
 //   - stub for HTML sanitization

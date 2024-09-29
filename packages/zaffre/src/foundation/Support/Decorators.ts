@@ -1,4 +1,3 @@
-
 //
 // lazyinit - a useful Typescript decorator for lazy creation of properties
 //

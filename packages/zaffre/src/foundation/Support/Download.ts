@@ -1,4 +1,3 @@
-
 //
 // downloadText - call this from a button action to download a chunk of text.
 // This should bring up a standard file dialog and allow the user to choose a destination.

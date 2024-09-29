@@ -1,4 +1,3 @@
-
 //
 // HighlightService
 //   - stub for source code highlighting

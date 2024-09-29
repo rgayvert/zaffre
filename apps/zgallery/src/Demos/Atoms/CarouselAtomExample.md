@@ -3,4 +3,4 @@ Another common pattern is a carousel list, modeled by a carousel atom. This is s
 
 Notes:
   - CarouselAtom is a generic atom which takes an array (literal or reactive) of any type.
-  - See the [Carousel](/demos/layouts/carousel/demo) demo for an example with images. 
+  - See the [Carousel](<<LINK_PREFIX>>/demos/layouts/carousel/demo) demo for an example with images. 

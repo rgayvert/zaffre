@@ -1,10 +1,9 @@
-import { Loader, HighlightService, HighlightFn } from "zaffre";
+import { HighlightService, HighlightFn, addDocumentHeaderLink } from "zaffre";
 
 export class HighlightJS extends HighlightService {
 
   public static async install(url: string): Promise<void> {
-    const loader = Loader.getInstance();
-    loader.addHeaderLink(url);
+    addDocumentHeaderLink(url);
 
     // customized highlighter generated from https://highlightjs.org/
 

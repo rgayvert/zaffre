@@ -1,6 +1,5 @@
-
 //
-//
+// Basic formatting functions 
 //
 
 export type Formatter<S> = (value: S) => string;

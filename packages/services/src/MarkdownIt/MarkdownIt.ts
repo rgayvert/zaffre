@@ -1,4 +1,4 @@
-import { atom, inDarkMode, Loader, resolveURI } from "zaffre";
+import { addDocumentBodyScript, addDocumentHeaderLink, atom, inDarkMode, resolveURI } from "zaffre";
 import { MarkdownService, MarkdownFn, HighlightService } from "zaffre";
 
 export interface MarkdownItOptions {
@@ -11,10 +11,9 @@ export interface MarkdownItOptions {
 export class MarkdownIt extends MarkdownService {
 
   public static async install(url: string, inOptions: MarkdownItOptions = {}): Promise<void> {
-    const loader = Loader.getInstance();
-    await loader.addScript(url, true);
+    await addDocumentBodyScript(url, true);
     const styles = atom(() => inDarkMode() ? resolveURI("url.github-markdown-dark") : resolveURI("url.github-markdown-light"));
-    loader.addHeaderLink(styles);
+    addDocumentHeaderLink(styles);
 
     const { default: markdownItConstructor } = await import("markdown-it");
     const options = {
