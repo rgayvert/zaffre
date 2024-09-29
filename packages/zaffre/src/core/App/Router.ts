@@ -2,11 +2,11 @@ import { zutil } from ":foundation";
 import { View } from ":view";
 
 //
-//
+// 
 //
 
 // TODO:
-//  - improve error page handling; we're only catching some bad urls currently
+//  - improve error page handling; currently we're only catching some bad urls 
 //
 export class Router {
   currentPath = "";
@@ -104,14 +104,12 @@ export class Router {
   historyChanged(event: PopStateEvent): void {
     // handle back/forward buttons
     const path = event.state || "/";
-    //zlog.info("historyChanged, state = " + event.state+", path="+path);
     this.restoring = true;
     this.routeToPath(path);
     this.restoring = false; 
   }
 
   addToHistory(path: string): void {
-    //console.log("addToHistory: "+path);
     if (!path.startsWith("/")) {
       path = "/" + path;
     }

@@ -1,11 +1,10 @@
 import { arrayAtom } from "../Atom";
 import { DateTimeFormatter } from "../Services";
 import { BooleanFormatter, NumericFormatter } from "../Support";
-import { lorem } from "../Testing";
 import { zutil } from "../Util";
-import { booleanColumn, dateColumn, numericColumn, stringColumn } from "./TableColumn";
-import { TableColumn, TableColumns } from "./TableColumn";
-import { TableModel } from "./TableModel";
+import { booleanColumn, dateColumn, numericColumn, stringColumn } from "../Data";
+import { TableModel, TableColumn, TableColumns } from "../Data";
+import { lorem } from "./Lorem";
 
 //
 // Generate a random TableModel with a specified number of rows and columns. The column

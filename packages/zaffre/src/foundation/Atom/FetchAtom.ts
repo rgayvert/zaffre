@@ -1,6 +1,5 @@
 import { Atom, zstring, zget, BasicAction, AtomOptions } from "./Atom";
-import { zlog } from "../Util";
-import { ContentSecurity } from "../Support";
+import { zlog, ContentSecurity } from "../Util";
 
 //
 // A FetchAtom encapsulates the interactions involved in retrieving a value through the Fetch API. 

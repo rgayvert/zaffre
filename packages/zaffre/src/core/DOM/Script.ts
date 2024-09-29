@@ -1,8 +1,8 @@
-import { ContentSecurity } from "./ContentSecurity";
+import { ContentSecurity } from ":foundation";
 
 //
 // Dynamically add a script to the document body. To ensure that the script content is
-// available we wrap this in a Promise, so the client call this with await.
+// available we wrap this in a Promise, so the client should call this with await.
 // 
 
 export function addDocumentBodyScript(url: string, defer = false): Promise<unknown> {

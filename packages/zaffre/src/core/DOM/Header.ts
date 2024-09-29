@@ -1,5 +1,4 @@
-import { Atom, reactiveAction, zget, zstring } from "../Atom";
-import { ContentSecurity } from "./ContentSecurity";
+import { Atom, reactiveAction, zget, zstring, ContentSecurity } from ":foundation";
 
 //
 // Dynamically add a link (typically CSS) to the document head. This is reactive,

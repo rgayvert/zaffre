@@ -1,8 +1,9 @@
-import { addDocumentHeaderLink, atom, toggleAtom, ToggleAtom, Tuple2, zstring, zutil } from ":foundation";
-import { ZWindow, ColorMode } from ":uifoundation";
-import { View, ViewCreator } from ":view";
-import { Theme, defaultCoreTheme } from ":theme";
-import { HTMLDelegate } from ":corehtml";
+import { atom, toggleAtom, ToggleAtom, Tuple2, zstring, zutil } from ":foundation";
+import { ZWindow, ColorMode } from "../UIFoundation";
+import { View, ViewCreator } from "../View";
+import { Theme, defaultCoreTheme } from "../Theme";
+import { HTMLDelegate } from "../CoreHTML";
+import { addDocumentHeaderLink } from "../DOM";
 import { I18n } from "./I18n";
 import { AppResources } from "./AppResources";
 import { Router } from "./Router";
@@ -149,13 +150,6 @@ export class App {
   static get fluidFonts(): ToggleAtom {
     return this.instance.useFluidFonts;
   }
-
-  // addHeaderLink(url: string): void {
-  //   return addDocumentHeaderLink(url);
-  // }
-  // addScript(url: string): Promise<unknown> {
-  //   return Loader.instance.addScript(url);
-  // }
 }
 
 export function isWebContext(): boolean {
