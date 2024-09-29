@@ -1,14 +1,23 @@
-import { zutil } from ":foundation";
+import { zlog, zutil } from ":foundation";
 import { View } from ":view";
 
 //
-// 
+// There is one instance of a Router in an application. This can be:
+//   - a StandardRouter, if the server supports dynamic routes; otherwise
+//   - a HashRouter (e.g., GitHub pages)
 //
-
+// A Router works with browser history to support links within the application, and
+// to jump to a location in the application from a URL.
+//
+// Internal routing depends on Ensembles and RouteAtoms, which provide branch points.
+//
+// The choice of router should be specified by the environment, hence a value in import.meta.env.
+//
 // TODO:
 //  - improve error page handling; currently we're only catching some bad urls 
 //
-export class Router {
+
+export abstract class Router {
   currentPath = "";
   previousPath = "";
   newPath = "";
@@ -16,49 +25,34 @@ export class Router {
   components: string[] = [];
   restoring = false;
 
-  constructor(public baseURL: string, public useHash: boolean, public rootTitle: string) {
+  abstract routeToInitialPath(): void;
+  abstract createFullPath(path: string): string;
+  abstract adjustPath(path: string): string;
+  abstract usesHash(): boolean;
+
+  constructor(public baseURL: string, public rootTitle: string) {
     // handle back/forward buttons
     window.addEventListener("popstate", (event) => this.historyChanged(event));
 
     this.currentPath = window.location.pathname;
     document.title = rootTitle;
     history.scrollRestoration = "auto";
-    console.log("initialPath=" + this.currentPath + ", baseURL="+this.baseURL);
+    zlog.info("initialPath=" + this.currentPath + ", baseURL="+this.baseURL);
   }
 
   redirectToErrorPage(): void {
     this.routeToPath("demos/errorpage");
   }
 
-  async routeToInitialPath(): Promise<void> {
-    const href = window.location.href;
-    let path = window.location.pathname;
-    if (this.useHash && href.includes("/#")) {
-      const url = new URL(href);
-      path = href.substring(url.origin.length);
-      this.routeToPath(url.pathname);
-    } 
-    this.routeToPath(path);
-  }
 
   // note: this is called from Ensemble.afterAddedToDOM when we're routing to initial path
 
   // TODO: this doesn't scrollIntoView when coming in with initial path (looks like view isn't created yet)
 
-  async routeToPath(path: string): Promise<void> {
-
-    if (this.useHash && path.includes("/#")) {
-      const href = window.location.href;
-      const idx = href.indexOf("/#") + 2;
-      path = href.substring(idx);
-    }
+  async routeToPath(inPath: string): Promise<void> {
     let routePointView: View | undefined = View.rootView;
-    if (path.startsWith(this.baseURL)) {
-      path = path.substring(this.baseURL.length);
-    }
-    if (path.startsWith("/#")) { 
-      path = path.substring(2);
-    }
+    const path = this.adjustPath(inPath);
+
     this.components = zutil.withoutAll(path.split("/"), [""]);
     if (this.components.length % 2 === 1) {
       this.redirectToErrorPage();
@@ -78,6 +72,7 @@ export class Router {
       routePointView.scrollIntoViewIfNeeded();
     }
   }
+  
   checkEnsemble(view: View): View | undefined {
     const routePointName = this.components[0];
     if (
@@ -109,6 +104,9 @@ export class Router {
     this.restoring = false; 
   }
 
+
+
+
   addToHistory(path: string): void {
     if (!path.startsWith("/")) {
       path = "/" + path;
@@ -116,12 +114,12 @@ export class Router {
     if (path.endsWith("/")) { 
       path = path.slice(0, path.length - 1);
     }
-    const hash = this.useHash ? "/#" : "";
-    path = `${this.baseURL}${hash}${path}`;
+    const fullPath = this.createFullPath(path);
     
-    history.pushState(path, "", path);
-    const last =  path.split("/").at(-1);
-    document.title = last ? `Gallery: ${last}` : "Zaffre Gallery";
+    history.pushState(fullPath, "", fullPath);
+    const last = fullPath.split("/").at(-1);
+    document.title = last ? `${this.rootTitle}: ${last}` : this.rootTitle;
 
   }
 }
+

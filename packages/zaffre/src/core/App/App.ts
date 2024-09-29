@@ -1,4 +1,4 @@
-import { atom, toggleAtom, ToggleAtom, Tuple2, zstring, zutil } from ":foundation";
+import { atom, toggleAtom, ToggleAtom, Tuple2, zlog, zstring, zutil } from ":foundation";
 import { ZWindow, ColorMode } from "../UIFoundation";
 import { View, ViewCreator } from "../View";
 import { Theme, defaultCoreTheme } from "../Theme";
@@ -7,6 +7,8 @@ import { addDocumentHeaderLink } from "../DOM";
 import { I18n } from "./I18n";
 import { AppResources } from "./AppResources";
 import { Router } from "./Router";
+import { HashRouter } from "./HashRouter";
+import { StandardRouter } from "./StandardRouter";
 
 //
 // There is a single instance of App for a given application. The entry point to the application
@@ -18,7 +20,6 @@ import { Router } from "./Router";
 //   - adding initial header links (e.g. fonts)
 //   - creating any necessary services
 //
-
 
 export enum AppContext {
   Web,
@@ -34,6 +35,7 @@ export interface AppOptions {
   defaultTheme?: Theme;
   useFluidFonts?: boolean;
   rootTitle?: string;
+  appTitle?: string;
 }
 
 const defaultAppOptions: AppOptions = {
@@ -42,7 +44,6 @@ const defaultAppOptions: AppOptions = {
   googleFonts: [],
   defaultTheme: defaultCoreTheme(),
   rootTitle: "Zaffre",
-  useFluidFonts: false,
 };
 
 export class App {
@@ -59,7 +60,7 @@ export class App {
     this.initializeTheme();
     this.initializeWindow();
 
-    console.log(JSON.stringify(import.meta.env));
+    zlog.info(JSON.stringify(import.meta.env));
   }
 
   initializeTheme(): void {
@@ -72,7 +73,9 @@ export class App {
     const metaBaseURL = import.meta.env["BASE_URL"];
     const baseURL = metaBaseURL === "/" ? "" : metaBaseURL.endsWith("/") ? metaBaseURL.slice(0, -1) : metaBaseURL;
     const useHash = import.meta.env["VITE_ROUTER"] === "hash";
-    return new Router(baseURL, useHash, this.options.rootTitle || "");
+    return useHash
+      ? new HashRouter(baseURL, this.options.rootTitle || "")
+      : new StandardRouter(baseURL, this.options.rootTitle || "");
   }
   initializeWindow(): void {
     ZWindow.instance.setWindowWidthBreakpoints(this.options.windowBreakpoints!);
@@ -171,7 +174,7 @@ export function routeToPath(path: string): void {
   App.instance.router.routeToPath(path);
 }
 export function useHashRouting(): boolean {
-  return App.instance.router.useHash;
+  return App.instance.router.usesHash();
 }
 export function linkPathPrefix(): string {
   return App.instance.linkPathPrefix();
