@@ -12,7 +12,7 @@ To follow the source code, it's helpful to know some of the naming conventions t
   - ex: atom, point2D, colorToken
 - Lowercase verb = general function
   - ex: convertColor
-- Lowercase noun starting with 'z' = ZType<type>
+- Lowercase noun starting with 'z' = ZType\<type\>
   - ex: znumber, zboolean, zstring
 - Lowercase verb starting with 'z' = function on a ZType
   - ex: zget
@@ -21,12 +21,12 @@ To follow the source code, it's helpful to know some of the naming conventions t
 
 - ZType\<T\> = T | Atom\<T\>
   - that is, a value which is either a simple type or a reactive type
-  - ex: ZType\<number\> is either a number or an Atom<number>
+  - ex: ZType\<string\> is either a number or an Atom\<string\> (aka zstring)
 - action = closure, often used when reactive values change
 - animation = CSS or Zaffre animation
 - atom = reactive value
 - attribute = CSS/HTML/SVG property
-- control = interactive component with a value
+- control = interactive component with a user-modifiable value
 - content = component that has innerHTML/innerText, value, url, or source
 - derived atom = reactive value defined as a function of other reactive values
 - disclosure = component that contains a title and toggling detail
@@ -35,13 +35,13 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - foundation = core non-UI classes/functions
 - handler = object that manages a set of event types
 - input = interactive component that allows a simple value to be edited
-- layer = top-level, full-window container for floating views, dialogs, toast
+- layers = top-level, full-window containers for floating views, dialogs, toast
 - layout = component whose purpose is to arrange and manage other components
 - lorem = testing data generator
 - model = object which controls one or more components via reactive values
 - option = optional value passed to component; may be attribute or other value
 - placement = specification of relative arrangement of two components
-- routing = navigation within an app in conjunction with browser history
+- routing = navigation within the app in conjunction with browser history
 - service = external package encapsulated in a well-defined API
 - theme = collection of mappings of tokens to attribute values
 - token = object which is converted into attributes by a theme
@@ -57,7 +57,7 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - apps
   - each app has index.html, package.json, tsconfig.json, vite.config.js
   - public contains assets
-  - src contains entry point <app>.ts
+  - src contains entry point \<app\>.ts
   - each src subfolder has index.ts
 - packages
   - each package has index.ts, package.json, tsconfig.json

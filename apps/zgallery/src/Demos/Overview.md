@@ -48,7 +48,7 @@ See this in action
 
 A Zaffre *component* is just a function which returns an opaque View object. In this sample, the HelloWorld1 component is defined as a composition of three other components: VStack, TextInput, and TextLabel. The Zaffre rendering process builds the HTML elements and CSS styles dynamically, so no external HTML or CSS files are needed. The reactive text value (an "atom") is shared by the input and label components. When this value is changed by the user in the input field, the label will be updated automatically. This is an example of reactive content. The opacity of the label is specified as a *derived atom*, which in this case is a function of the text atom. This yields a reactive CSS attribute; that is, the opacity will automatically change when the length of the text value changes.
 
-Some notes:
+#### Some notes:
 
   - Composition is done with the *append()* method.
   - Each component typically takes a list of *options* which result in CSS/HTML/SVG attributes being set on the underlying DOM element.
@@ -127,7 +127,7 @@ A Zaffre Table is a grid-based component backed by a table model with reactive r
 
 <p align="center"><img src='./assets/TFTable<<DARK_MODE_SUFFIX>>.png' width="90%"></p>
 
-and 
+and this:
 
 <p align="center"><img src='./assets/TFForm<<DARK_MODE_SUFFIX>>.png' width="90%"></p> 
 
@@ -172,15 +172,14 @@ The Zaffre library is organized into three layered subpackages: Foundation, Core
 
 <br/>
 <p align="center"><img src='./assets/LibraryStacks<<DARK_MODE_SUFFIX>>.png' controls width="50%" ></p>
+<br/>
 
-<br/>
-<br/>
 The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that this approach works well with a variety of problems. What remains to be seen is how well this scales.
 
 <br/>
 <br/>
 
-Some Caveats and Issues: 
+#### Some Caveats and Issues: 
 
 - No npm package is available for the current (0.7) version of the Zaffre library. You'll need to download the monorepo to try it.
 - The minimal bundle size is about 100k (see the Hello app in the Zaffre repository). However, you can add considerable functionality without increasing the size much because of rollup's tree shaking. The gallery app, which contains 100+ examples, is about 500k, spread over ~50 dynamic imports.
@@ -191,8 +190,20 @@ Some Caveats and Issues:
 - Memory footprint also needs evaluation. For heavyweight components (e.g., a table with thousands of rows), the plan is to use virtualization to minimize the number of components that are necessary.
 
   
-Availability
+#### Availability
 
  - Full source for version 0.7 is available in a monorepo at https://github.com/rgayvert/zaffre.
 
  - A gallery of examples can be viewed at https://zaffre-io.github.io/zgallery.
+
+#### Acknowledgments
+ 
+ The development of Zaffre drew inspiration from a variety of sources. In particular,
+  - React, for concepts of reactivity and DOM reconciliation;
+  - Vue, for ideas on routing and dynamic imports;
+  - MDN, for awesome documentation and samples;
+  - SwiftUI, for declarative UI syntax;
+  - Material Design, for ideas on themes, tokens, fonts, and colors;
+  - Every Layout, for excellent layout examples and guidelines; and
+  - Stack Overflow, for solutions to countless problems.
+
