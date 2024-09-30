@@ -22,7 +22,7 @@ export function SegmentedTextButton(selectedValue: Atom<string>, values: string[
     background: core.color.none,
     buttonBackground: core.color.none,
     border: core.border.none,
-    borderRadius: core.rounding.r0,
+    borderRadius: core.rounding.none,
     buttonComponent: SegmentTextButton,
     componentName: "SegmentedTextButton",
   });

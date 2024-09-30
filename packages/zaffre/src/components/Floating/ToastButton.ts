@@ -36,7 +36,7 @@ export function ToastButton(message: zstring, inOptions: ToastButtonOptions = {}
         padding: core.space.s1,
         background: core.color.primary,
         color: core.color.white,
-        rounding: core.rounding.r0,
+        rounding: core.rounding.none,
       },
     })
   );

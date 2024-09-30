@@ -3,7 +3,7 @@ import { View } from ":view";
 import { CreateShape, SVGShapeCSSKeys, SVGShapeOptions, SVGShapeSVGKeys } from "./SVGShape";
 
 //
-//
+// Basic SVG polygon component.
 //
 
 export interface SVGPolygonOptions extends SVGShapeOptions {

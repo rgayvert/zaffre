@@ -1,11 +1,12 @@
 import { ZType, LogicalBox } from ":foundation";
 import { BackgroundToken, ColorToken, CalcToken, BorderToken, SpaceToken, PercentToken, LengthToken, FilterToken, GradientToken } from "./Tokens";
 import { LiteralToken, FontToken, RoundingToken, FlexToken } from "./Tokens";
-import { CSSClipPathGeometry, CSSFontSizeName } from "./CSS";
+import { CSSClipPathGeometry, CSSFontSizeName } from "./CSSLiteralTypes";
 
 //
+// Type definitions for CSS properties that use tokens.
 //
-//
+
 
 export type CSSOption<T> = ZType<T | LiteralToken | CalcToken | undefined>;
 

@@ -1,10 +1,10 @@
 import { zstring } from ":foundation";
 import { View } from ":view";
 import { CreateShape, SVGShapeCSSKeys, SVGShapeOptions, SVGShapeSVGKeys } from "./SVGShape";
-import { SVGStrokeLinejoin } from "../SVGOptions";
+import { SVGStrokeLinejoin } from "../../CoreOptions/SVGOptions";
 
 //
-//
+// Basic SVG path component.
 //
 
 export interface SVGPathOptions extends SVGShapeOptions {

@@ -37,7 +37,7 @@ export abstract class Router {
     this.currentPath = window.location.pathname;
     document.title = rootTitle;
     history.scrollRestoration = "auto";
-    zlog.info("initialPath=" + this.currentPath + ", baseURL="+this.baseURL);
+    zlog.info(`initialPath=${this.currentPath}, baseURL=${this.baseURL}, href=${window.location.href}`);
   }
 
   redirectToErrorPage(): void {
@@ -50,6 +50,8 @@ export abstract class Router {
   // TODO: this doesn't scrollIntoView when coming in with initial path (looks like view isn't created yet)
 
   async routeToPath(inPath: string): Promise<void> {
+    //zlog.info(`routeToPath: href=${inPath}`);
+
     let routePointView: View | undefined = View.rootView;
     const path = this.adjustPath(inPath);
 
@@ -98,8 +100,8 @@ export abstract class Router {
 
   historyChanged(event: PopStateEvent): void {
     // handle back/forward buttons
-    const path = event.state || "/";
     this.restoring = true;
+    const path = event.state || "/";
     this.routeToPath(path);
     this.restoring = false; 
   }

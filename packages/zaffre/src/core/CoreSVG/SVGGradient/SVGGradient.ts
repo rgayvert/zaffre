@@ -1,9 +1,10 @@
 import { zstring } from ":foundation";
-import { SVGGradientUnits, SVGSpreadMethod,  } from "../SVGOptions";
-import { SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "../SVG";
+import { SVGGradientUnits, SVGSpreadMethod,  } from "../../CoreOptions/SVGOptions";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "../SVG";
+import { SVGOptions } from "../SVGOptions";
 
 //
-//
+// Common options for SVG gradients
 //
 
 export interface SVGGradientOptions extends SVGOptions {

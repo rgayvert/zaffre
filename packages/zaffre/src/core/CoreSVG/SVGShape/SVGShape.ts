@@ -1,13 +1,12 @@
 import { znumber } from ":foundation";
 import { View } from ":view";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "../SVG";
-import { SVGMarkerRef, SVGPaint } from "../SVGOptions";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "../SVG";
+import { SVGMarkerRef, SVGPaint } from "../../CoreOptions";
+import { SVGOptions } from "../SVGOptions";
+import { CreateSVGView } from "../SVGDelegate";
 
 //
-//
-//
-
-// Used by the following elements:
+// Base class for SVG shape components
 //  - SVGCircle
 //  - SVGEllipse
 //  - SVGLine

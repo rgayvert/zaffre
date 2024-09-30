@@ -1,9 +1,10 @@
-import { Token, LengthToken, TokenOptions } from "../Token";
+import { Token, TokenOptions } from "../Token";
+import { LengthToken } from "../SimpleTokens";
 import { ColorToken } from "../ColorToken";
 import { ITheme } from "../AttrTypes";
 
 //
-//
+// A BorderToken is intended to handle the shorthand CSS border property.
 //
 
 export type CSSBorderStyle = "none" | "dotted" | "inset" | "dashed" | "solid" | "double" | "groove" | "ridge" | "outset";

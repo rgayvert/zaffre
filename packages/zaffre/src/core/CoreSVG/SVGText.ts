@@ -1,10 +1,16 @@
 import { ZType, znumber, zstring, zget, zpoint2D, SplitZPoint2D } from ":foundation";
 import { css_color, css_font, css_fontSize, css_userSelect } from ":attributes";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "./SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
+import {  SVGOptions } from "./SVGOptions";
+import { CreateSVGView } from "./SVGDelegate";
 import { View } from ":view";
 
 //
+// SVGText is an SVG component containing text.
 //
+// TODO: 
+//  - sanitize?
+//  - add SVGTextPath
 //
 
 export interface SVGTextOptions extends SVGOptions {
@@ -18,15 +24,13 @@ export interface SVGTextOptions extends SVGOptions {
   textLength?: znumber;
   fontSize?: css_fontSize;
   font?: css_font;
-  //alignmentBaseline?: zstring;  // not support on Firefox
+  //alignmentBaseline?: zstring;  // not supported on Firefox
   dominantBaseline?: zstring;
-  baselineShift?: number;         // not support on Firefox
+  baselineShift?: number;         // not supported on Firefox
   textAnchor?: zstring;
   stroke?: css_color;
   userSelect?: css_userSelect;
 }
-
-// TODO: sanitize
 
 export function SVGText(content: zstring, options: SVGTextOptions): View {
   options.componentName = "SVGText";

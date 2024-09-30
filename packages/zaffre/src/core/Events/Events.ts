@@ -1,7 +1,7 @@
 import { CounterAtom, zboolean } from ":foundation";
 
 //
-//
+// Event type definitions and corresponding actions
 //
 
 export interface DragHandlerOptions {

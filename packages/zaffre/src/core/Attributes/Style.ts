@@ -2,7 +2,9 @@ import { lazyinit } from ":foundation";
 import { Attr } from "./Attr";
 
 //
-//
+// Dynamic creation of styles. The attribute bundle for a view will attempt to create
+// a new style if it has any CSS attributes. If there is an existing style with the
+// exact string definition, that style will be used.
 //
 
 export class ZStyleSheet {
@@ -31,26 +33,13 @@ export class ZStyleSheet {
   }
  
   /**
-   * Return a CSS stylesheet in which to load our styles. Use adoptedStyleSheets
-   * if possible, otherwise use the first stylesheet available.
+   * Return a CSS stylesheet in which to load our styles. All recent browsers seem
+   * to support adoptedStyleSheets, so we'll use this instead of an existing one.
    */
   private static defaultCSSStyleSheet(): CSSStyleSheet {
     const stylesheet = new CSSStyleSheet();
-    (document as any)["adoptedStyleSheets"] = [stylesheet];
+    document.adoptedStyleSheets = [stylesheet]
     return stylesheet;
-
-    // let stylesheet; 
-    // if ("adoptedStyleSheets" in document) { 
-    //   try {
-    //     stylesheet = new CSSStyleSheet();
-    //     document["adoptedStyleSheets"] = [stylesheet];
-    //   } catch {
-    //     stylesheet = document.styleSheets[0];
-    //   }
-    // } else {
-    //   stylesheet = document["styleSheets"][0];
-    // }
-    //return document["styleSheets"][0];
   }
 
   /** A collection of styles, keyed by name */
@@ -130,7 +119,6 @@ export class ZStyle {
   }
   public addToStyleSheet(): ZStyle {
     const fullName = /^(\.|:)/.test(this.name) ? this.name : "." + this.name;
-    //const fullName = this.name.startsWith(".") ? this.name : "." + this.name;
     this.zstylesheet.addStyle(fullName, this);
     this.rule = this.zstylesheet.addRule(fullName, this.asRule());
     return this;

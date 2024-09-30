@@ -1,18 +1,21 @@
 import { Color, findContrastingTone, relativeLuminance } from ":uifoundation";
 import { ITheme } from "./AttrTypes";
 import { Token, TokenOptions } from "./Token";
+import { TonalPalette } from "../../UIFoundation/Color/TonalPalette";
 
 //
-//
+// A ColorToken contains a description of a color value which gets translated
+// into a valid CSS color by a theme.
 //
 
 export interface ColorTokenOptions extends TokenOptions {
-    rgba?: string;
-    cssName?: string;
-    opacity?: number;
-    contrast?: boolean;
-    color?: Color;
-    tone?: number;
+  rgba?: string;
+  cssName?: string;
+  opacity?: number;
+  contrast?: boolean;
+  color?: Color;
+  tone?: number;
+  tonalPalette?: TonalPalette;
 }
 
 export function colorToken(options: ColorTokenOptions): ColorToken {
@@ -20,7 +23,6 @@ export function colorToken(options: ColorTokenOptions): ColorToken {
 }
 
 export class ColorToken extends Token {
-
   constructor(public options: ColorTokenOptions) {
     super(options);
     // TODO: fix rgba handling
@@ -38,7 +40,7 @@ export class ColorToken extends Token {
     return colorToken({
       ...this.options,
       extension: `-o${Math.floor(opacity * 100)}`,
-      opacity: opacity
+      opacity: opacity,
     });
   }
   public get contrast(): ColorToken {
@@ -52,7 +54,7 @@ export class ColorToken extends Token {
     return colorToken({
       ...this.options,
       extension: `-t${Math.floor(tone * 100)}`,
-      tone: tone
+      tone: tone,
     });
   }
 
@@ -75,8 +77,10 @@ export class ColorToken extends Token {
     return baseColor ? baseColor.withOpacity(this.options.opacity || 1.0) : Color.none;
   }
   tonalColor(theme: ITheme): Color {
-    const baseColor = this.simpleColorWithTheme(theme);
-    return baseColor.tone(this.options.tone || 50);
+    const palette = theme.tonalPaletteForKey(this.key);
+    //const baseColor = this.simpleColorWithTheme(theme);
+    //return baseColor.tone(this.options.tone || 50);
+    return palette.tone(this.options.tone || 50);
   }
 
   colorWithTheme(theme: ITheme): Color {
@@ -107,9 +111,3 @@ export class ColorToken extends Token {
     }
   }
 }
-
-// export function contrastingColor(color: ColorToken): ColorToken {
-//   const col = zget(color);
-//   const token = typeof col === "string" ? new ColorToken(col) : col;
-//   return token.contrast();
-// }

@@ -27,7 +27,7 @@ export interface MenuItem<T> {
 }
 defineComponentDefaults<MenuOptions>("SimpleMenu", "Box", {
   outline: core.border.none,
-  rounding: core.rounding.r0,
+  rounding: core.rounding.none,
   effects: { hidden: transitions.fadeIn() },
   tabIndex: 0,
   zIndex: 999,
@@ -72,7 +72,7 @@ export function SimpleMenu<T>(
       border: core.border.none,
       leadingIconURI: includeCheck.get() || zget(item.checked) ? "icon.check" : "",
       background: core.color.secondaryContainer,
-      rounding: core.rounding.r0,
+      rounding: core.rounding.none,
       action: () => itemSelected(item),
       selected: atom(() => zget(selectedValue) === item.title),
       selectionColor: core.color.secondary,

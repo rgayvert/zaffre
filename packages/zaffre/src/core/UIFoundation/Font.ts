@@ -1,7 +1,7 @@
 import { zutil, lazyinit } from ":foundation";
 
 //
-//
+// A Font is an object that can be converted to a valid CSS font string.
 //
 
 export interface FontOptions {

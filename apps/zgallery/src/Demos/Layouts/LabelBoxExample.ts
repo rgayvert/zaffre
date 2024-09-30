@@ -1,8 +1,8 @@
-import { View, core, atom, DropDownButton, Spacer, LabelBox, EdgePoint, HStack } from "zaffre";
+import { View, core, atom, DropDownButton, Spacer, LabelBox, EdgePoint, HStack, zlog } from "zaffre";
 import { Box, ch, em, edgePointNames, TextLabelOptions } from "zaffre";
 
 export function LabelBoxExample(): View {
-  const refPt = atom(<EdgePoint>"xstart-ystart", { action: (val) => console.log(val) });
+  const refPt = atom(<EdgePoint>"xstart-ystart", { action: (val) => zlog.info(val) });
   const content = Box({ background: core.color.primary, width: ch(20), height: em(2) });
   const labelOptions: TextLabelOptions = {
     color: core.color.tertiary,

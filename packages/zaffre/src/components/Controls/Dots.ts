@@ -35,7 +35,7 @@ function DefaultDot(_index: number, value: zboolean, options: DotOptions): View 
     height: sz,
     border: core.border.thin.color(color),
     background: atom(() => (zget(value) ? color : core.color.inherit)),
-    rounding: shape === "circle" ? core.rounding.circle : core.rounding.r0,
+    rounding: shape === "circle" ? core.rounding.circle : core.rounding.none,
   });
 }
 

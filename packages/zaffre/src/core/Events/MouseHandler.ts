@@ -5,7 +5,7 @@ import { MouseEventType } from "./Listener";
 import { MouseAction, handleEvents } from "./Events";
 
 //
-//
+// Handler for mouse events: click, dblClick, mouseDown, mouseUp, mouseOver, mouseMove, contentMenu
 //
 
 export type MouseActions = Record<MouseEventType, MouseAction>;

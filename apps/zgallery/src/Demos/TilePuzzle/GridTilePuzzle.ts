@@ -5,7 +5,7 @@ import { Tile } from "./Tile";
 function Square(tile: Tile, model: TilePuzzleModel, n: number): View {
   return Button({
     label: tile.title(),
-    rounding: core.rounding.r0,
+    rounding: core.rounding.none,
     color: core.color.background.contrast,
     background: atom(() => (tile.isBlank() ? core.color.transparent : tile.isHome() ? core.color.green : core.color.secondaryContainer)),
     gridArea: atom(() => `${tile.y + 1} / ${tile.x + 1}`),

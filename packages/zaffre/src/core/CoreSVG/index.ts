@@ -1,5 +1,6 @@
 export * from "./SVG";
 export * from "./SVGDefs";
+export * from "./SVGDelegate";
 export * from "./SVGEffect";
 export * from "./SVGFilter";
 export * from "./SVGForeignObject";

@@ -3,7 +3,7 @@ import { View } from ":view";
 import { CreateShape, SVGShapeCSSKeys, SVGShapeOptions, SVGShapeSVGKeys } from "./SVGShape";
 
 //
-//
+// Basic SVG ellipse component.
 //
 
 export interface SVGEllipseOptions extends SVGShapeOptions {

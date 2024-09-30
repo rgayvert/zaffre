@@ -4,7 +4,7 @@ import { EventHandler } from "./EventHandler";
 import { ClipboardEventType } from "./Listener";
 
 //
-//
+// Handler for clipboard copy/cut/paste events
 //
 
 export interface ClipboardHandlerOptions {

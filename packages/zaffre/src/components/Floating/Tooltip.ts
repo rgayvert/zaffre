@@ -1,10 +1,15 @@
 import { zget, atom, Atom } from ":foundation";
 import { View, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { TextLabelOptions, TextLabel } from "../Content";
-import { Box, Floating, floatingCount } from "../HTML"; 
+import { Box, Floating, floatingCount } from "../HTML";
 
 //
-//
+// A Tooltip is a special floating component that is used by all descendants of a
+// particular component. Typically, an application will add a single BasicTooltip to
+// the top-level component, so a single tooltip instance will be shared by all 
+// components which have a tooltip option. Each view can have a placement option to 
+// indicate where the tooltip should be placed. The tooltip will use this if possible,
+// but may choose a different placement if necessary to make the tooltip visible.
 //
 
 export interface TooltipOptions extends TextLabelOptions {

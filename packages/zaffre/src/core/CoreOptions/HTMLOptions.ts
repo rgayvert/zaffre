@@ -1,7 +1,7 @@
 import { znumber, zboolean, zstring, ZType, Atom } from ":foundation";
 
 //
-//
+// Options that are converted into HTML attributes.
 //
 
 export interface HTMLAttributeOptions {

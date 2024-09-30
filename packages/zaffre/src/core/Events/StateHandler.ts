@@ -3,7 +3,7 @@ import { Effect } from ":effect";
 import { Handler, HandlerTarget } from "./Handler";
 
 //
-//
+// Handler for view state changes: mounted, hidden, selected, contentChanged
 //
 
 type TriggerFn = (target: HandlerTarget) => Atom<boolean>;

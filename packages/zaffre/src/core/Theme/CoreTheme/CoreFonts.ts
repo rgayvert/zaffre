@@ -2,7 +2,7 @@ import { zutil } from ":foundation";
 import { Font } from ":uifoundation";
 
 //
-//
+// Definitions of the core font scheme, based on Material 3.
 //
 
 type CoreFontUse = "display" | "headline" | "title" | "label" | "body";

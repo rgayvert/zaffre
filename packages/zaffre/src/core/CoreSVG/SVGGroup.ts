@@ -1,10 +1,13 @@
 import { znumber } from ":foundation";
 import { View } from ":view";
 import { defineComponentDefaults, mergeComponentDefaults } from ":theme";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "./SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
+import { SVGOptions } from "./SVGOptions";
+import { CreateSVGView } from "./SVGDelegate";
 
 //
-//
+// An SVGGroup is a container used to group other SVG components. A group can be
+// reference in an SVGUse component to create an offset copy.
 //
 
 export interface SVGGroupOptions extends SVGOptions {

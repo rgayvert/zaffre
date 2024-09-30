@@ -1,5 +1,6 @@
 import { atom, zget, zstring } from ":foundation";
-import { View, ColorToken, css_background, css_color, AttributeEffect, Effects, dropShadowForElevation } from ":core";
+import { View, ColorToken, css_background, css_color, AttributeEffect } from ":core";
+import { EffectsBundle, dropShadowForElevation } from ":core";
 import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { Button, ButtonOptions } from "./Button";
 
@@ -19,7 +20,7 @@ function attributeEffect(name: string, elevation: number, opacity: number): Attr
   return new AttributeEffect(attrs, "in&out", { useOverlay: false });
 }
 
-export function defaultTextButtonInteractionEffects(): Effects {
+export function defaultTextButtonInteractionEffects(): EffectsBundle {
   return {
     enabled: attributeEffect("enabled", 0, 0.0),
     disabled: attributeEffect("disabled", 0, 0.5),

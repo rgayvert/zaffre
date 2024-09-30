@@ -2,7 +2,8 @@ import { lazyinit, atom, Point2D, point2D, rect2D, Rect2D, Size2D, Sz2D } from "
 import { BasicAction, BreakpointAtom, Atom, breakpointAtom } from ":foundation";
 
 //
-//
+// There is one instance of ZWindow, which corresponds to the application window. This instance
+// provides reactive values for the window size and width.
 //
 
 export function windowWidth(): number {
@@ -13,35 +14,35 @@ export class ZWindow {
   @lazyinit public static get instance(): ZWindow {
     return new ZWindow();
   }
-  public static windowSizeAtom(): Atom<Size2D> {
-    return this.instance.windowSizeAtom;
+  @lazyinit static get windowSize(): Atom<Size2D> {
+    return this.instance.windowSize;
   }
-  public static windowWidthAtom(): Atom<number> {
+  @lazyinit static get windowWidth(): Atom<number> {
     return atom(() => this.instance.windowWidth);
   }
-  public static fractionOfSize(fraction: number): string {
-    const sz = ZWindow.windowSizeAtom().get();
+  static fractionOfSize(fraction: number): string {
+    const sz = this.windowSize.get();
     return `${Math.min(sz.width, sz.height) * fraction}px`;
   }
-  public static get cursorPoint(): Point2D {
+  static get cursorPoint(): Point2D {
     return this.instance._cursorPoint;
   }
 
-  private windowAspectRatioAtom = breakpointAtom([1.0], window.innerWidth / Math.max(window.innerHeight, 1));
-  private windowSizeAtom = atom(Sz2D(window.innerWidth, window.innerHeight));
+  private windowAspectRatio = breakpointAtom([1.0], window.innerWidth / Math.max(window.innerHeight, 1));
+  private windowSize = atom(Sz2D(window.innerWidth, window.innerHeight));
 
   get screenRect2D(): Rect2D {
     return rect2D(0, 0, this.windowWidth, this.windowHeight);
   }
   get windowWidth(): number {
-    return this.windowSizeAtom.get().width;
+    return this.windowSize.get().width;
   }
   get windowHeight(): number {
-    return this.windowSizeAtom.get().height;
+    return this.windowSize.get().height;
   }
 
   public windowWidthBreakpoints = [600, 1200];
-  public windowWidthBreakpointAtom: BreakpointAtom;
+  public windowWidthBreakpoint: BreakpointAtom;
 
   public setWindowWidthBreakpoints([small, medium]: [number, number]): void {
     this.windowWidthBreakpoints = [small, medium];
@@ -50,13 +51,13 @@ export class ZWindow {
   // TODO: remove this limitation of 3 sizes
   
   smallDisplay(): boolean {
-    return this.windowWidthBreakpointAtom.index() === 0;
+    return this.windowWidthBreakpoint.index() === 0;
   }
   mediumDisplay(): boolean {
-    return this.windowWidthBreakpointAtom.index() === 1;
+    return this.windowWidthBreakpoint.index() === 1;
   }
   largeDisplay(): boolean {
-    return this.windowWidthBreakpointAtom.index() === 2;
+    return this.windowWidthBreakpoint.index() === 2;
   }
 
   break<T>(small: T, medium: T, large: T): T {
@@ -64,7 +65,7 @@ export class ZWindow {
   }
 
   public addWindowResizeAction(action: BasicAction): void {
-    this.windowSizeAtom.addAction(action);
+    this.windowSize.addAction(action);
   }
 
   private loadActions = new Set<BasicAction>();
@@ -76,7 +77,7 @@ export class ZWindow {
   }
 
   constructor() {
-    this.windowWidthBreakpointAtom = breakpointAtom(this.windowWidthBreakpoints, window.innerWidth);
+    this.windowWidthBreakpoint = breakpointAtom(this.windowWidthBreakpoints, window.innerWidth);
     window.addEventListener("resize", () => this.handleWindowResize());
     window.addEventListener("load", () => this.handleWindowLoad());
     window.addEventListener("keydown", (event) => this.handleKeyDown(event));
@@ -86,9 +87,9 @@ export class ZWindow {
   private handleWindowResize(): void {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    this.windowWidthBreakpointAtom.set(width);
-    this.windowAspectRatioAtom.set(width / Math.max(height, 1));
-    this.windowSizeAtom.set(Sz2D(width, height));
+    this.windowWidthBreakpoint.set(width);
+    this.windowAspectRatio.set(width / Math.max(height, 1));
+    this.windowSize.set(Sz2D(width, height));
 
   }
   private handleWindowLoad(): void {
@@ -107,9 +108,9 @@ export class ZWindow {
   }
 
   public static isPortrait(): boolean {
-    return this.instance.windowAspectRatioAtom.index() === 0;
+    return this.instance.windowAspectRatio.index() === 0;
   }
   public static isLandscape(): boolean {
-    return this.instance.windowAspectRatioAtom.index() === 1;
+    return this.instance.windowAspectRatio.index() === 1;
   }
 }

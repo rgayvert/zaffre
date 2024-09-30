@@ -1,22 +1,61 @@
+import { Color, createColor, HSL, LAB, LCH, OKLAB, XYZ } from "./Color";
+import { RGB, ZColorSpace } from "./Color";
 
 //
-//
+// Routines for converting among color spaces supported in CSS
 //
 
-export type RGB = [number, number, number];
-export type RGBA = [number, number, number, number];
-export type XYZ = [number, number, number];
-export type LAB = [number, number, number];
-export type OKLAB = [number, number, number];
-export type LCH = [number, number, number];
-export type HSL = [number, number, number];
+export function convertColorToRGB(color: Color): Color {
+  const comp = color.comp;
+  let newComp;
+  switch (color.colorSpace) {
+    case "rgb":
+      newComp = comp;
+      break;
+    case "lch":
+      newComp = lchToRGB(comp as LCH);
+      break;
+    case "lab":
+      newComp = labToRGB(comp as LAB);
+      break;
+    case "hsl":
+      newComp = hslToRGB(comp as HSL);
+      break;
+    case "oklab":
+      newComp = oklabToSRGB(comp as OKLAB);
+      break;
+  }
+  return createColor(
+    "rgb",
+    newComp.map((c) => Math.floor(c)),
+    color.alpha
+  );
+}
+export function convertColor(color: Color, space: ZColorSpace): Color {
+  const rgbColor = convertColorToRGB(color);
+  const comp = rgbColor.comp as RGB;
+  let newComp;
+  switch (space) {
+    case "rgb":
+      newComp = comp;
+      break;
+    case "lch":
+      newComp = rgbToLCH(comp);
+      break;
+    case "lab":
+      newComp = rgbToLAB(comp);
+      break;
+    case "hsl":
+      newComp = rgbToHSL(comp);
+      break;
+    case "oklab":
+      newComp = rgbToOklab(comp);
+      break;
+  }
+  return createColor(space, newComp, color.alpha);
+}
 
-export const colorSpaceParams = [
-  ["rgb", [0, 255], [0, 255], [0, 255]],
-  ["lch", [0, 100], [0, 100], [0, 360]],
-  ["lab", [0, 100], [-125, 125], [-125, 125]],
-  ["hsl", [0, 360], [0, 100], [0, 100]],
-];
+
 
 function gammaToLinear(c: number): number {
   return c >= 0.04045 ? Math.pow((c + 0.055) / 1.055, 2.4) : c / 12.92;

@@ -13,7 +13,6 @@ export interface YouTubePlayerConfig {
 
 const youTubeAPIInstalled = atom(false, { alwaysFire: true });
 let installingYouTubeAPI = false;
-console.log("installingYouTubeAPI=" + installingYouTubeAPI);
 
 function onYouTubeIframeAPIReady(): void {
   youTubeAPIInstalled.set(true);

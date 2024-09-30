@@ -20,7 +20,7 @@ export function TilePuzzleGame(): View {
   function MenuWithLabel(label: string, selection: Atom<string>, choices: string[]): View {
     return LabelBox(label, labelOptions).append(DropDownButton(selection, choices, menuOptions));
   }
-  return Page({ maxWidth: ch(100) }).append(
+  return Page({ maxWidth: ch(100), width: pct(90) }).append(
     VStack({ width: pct(100), alignItems: "center" }).append(
       HStack({ gap: core.space.s4 }).append(
         MenuWithLabel("Size:", size, sizeChoices),

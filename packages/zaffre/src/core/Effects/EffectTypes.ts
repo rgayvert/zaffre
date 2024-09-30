@@ -1,6 +1,6 @@
 
 //
-//
+// Names for the various effect types
 //
 
 export const InteractionStateValues = ["disabled", "enabled", "hovered", "focused", "pressed", "clicked", "dragged", "draggedOver"] as const;
@@ -16,3 +16,4 @@ export function isInteractionState(s: string): s is InteractionState {
 export function isEffectType(s: string): s is EffectType {
     return EffectTypeValues.includes(s);
 }
+

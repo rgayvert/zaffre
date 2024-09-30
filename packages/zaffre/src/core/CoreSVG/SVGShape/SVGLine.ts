@@ -1,10 +1,10 @@
 import { SplitZPoint2D, SplitZSegment2D, zlength, zpoint2D, zsegment2D } from ":foundation";
 import { CreateShape, SVGShapeCSSKeys, SVGShapeOptions, SVGShapeSVGKeys } from "./SVGShape";
 import { View } from ":view";
-import { SVGStrokeDasharray, SVGStrokeDashoffset, SVGStrokeLinecap, SVGStrokeLinejoin } from "../SVGOptions";
+import { SVGStrokeDasharray, SVGStrokeDashoffset, SVGStrokeLinecap, SVGStrokeLinejoin } from "../../CoreOptions/SVGOptions";
 
 //
-//
+// Basic SVG line component.
 //
 
 export interface SVGLineOptions extends SVGShapeOptions {

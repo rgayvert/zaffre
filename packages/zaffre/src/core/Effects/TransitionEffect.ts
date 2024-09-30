@@ -1,8 +1,51 @@
-import { EffectDirection, TransitionEffect, EffectTarget } from "./Effect";
+import { zutil } from ":foundation";
+import { Effect, effectDefaults, EffectDirection, EffectOptions, EffectPromise } from "./Effect";
+import { EffectTarget, evalVF, reverseVF, VF } from "./Effect";
 
 //
+// Standard effects to apply to a view when changing state (mounted, hidden, ...)
 //
-//
+
+
+export interface TransitionEffectOptions extends EffectOptions {
+  duration?: VF<number>;
+  delay?: number;
+}
+
+const transitionEffectDefaults = {
+  ...effectDefaults,
+  duration: 0.2,
+  delay: 0,
+};
+
+export class TransitionEffect extends Effect {
+  options: TransitionEffectOptions;
+
+  constructor(public keyFrames: VF<Keyframe[]>, direction: EffectDirection, inOptions: TransitionEffectOptions) {
+    const options: TransitionEffectOptions = zutil.mergeOptions(transitionEffectDefaults, inOptions);
+    super(direction, options);
+    this.options = options;
+  }
+
+  reverse(): TransitionEffect {
+    return new TransitionEffect(reverseVF(this.keyFrames), this.direction, this.options);
+  }
+
+  applyToTarget(target: EffectTarget, direction: EffectDirection, fill: FillMode = "none"): EffectPromise {
+    const realTarget = this.options.useOverlay ? target.overlay : target;
+    const options: KeyframeAnimationOptions = {
+      duration: evalVF(this.options.duration!, target) * 1000,
+      fill: this.options.fill,
+      easing: "ease-in-out",
+      delay: this.options.delay! * 1000,
+      direction: direction === "out" ? "reverse" : "normal",
+    };
+
+    return realTarget.animate(evalVF(this.keyFrames, realTarget), options).finished;
+  }
+}
+
+
 
 export const transitions = {
   pop: (dir: EffectDirection = "in", duration = 0.3): TransitionEffect => {

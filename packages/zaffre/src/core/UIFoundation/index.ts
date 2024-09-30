@@ -1,5 +1,4 @@
-export * from "./BasicAnimator";
-export * from "./ColorConversions";
+export * from "./Animation";
 export * from "./Color";
 export * from "./Font";
 export * from "./Placement";

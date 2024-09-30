@@ -1,12 +1,13 @@
-import { isSVGView, SVG, SVGDelegate } from "./SVG";
 import { Effect, EffectTarget, EffectDirection, EffectPromise } from ":effect";
 import { css_color } from ":attributes";
 import { core } from ":theme";
 import { View } from ":view";
 import { SVGCircle } from "./SVGShape";
+import { isSVGView, SVGDelegate } from "./SVGDelegate";
+import { SVG } from "./SVG";
 
 //
-//
+// Base class for SVG effects.
 //
 
 export class SVGEffect extends Effect {
@@ -29,7 +30,6 @@ export class SVGEffect extends Effect {
       if (this.maxDiameter) {
         diameter = Math.min(this.maxDiameter, diameter);
       }
-      //zlog.debug("pt="+pt);
   
       const svg = SVG({ bounds: rect });   // is this right?
       const circle = SVGCircle({ cx: pt.x, cy: pt.y, fill: this.color });

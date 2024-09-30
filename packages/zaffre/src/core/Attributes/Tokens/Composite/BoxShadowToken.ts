@@ -1,10 +1,11 @@
 import { zboolean, zutil } from ":foundation";
-import { Token, LengthToken, TokenOptions } from "../Token";
+import { Token, TokenOptions } from "../Token";
+import { LengthToken } from "../SimpleTokens";
 import { ColorToken } from "../ColorToken";
 import { ITheme } from "../AttrTypes";
 
 //
-//
+// A BoxShadowToken contains a description of a CSS box-shadow. 
 //
 
 export interface BoxShadowTokenOptions extends TokenOptions {

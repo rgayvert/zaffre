@@ -1,10 +1,11 @@
 import { Point2D, zlength } from ":foundation";
 import { View } from ":view";
-import { CreateSVGView } from "../SVG";
+import { CreateSVGView } from "../SVGDelegate";
 import { SVGGradientCSSKeys, SVGGradientOptions, SVGGradientSVGKeys } from "./SVGGradient";
 
 //
-//
+// An SVGRadialGradient defines a circular transition through a sequence of colors. A list of
+// SVGStops should be appended to specify the transitions.
 //
 
 export interface SVGRadialGradientOptions extends SVGGradientOptions {
@@ -15,7 +16,7 @@ export interface SVGRadialGradientOptions extends SVGGradientOptions {
   fy?: zlength;
   r?: Point2D;
 }
-export function SVGRadialGradient(options: SVGRadialGradientOptions): View {
+export function SVGRadialGradient(options: SVGRadialGradientOptions = {}): View {
   options.componentName = "SVGRadialGradient";
   return CreateSVGView("line", SVGRadialGradient.svgKeys, SVGRadialGradient.cssKeys, options);
 }

@@ -1,5 +1,5 @@
 import { atom, toggleAtom, ToggleAtom, Tuple2, zlog, zstring, zutil } from ":foundation";
-import { ZWindow, ColorMode } from "../UIFoundation";
+import { ColorMode, ZWindow } from "../UIFoundation";
 import { View, ViewCreator } from "../View";
 import { Theme, defaultCoreTheme } from "../Theme";
 import { HTMLDelegate } from "../CoreHTML";
@@ -13,7 +13,7 @@ import { StandardRouter } from "./StandardRouter";
 //
 // There is a single instance of App for a given application. The entry point to the application
 // (<appname.ts>) will normally create a subclass of App. An App is responsible for:
-//   - creating a resource manager (AppResources)
+//   - creating a resource manager (AppResources);
 //   - creating a router
 //   - establishing the default theme
 //   - setting up window breakpoints
@@ -60,7 +60,7 @@ export class App {
     this.initializeTheme();
     this.initializeWindow();
 
-    zlog.info(JSON.stringify(import.meta.env));
+    zlog.info(`import.meta.env: ${JSON.stringify(import.meta.env)}`);
   }
 
   initializeTheme(): void {
@@ -69,11 +69,16 @@ export class App {
     Theme.default.setTarget(HTMLDelegate.rootView);
     Theme.default.useFluidFonts.set(this.options.useFluidFonts || false);
   }
-  createRouter(): Router {
+  useHashRouting(): boolean {
+    return import.meta.env["VITE_ROUTER"] === "hash";
+  }
+  baseURL(): string {
     const metaBaseURL = import.meta.env["BASE_URL"];
-    const baseURL = metaBaseURL === "/" ? "" : metaBaseURL.endsWith("/") ? metaBaseURL.slice(0, -1) : metaBaseURL;
-    const useHash = import.meta.env["VITE_ROUTER"] === "hash";
-    return useHash
+    return metaBaseURL === "/" ? "" : metaBaseURL.endsWith("/") ? metaBaseURL.slice(0, -1) : metaBaseURL;
+  }
+  createRouter(): Router {
+    const baseURL = this.baseURL();
+    return this.useHashRouting() 
       ? new HashRouter(baseURL, this.options.rootTitle || "")
       : new StandardRouter(baseURL, this.options.rootTitle || "");
   }
@@ -84,7 +89,7 @@ export class App {
     return this.resources.assetBase;
   }
   linkPathPrefix(): string {
-    const hash = import.meta.env["VITE_ROUTER"] === "hash" ? "/#" : "";
+    const hash = this.useHashRouting() ? "/#" : "";
     const base = import.meta.env["VITE_BASE_URL"] || "";
     return `${base}${hash}`;
   }
@@ -174,8 +179,11 @@ export function routeToPath(path: string): void {
   App.instance.router.routeToPath(path);
 }
 export function useHashRouting(): boolean {
-  return App.instance.router.usesHash();
+  return App.instance.useHashRouting();
 }
 export function linkPathPrefix(): string {
   return App.instance.linkPathPrefix();
+}
+export function baseURL(): string {
+  return App.instance.baseURL();
 }

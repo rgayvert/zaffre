@@ -11,7 +11,6 @@ import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 // rotated). Each item that can be expanded should be configured with a click action that
 // modifies the underlying model.
 //
-//
 // TODO: consider implementing this using LabelWithIcons (or eliminating it entirely
 // and go straight from SimpleDisclosureList to LabelWithIcons).
 
@@ -31,7 +30,7 @@ export interface ExpandableItemOptions extends StackOptions {
 }
 defineComponentDefaults<ExpandableItemOptions>("ExpandableItem", "HStack", {
   background: core.color.surface,
-  rounding: core.rounding.r0,
+  rounding: core.rounding.none,
   padding: core.space.s2,
   textColor: core.color.surface.contrast,
   font: core.font.title_medium, 

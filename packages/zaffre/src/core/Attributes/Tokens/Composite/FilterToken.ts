@@ -1,10 +1,12 @@
 import { Atom, atom, zget, znumber, zutil } from ":foundation";
 import { ITheme } from "../AttrTypes";
-import { LengthToken, LiteralToken, PercentToken, Token } from "../Token";
+import { LengthToken, LiteralToken, PercentToken } from "../SimpleTokens";
+import { Token } from "../Token";
+
 import { ColorToken } from "../ColorToken";
 
 //
-//
+// A FilterToken contains a description of a CSS filter. 
 //
 
 export class FilterToken extends Token {

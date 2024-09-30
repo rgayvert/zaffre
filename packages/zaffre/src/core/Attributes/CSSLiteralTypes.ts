@@ -2,10 +2,9 @@ import { ZType } from ":foundation";
 import { CSSBorderStyle } from "./Tokens";
 
 //
-//
+// Type definitions for CSS properties with literal types.
 //
 
-// types needed for tokens
 export type CSSClipPathGeometry = "margin-box" | "border-box" | "padding-box" | "content-box" | "fill-box" | "stroke-box" | "view-box";
 export type CSSFontSizeName = "xx-small" | "x-small" | "small" | "medium" | "large" | "x-large" | "xx-large" | "xxx-large" | "smaller" | "larger" | "math";
 

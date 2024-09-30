@@ -4,7 +4,7 @@ import { EventAction } from "./Events";
 import { EventType } from "./Listener";
 
 //
-//
+// Base class for event handlers
 //
 
 export type EventActionsRecord<L extends Partial<EventType>, E extends Event> = Partial<Record<L, EventAction<E> | undefined>>;
@@ -21,7 +21,6 @@ export interface HandlerTarget extends EffectTarget {
   setInteractionState(state: InteractionState, action?: BasicAction): void;
   addListenerAction<E extends Event>(type: EventType, action: EventAction<E>): void;
 }
-
 
 export abstract class Handler<T> {
   target?: HandlerTarget;

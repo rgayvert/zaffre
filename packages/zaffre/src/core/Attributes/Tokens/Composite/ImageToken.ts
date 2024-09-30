@@ -4,7 +4,7 @@ import { Token, TokenOptions } from "../Token";
 import { ColorToken } from "../ColorToken";
 
 //
-//
+// An ImageToken contains a description of a CSS image.
 //
 
 export interface ImageTokenOptions extends TokenOptions {

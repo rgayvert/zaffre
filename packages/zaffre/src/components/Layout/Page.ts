@@ -13,7 +13,7 @@ import { Box, BoxOptions } from "../HTML";
 export interface PageOptions extends BoxOptions {}
 
 defineComponentDefaults<PageOptions>("Page", "Box", {
-  //width: pct(100),
+  width: pct(100),
   height: pct(100),
   maxWidth: ch(100), 
   margin: css("0 auto"),

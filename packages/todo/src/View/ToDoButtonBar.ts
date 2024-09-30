@@ -8,9 +8,9 @@ export function ToDoButtonBar(model: ToDoModel): View {
     width: pct(100),
     padding: core.space.s4,
   }).append(
-    TextLabel(model.count, { rounding: core.rounding.r0 }),
+    TextLabel(model.count, { rounding: core.rounding.none }),
     Spacer(1),
-    SegmentedButton(model.currentFilterName, model.filterNames, { rounding: core.rounding.r0 }),
+    SegmentedButton(model.currentFilterName, model.filterNames, { rounding: core.rounding.none }),
     Spacer(1),
     TextButton("Clear Completed", {
       action: () => model.clearCompletedItems(),

@@ -3,7 +3,7 @@ import { CreateShape, SVGShapeCSSKeys, SVGShapeSVGKeys } from "./SVGShape";
 import { SVGPolygonOptions } from "./SVGPolygon";
 
 //
-//
+// Basic SVG polyline component.
 //
 
 export function SVGPolyline(options: SVGPolygonOptions): View {

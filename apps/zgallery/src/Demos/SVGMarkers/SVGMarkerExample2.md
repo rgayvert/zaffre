@@ -1,1 +1,1 @@
-In this example we create a pair of standard markers ("arrow" and "dot"), then apply them to a pair of polylines.
+In this example we create a pair of simple markers and apply them to a pair of polylines.

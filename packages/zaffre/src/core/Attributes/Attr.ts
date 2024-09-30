@@ -18,10 +18,6 @@ import { AttributeValue, AttrTarget } from "./Tokens";
  *
  */
 
-// function isReactiveAttributeVal(val: AttributeValue): boolean {
-//   return val instanceof Atom || (val instanceof Token && val.isReactive());
-//   //return val instanceof Atom;
-// }
 
 // TODO: debounce??
 

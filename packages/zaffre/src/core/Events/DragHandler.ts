@@ -5,7 +5,7 @@ import { EventHandler } from "./EventHandler";
 import { DragEventType } from "./Listener";
 
 //
-//
+// Handler for drag events: dragStart, drag, dragEnd
 //
 
 export type DragActions = Record<DragEventType, DragAction>;
@@ -35,13 +35,6 @@ export class DragHandler extends EventHandler<DragEventType, DragEvent> {
     super(actions, active);
     // ensure empty drag image is created before we try to use it
     DragHandler.emptyDragImage;
-  }
-
-  afterSetTarget(target: HandlerTarget): void {
-    super.afterSetTarget(target);
-    //if (this.options.effect) {
-    //  this.addInteractionEffect("dragged", this.options.effect);
-    //}
   }
 
   dragStart(evt: DragEvent): void {

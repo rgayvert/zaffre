@@ -1,13 +1,13 @@
 import { zutil, lazyinit } from ":foundation";
-import { Font, Color, ColorMode, TonalPalette } from ":uifoundation";
+import { Font, Color, TonalPalette, ColorMode } from ":uifoundation";
 import { Theme } from "../Theme";
 import { createCoreFonts } from "./CoreFonts";
-import { createLightCoreColors, createDarkCoreColors, CoreKeyColors, coreFixedColorKeys, coreFixedColors, coreSemanticColorKeys, coreSemanticColors, CoreTones, KeyPalettes } from "./CoreColors";
+import { createLightCoreColors, createDarkCoreColors, CoreKeyColors, coreFixedColorKeys } from "./CoreColors";
+import { coreFixedColors, coreSemanticColorKeys, coreSemanticColors, CoreTones, KeyPalettes } from "./CoreColors";
 
 //
+// Mappings of the core tokens.
 //
-//
-
 
 export interface CoreThemeOptions {
   lightTones?: Partial<CoreTones>;
@@ -33,7 +33,6 @@ export function coreTheme(name: string, keyColors: CoreKeyColors, options: CoreT
 }
 
 export class CoreTheme extends Theme {
-
   @lazyinit public static get defaultOptions(): CoreThemeOptions {
     return {
       spaceBase: 2.0,
@@ -68,15 +67,24 @@ export class CoreTheme extends Theme {
   }
 
   keyColors(): Map<string, Color> {
-    return this.coreKeyColors; 
+    return this.coreKeyColors;
   }
 
   colorForKey(key: string): Color {
-    return (this.inDarkMode() ? this.darkColors.get(key) : this.lightColors.get(key))  || this.fixedColors.get(key) || this.semanticColors.get(key) || Color.none;
+    return (
+      (this.inDarkMode() ? this.darkColors.get(key) : this.lightColors.get(key)) ||
+      this.fixedColors.get(key) ||
+      this.semanticColors.get(key) ||
+      Color.none
+    );
+  }
+  tonalPaletteForKey(key: string): TonalPalette {
+    const tonalKey = Object.keys(this.tonalPalettes).find((k) => key.startsWith(k)) || "primary";
+    return (this.tonalPalettes as any)[key] || this.tonalPalettes.primary
   }
   fixedColorKeys(): string[] {
     return coreFixedColorKeys();
-  }  
+  }
   semanticColorKeys(): string[] {
     return coreSemanticColorKeys();
   }
@@ -93,18 +101,17 @@ export class CoreTheme extends Theme {
 
   spaceBase = 0.15;
   spaceRatio = 1.6;
-  spaceValues = new Map(zutil.sequence(0, 11).map((s, index) => [`s${s}`, this.indexToEm(index, this.spaceBase, this.spaceRatio)]));
+  spaceValues = new Map(
+    zutil.sequence(0, 11).map((s, index) => [`s${s}`, this.indexToEm(index, this.spaceBase, this.spaceRatio)])
+  );
 
   spaceForKey(key: string): string {
     return this.spaceValues.get(key) || "";
   }
 
   roundingValues = ["0em", "0.5em", "0.75em", "1em", "1.5em", "2em"];
-  
+
   roundingForKey(key: string): string {
     return key.match(/r[0-5]/) ? this.roundingValues[parseInt(key[1])] : "";
   }
-
 }
-
-

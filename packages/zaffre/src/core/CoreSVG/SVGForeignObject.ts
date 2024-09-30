@@ -1,9 +1,11 @@
 import { ZType, znumber } from ":foundation";
 import { View } from ":view";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "./SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
+import { SVGOptions } from "./SVGOptions";
+import { CreateSVGView } from "./SVGDelegate";
 
 //
-//
+// An SVGForeignObject is a component that may contain HTML components.
 //
 
 export interface SVGForeignObjectOptions extends SVGOptions {

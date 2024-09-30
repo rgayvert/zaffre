@@ -4,7 +4,7 @@ import { EventHandler } from "./EventHandler";
 import { EventType } from "./Listener";
 
 //
-//
+// Handler for input events
 //
 
 export interface InputHandlerOptions {

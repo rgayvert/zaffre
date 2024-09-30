@@ -6,7 +6,7 @@ import { EventHandler } from "./EventHandler";
 import { DropEventType } from "./Listener";
 
 //
-//
+// Handler for drop events: dragOver, dragLeave, drop
 //
 
 export type DropActions = Record<DropEventType, DragAction>;

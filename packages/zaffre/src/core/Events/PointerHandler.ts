@@ -5,7 +5,7 @@ import { EventHandler } from "./EventHandler";
 import { PointerEventType } from "./Listener";
 
 //
-//
+// Handler for pointer events: pointerDown, pointerUp, pointerOver, pointerLeave, pointerMove
 //
 
 export type PointerActions = Record<PointerEventType, PointerAction>;
@@ -23,7 +23,7 @@ const defaultPointerHandlerOptions: PointerHandlerOptions = {
 
 export function pointerHandler(inOptions: PointerHandlerOptions): PointerHandler {
   const options: PointerHandlerOptions = zutil.mergeOptions(defaultPointerHandlerOptions, inOptions);
-  return new PointerHandler(options);  // options.active, options.effect);
+  return new PointerHandler(options);  
 }
 
 

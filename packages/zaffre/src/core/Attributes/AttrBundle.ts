@@ -1,10 +1,11 @@
 import { Atom, zget, zutil } from ":foundation";
-import { Token,AttrTarget, Attributes, AttributeValue  } from "./Tokens";
+import { Token, AttrTarget, Attributes, AttributeValue } from "./Tokens";
 import { Attr, CSSAttr, SVGAttr, HTMLAttr } from "./Attr";
 import { ZStyle } from "./Style";
 
 //
-//
+// An AttrBundle gathers up the HTML/CSS/SVG attributes for a View and applies them
+// to the view, creating styles where possible. It also holds on to any reactive attributes.
 //
 
 export class AttrBundle {
@@ -26,22 +27,19 @@ export class AttrBundle {
       const attrs = this.cssAttrs(attributes);
       if (attrs.length > 0) {
         const reactiveAttrs = attrs.filter((attr) => attr.attrValue instanceof Atom);
-        //const attrsWithCSSValues = attrs.filter((attr) => attr.attrValue instanceof Token && !attr.isReactive());
         this.setReactiveValues(reactiveAttrs);
-        //this.setNonReactiveCSSValues(attrsWithCSSValues);
         style = ZStyle.create(name, attrs);
       }
     }
     return style;
   }
 
-    // support reactive updates in a DOM inspector
-    touchReactiveAttributes(): void {
-      this.reactiveAttrs.forEach((attr) => attr.touch());
-    }
+  // support reactive updates in a DOM inspector
+  touchReactiveAttributes(): void {
+    this.reactiveAttrs.forEach((attr) => attr.touch());
+  }
 
   constructor(public target: AttrTarget) {
-
     const cssAttributes = target.cssAttributes();
     const style = this.styleFromCSSAttributes(target.baseStyleName(), cssAttributes);
     if (style) {
@@ -64,7 +62,10 @@ export class AttrBundle {
     return val || val === 0 ? val.toString() : "";
   }
 
-  private addAttributes(attrs: Attributes, createAttrFn: (target: AttrTarget, attrName: string, attrVal: AttributeValue) => Attr): void {
+  private addAttributes(
+    attrs: Attributes,
+    createAttrFn: (target: AttrTarget, attrName: string, attrVal: AttributeValue) => Attr
+  ): void {
     Object.entries(attrs)
       .filter(([_attrName, attrValue]) => attrValue !== undefined)
       .forEach(([attrName, attrValue]) => {

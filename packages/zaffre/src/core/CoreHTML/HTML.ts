@@ -2,16 +2,18 @@ import { Atom, atom, lazyinit, zget, znumber } from ":foundation";
 import { Attributes, ColorToken, css_color, css_rounding, pct, px, vh, vw } from ":attributes";
 import { core, defineComponentDefaults, mergeComponentDefaults } from ":theme";
 import { place } from ":uifoundation";
-import { View, ViewDelegate, ViewOptions, CSSOptions, beforeAddedToDOM, cssOptionKeys } from ":view";
-import { dropShadowForElevation, Effects, standardHTMLInteractionEffects } from ":effect";
+import { View, ViewDelegate, ViewOptions, beforeAddedToDOM } from ":view";
+import { dropShadowForElevation, EffectsBundle, standardHTMLInteractionEffects } from ":effect";
 import { DragHandler } from ":events";
-import { htmlAttributeKeys, HTMLAttributeOptions } from "./HTMLOptions";
+import { CSSAttributeOptions, cssOptionKeys, htmlAttributeKeys, HTMLAttributeOptions } from "../CoreOptions";
 
 //
-//
+// Base support for HTML views. This includes the HTMLDelegate class, the low-level HTML component,
+// the HTMLBody component, the ViewOverlay component, and components for the floating, dialog and 
+// toast layers.
 //
 
-export interface HTMLOptions extends ViewOptions, HTMLAttributeOptions, CSSOptions {
+export interface HTMLOptions extends ViewOptions, HTMLAttributeOptions, CSSAttributeOptions {
   rounding?: css_rounding;
   selectionColor?: css_color;
   selectionTextColor?: css_color;
@@ -89,7 +91,7 @@ export class HTMLDelegate extends ViewDelegate {
   _overlay?: View;
   get overlay(): View {
     if (!this._overlay) {
-      this._overlay = Overlay();
+      this._overlay = ViewOverlay();
       this.view.appendAndRender(this._overlay);
     }
     if (!this._overlay.elt.parentElement) {
@@ -98,7 +100,7 @@ export class HTMLDelegate extends ViewDelegate {
     return this._overlay;
   }
 
-  public defaultInteractionEffects(): Effects {
+  public defaultInteractionEffects(): EffectsBundle{
     return standardHTMLInteractionEffects();
   }
 
@@ -170,7 +172,7 @@ export class HTMLDelegate extends ViewDelegate {
     return summary ? "\nhtml properties:\n" + summary : "";
   }
 
-  extractCSSAttributes(options: ViewOptions | CSSOptions): Attributes {
+  extractCSSAttributes(options: ViewOptions | CSSAttributeOptions): Attributes {
     const validOptions = Object.entries(options).filter(
       ([key, value]) => (value === 0 || value) && cssOptionKeys.includes(key)
     );
@@ -240,9 +242,9 @@ function HTMLBody(): View {
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-interface OverlayOptions extends HTMLOptions {}
+interface ViewOverlayOptions extends HTMLOptions {}
 
-defineComponentDefaults<OverlayOptions>("Overlay", "HTML", {
+defineComponentDefaults<ViewOverlayOptions>("Overlay", "HTML", {
   background: core.color.transparent,
   position: "absolute",
   left: px(0),
@@ -254,7 +256,7 @@ defineComponentDefaults<OverlayOptions>("Overlay", "HTML", {
   borderRadius: "inherit",
 });
 
-export function Overlay(inOptions: OverlayOptions = {}): View {
+export function ViewOverlay(inOptions: ViewOverlayOptions = {}): View {
   const options = mergeComponentDefaults("Overlay", inOptions);
   return HTML(options);
 }

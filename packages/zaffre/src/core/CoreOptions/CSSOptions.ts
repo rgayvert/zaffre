@@ -9,10 +9,10 @@ import { css_align, css_alignSelf, css_appearance, css_borderStyle, css_position
 import { css_length, css_resize, css_textAlign, css_textOverflow } from ":attributes";
 
 //
-//
+// Options that are converted into CSS attributes.
 //
 
-export interface CSSOptions {
+export interface CSSAttributeOptions {
   alignItems?: css_align;
   alignSelf?: css_alignSelf;
   appearance?: css_appearance;

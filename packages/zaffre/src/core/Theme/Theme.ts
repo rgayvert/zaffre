@@ -1,77 +1,16 @@
 import { zget, Atom, atom, lazyinit, point2D, piecewiseLinearAtom } from ":foundation";
-import { MappingAtomR1, stepFunctionAtom, zutil, ToggleAtom, toggleAtom } from ":foundation";
-import { Font, Color, ColorMode, ZWindow } from "../UIFoundation";
+import { MappingAtomR1, stepFunctionAtom, ToggleAtom, toggleAtom } from ":foundation";
+import { Font, Color, ZWindow, TonalPalette, ColorMode } from "../UIFoundation";
 import { ColorToken, FontToken, ITheme, Token, css_length } from "../Attributes";
-import { ComponentDefaultsMap, LocalDefaults, View, ViewCreator, ViewOptions } from "../View";
+import { View, ViewOptions } from "../View";
+import { currentDefaults } from "./Defaults";
 
 //
+// Base class for Themes.
 //
-//
-
-const baseDefaults: ComponentDefaultsMap = new Map<string, ViewOptions>();
-const defaultsStack: ComponentDefaultsMap[] = [baseDefaults];
-
-function currentDefaults(): ComponentDefaultsMap {
-  return defaultsStack.at(-1)!;
-}
-
-// Each component may define default values for its options. These ae merged in the component function 
-// with incoming options. A component may also have localDefaults, which specify defaults for decendents.
-
-export function defineComponentDefaults<T extends ViewOptions>(
-  componentName: string,
-  parentComponent: string,
-  options: T
-): T {
-  options.componentName = componentName;
-  const opts = mergeComponentDefaults(parentComponent, options);
-  baseDefaults.set(componentName, opts);
-  return opts;
-}
-
-export function mergeOptions<T extends ViewOptions>(options1: T, options2: T): T {
-  return Object.assign({ ...options1 }, options2);
-}
-
-export function localDefaultsFor(compName: string): LocalDefaults {
-  let answer: LocalDefaults = {};
-  localDefaultsStack.toReversed().forEach((def) => {
-    if (def[compName]) {
-      answer = zutil.mergeOptions(answer, def[compName]);
-    }
-  });
-  return answer;
-}
-
-//
-//  mergeComponentDefaults() is called when a component is being 
-//
-export function mergeComponentDefaults<T extends ViewOptions>(componentName: string, inOptions: T): T {
-  let defaults = currentDefaults().get(componentName) || {};
-  const localDefaults = localDefaultsFor(componentName);
-  if (localDefaults) {
-    defaults = zutil.mergeOptions(defaults, localDefaults);
-  }
-  defaults.events && inOptions.events && Object.assign(defaults.events, inOptions.events);
-  defaults.effects && inOptions.effects && Object.assign(defaults.effects, inOptions.effects);
-  defaults.extraVars && inOptions.extraVars && defaults.extraVars.push(...inOptions.extraVars);
-  defaults.animations && inOptions.animations && defaults.animations.push(...inOptions.animations);
-
-  return <T>zutil.mergeOptions(defaults, inOptions);
-}
-
-const localDefaultsStack: LocalDefaults[] = [];
-
-export function evaluateWithLocalDefaults(localDefaults: LocalDefaults, fn: ViewCreator): View {
-  localDefaultsStack.push(localDefaults);
-  const view = fn();
-  localDefaultsStack.pop();
-  return view;
-}
-
-
 
 export abstract class Theme implements ITheme {
+
   // The App instance is required to supply a default Theme
   private static _defaultTheme: Theme;
   public static setDefault(theme: Theme): void {
@@ -88,7 +27,6 @@ export abstract class Theme implements ITheme {
   // the current Theme is set by the view which is currently being rendered
   public static get current(): Theme {
     return <Theme>View.themeStack.at(-1) || this.default;
-    //return <Theme>View.currentParent.theme;
   }
 
   @lazyinit static get activeTokens(): Map<string, Token> {
@@ -105,7 +43,7 @@ export abstract class Theme implements ITheme {
   componentOptions = new Map<string, ViewOptions>();
   colorContrastRatio = atom(7.0, { action: () => this.setColorCSSVars() });
   useFluidFonts: ToggleAtom;
-
+  
   isDefault(): boolean {
     return this === Theme.default;
   }
@@ -120,7 +58,7 @@ export abstract class Theme implements ITheme {
   @lazyinit get standardFontMapping(): MappingAtomR1 {
     const mapping = stepFunctionAtom(
       [point2D(0, 1.0), point2D(600, 1.15), point2D(900, 1.2), point2D(9999, 1.2)],
-      ZWindow.windowWidthAtom()
+      ZWindow.windowWidth
     );
     mapping.addAction(() => this.setFontCSSVars());
     return mapping;
@@ -128,7 +66,7 @@ export abstract class Theme implements ITheme {
   @lazyinit get fluidFontMapping(): MappingAtomR1 {
     const mapping = piecewiseLinearAtom(
       [point2D(0, 1.0), point2D(600, 1.0), point2D(900, 1.15), point2D(1920, 1.2), point2D(9999, 1.2)],
-      ZWindow.windowWidthAtom()
+      ZWindow.windowWidth
     );
     mapping.addAction(() => this.setFontCSSVars());
     return mapping;
@@ -189,6 +127,7 @@ export abstract class Theme implements ITheme {
   }
 
   abstract colorForKey(key: string): Color;
+  abstract tonalPaletteForKey(key: string): TonalPalette;
   abstract fontForKey(key: string): Font;
   abstract spaceForKey(key: string): string;
   abstract roundingForKey(key: string): string;

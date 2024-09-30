@@ -3,7 +3,8 @@ import { ITheme } from "./AttrTypes";
 import { Token, TokenOptions } from "./Token";
 
 //
-//
+// A FontToken contains a description of a font which gets translated
+// into a valid CSS font by a theme.
 //
 
 type FontStyle = "normal" | "italic" | "oblique";
@@ -63,9 +64,6 @@ export class FontToken extends Token {
   public hasCSSVar(): boolean {
     return this.key !== "custom" && this.isStandard();
   }
-  // public named(name: string, size: number): FontToken {
-  //   return this.copyWith({ name: name, size: size });
-  // }
   formatNonStandard(font: Font, theme: ITheme): string {
     const options = {
       weight: this.options.weight,
@@ -74,7 +72,6 @@ export class FontToken extends Token {
     };
     return theme.formatFont(font.withOptions(options));
   }
-
   formatWithTheme(theme: ITheme): string {
     const font = theme.fontForKey(this.key);
     if (this.key === "inherit") {

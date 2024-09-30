@@ -16,7 +16,7 @@ export function FrameBasedAnimationExample(): View {
   }
   return HStack({ gap: core.space.s8 }).append(
     Box({ width: px(200), height: px(20), border: core.border.none }).append(
-      ThingComponent(model.thing1, core.color.primary, core.rounding.r0),
+      ThingComponent(model.thing1, core.color.primary, core.rounding.none),
       ThingComponent(model.thing2, core.color.red, core.rounding.circle)
     ),
     Button({

@@ -2,7 +2,7 @@ import { ColorToken, Attributes } from ":attributes";
 import { AttributeEffect } from ":effect";
 
 //
-//
+// Basic color transition, useful for images.
 //
 
 export function coreColorEffect(color: ColorToken): AttributeEffect {

@@ -4,7 +4,7 @@ import { EventHandler } from "./EventHandler";
 import { EventType } from "./Listener";
 
 //
-//
+// Handler for select and change events
 //
 
 export interface GenericEventHandlerOptions {

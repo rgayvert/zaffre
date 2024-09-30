@@ -4,7 +4,7 @@ import { KeyEventType } from "./Listener";
 import { KeyBindings, KeyboardAction, handleEvents } from "./Events";
 
 //
-//
+// Handler for keyboard events: keyDown, keyUp
 //
 
 export interface KeyHandlerOptions {

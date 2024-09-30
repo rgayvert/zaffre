@@ -1,10 +1,11 @@
 import { FilterToken, css, dropShadowFilter, px } from "../Attributes";
-import { AttributeEffect, Effects } from "./Effect";
+import { AttributeEffect } from "./AttributeEffect";
+import { EffectsBundle} from "./EffectsBundle";
 
 //
+// Standard effects to apply for different interaction states of a View.
 //
-//
-
+ 
 export function dropShadowForElevation(elevation = 0): FilterToken | undefined {
   const shadow =
     elevation === 1
@@ -43,7 +44,7 @@ export function svgInteractionEffect(name: string, elevation: number, opacity: n
 }
 
 // elevation + opacity + background-color on overlay
-export function standardHTMLInteractionEffects(): Effects {
+export function standardHTMLInteractionEffects(): EffectsBundle{
   return {
     enabled: interactionEffect("enabled", 0, 1.0),
     disabled: interactionEffect("disabled", 0, 0.2),
@@ -55,7 +56,7 @@ export function standardHTMLInteractionEffects(): Effects {
 }
 
 // elevation + opacity on view
-export function standardSVGInteractionEffects(): Effects {
+export function standardSVGInteractionEffects(): EffectsBundle{
   return {
     enabled: svgInteractionEffect("enabled", 0, 1.0),
     disabled: svgInteractionEffect("disabled", 0, 0.62),
@@ -67,7 +68,7 @@ export function standardSVGInteractionEffects(): Effects {
 }
 
 // brightness + opacity + background-color on overlay
-export function simpleInteractionEffects(): Effects {
+export function simpleInteractionEffects(): EffectsBundle{
   return {
     enabled: simpleInteractionEffect("enabled", 0, 1.0),
     disabled: simpleInteractionEffect("disabled", 0, 0.5),

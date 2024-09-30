@@ -18,6 +18,9 @@ export default defineConfig({
   build: {
     rollupOptions: {},
   },
+  define: {
+    'import.meta.env.VITE_BUILD_DATE': JSON.stringify(new Date().toString())
+  }
   // resolve: {
   //   alias: {
   //     ":foundation": path.resolve(__dirname, "../../packages/zaffre/src/core/Foundation"),

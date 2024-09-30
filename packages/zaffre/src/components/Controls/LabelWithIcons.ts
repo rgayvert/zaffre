@@ -33,7 +33,7 @@ const defaultIconOptions: IconOptions = {
 defineComponentDefaults<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
   flexDirection: "row",
   background: core.color.inherit,
-  rounding: core.rounding.r0,
+  rounding: core.rounding.none,
   alignItems: "center",
   outline: core.border.none,
   labelOptions: {

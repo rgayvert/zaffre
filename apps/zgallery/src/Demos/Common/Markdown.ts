@@ -1,4 +1,4 @@
-import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix } from "zaffre";
+import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix, zlog } from "zaffre";
 import { core, defineComponentDefaults, mergeComponentDefaults } from "zaffre";
 import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 
@@ -40,7 +40,7 @@ export function Markdown(inOptions: MarkdownOptions = {}): View {
   if (options.uri) {
     let url = resolveURI(options.uri);
     if (options.expandRelativeAssets) {
-      console.log("linkPathPrefix__="+linkPathPrefix());
+      //zlog.info("linkPathPrefix__="+linkPathPrefix());
       // prepend ./assets/ with the path to this file
       const path = url.split("/").slice(0, -1).join("/");
       const f = zget(options.textTransformFn)!;

@@ -1,5 +1,5 @@
 import { Atom, atom, zget, zboolean, zstring } from ":foundation";
-import { CalcToken, tmult, View, HTMLOptions, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { CalcToken, calcMult, View, HTMLOptions, defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -33,7 +33,7 @@ export function ZStack(inOptions: ZStackOptions = {}): View {
     const opts = <ZStackOptions>view.parent?.options;
     const yOffset = opts?.offsetY || "0";
 
-    return options.hasBaseView && index > 1 ? tmult(zget(yOffset), index - 1) : undefined;
+    return options.hasBaseView && index > 1 ? calcMult(zget(yOffset), index - 1) : undefined;
   }
 
   // TODO

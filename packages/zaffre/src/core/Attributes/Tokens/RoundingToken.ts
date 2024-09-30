@@ -2,7 +2,8 @@ import { ITheme } from "./AttrTypes";
 import { Token } from "./Token";
 
 //
-//
+// A RoundingToken contains a description of a font which gets translated
+// into a valid CSS rounding value by a theme.
 //
 
 export class RoundingToken extends Token {

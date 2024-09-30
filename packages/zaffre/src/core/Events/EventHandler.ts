@@ -3,7 +3,7 @@ import { Handler, HandlerTarget, EventActionsRecord } from "./Handler";
 import { EventType } from "./Listener";
 
 //
-//
+// Base class for event handlers.
 //
 
 export abstract class EventHandler<L extends Partial<EventType>, E extends Event> extends Handler<E> {

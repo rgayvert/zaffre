@@ -3,7 +3,8 @@ import { ITheme } from "./AttrTypes";
 import { Token } from "./Token";
 
 //
-//
+// A CalcToken is a wrapper around a CSS calc expression. These are created using
+// one of the calcXXX functions below.
 //
 
 type CalcOption = "add" | "sub" | "mult" | "div";
@@ -40,24 +41,22 @@ export class CalcToken extends Token {
   }
 }
 
-export function tadd(val1: CalcValue, val2: CalcValue): CalcToken {
-  return new CalcToken(val1, val2, "add");
-}
-export function tsub(val1: CalcValue, val2: CalcValue): CalcToken {
-  return new CalcToken(val1, val2, "sub");
-}
-export function tmult(val1: CalcValue, val2: CalcValue): CalcToken {
-  return new CalcToken(val1, val2, "mult");
-}
-export function tdiv(val1: CalcValue, val2: CalcValue): CalcToken {
-  return new CalcToken(val1, val2, "div");
-}
-
 export function calc(val1: CalcValue, val2?: CalcValue, operation?: CalcOption): CalcToken {
   return new CalcToken(val1, val2, operation);
 }
-
+export function calcAdd(val1: CalcValue, val2: CalcValue): CalcToken {
+  return new CalcToken(val1, val2, "add");
+}
+export function calcSub(val1: CalcValue, val2: CalcValue): CalcToken {
+  return new CalcToken(val1, val2, "sub");
+}
+export function calcMult(val1: CalcValue, val2: CalcValue): CalcToken {
+  return new CalcToken(val1, val2, "mult");
+}
+export function calcDiv(val1: CalcValue, val2: CalcValue): CalcToken {
+  return new CalcToken(val1, val2, "div");
+}
 export function fractionOfWindowSize(fraction: number): CalcToken {
-  const sz = ZWindow.windowSizeAtom().get();
+  const sz = ZWindow.windowSize.get();
   return calc(`${Math.min(sz.width, sz.height) * fraction}px`);
 }

@@ -1,10 +1,13 @@
 import { View } from ":view";
 import { znumber } from ":foundation";
 import { css_color, css_percent } from ":attributes";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "../SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "../SVG";
+import { CreateSVGView } from "../SVGDelegate";
+import { SVGOptions } from "../SVGOptions";
 
 //
-//
+// An SVGStop defines a color and its position to use on a gradient. It must be
+// contained in an SVGLinearGradient or SVGRadialGradient.
 //
 
 export interface SVGStopOptions extends SVGOptions {

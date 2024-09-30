@@ -1,10 +1,12 @@
 import { atom, zget, Atom, zboolean } from ":foundation";
 
 //
-//
+// A View delegates event handling to a set of listeners. A Listener has a reactive
+// currentEvent. When View.addEventListener sends events here to handleEvent(), which
+// set the currentEvent. 
 //
 
-export type GenericEventType = string; // "change"; 
+export type GenericEventType = string; // "change" | "select" + possibly others
 export type InputEventType = "input";
 export type WheelEventType = "wheel";
 export type FocusEventType = "focus" | "blur";

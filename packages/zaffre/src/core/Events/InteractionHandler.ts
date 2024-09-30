@@ -1,19 +1,22 @@
-import { InteractionState, InteractionEffects } from ":effect";
+import { InteractionState } from ":effect";
 import { Handler, HandlerTarget } from "./Handler";
 import { pointerHandler } from "./PointerHandler";
+import { InteractionEffectsBundle } from "../Effects";
 
 //
+// Handler for interaction effects
 //
+// TODO: figure out what this does, if anything
 //
 
-export function interactionHandler(interactionEffects: InteractionEffects): InteractionHandler {
+export function interactionHandler(interactionEffects: InteractionEffectsBundle): InteractionHandler {
     return new InteractionHandler(interactionEffects);
   }
   
   export class InteractionHandler extends Handler<InteractionState> {
     ptrHandler = pointerHandler({});
   
-    constructor(protected interactionEffects: InteractionEffects) {
+    constructor(protected interactionEffects: InteractionEffectsBundle) {
       super();
     }
     afterSetTarget(target: HandlerTarget): void {

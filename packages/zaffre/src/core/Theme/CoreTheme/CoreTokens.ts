@@ -1,7 +1,7 @@
 import { borderToken, colorToken, px, ColorToken, FontToken, RoundingToken, SpaceToken } from ":attributes";
 
 //
-//
+// Definitions of the core tokens
 //
 
 const spaceKeys = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"] as const;
@@ -10,7 +10,7 @@ type SpaceType = {
 }
 const space = <SpaceType>Object.fromEntries(spaceKeys.map((s) => [s, new SpaceToken({ key: s })]));
 
-const roundingKeys = ["r0", "r1", "r2", "r3", "r4", "r5", "pill", "circle"] as const;
+const roundingKeys = ["r0", "r1", "r2", "r3", "r4", "r5", "pill", "circle", "none"] as const;
 type RoundingType = {
   [Key in typeof roundingKeys[number]]: RoundingToken;
 }

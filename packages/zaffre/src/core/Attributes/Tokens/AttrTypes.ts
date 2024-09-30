@@ -1,14 +1,15 @@
 import { Atom } from ":foundation";
-import { Color, Font } from ":uifoundation";
+import { Color, Font, TonalPalette } from ":uifoundation";
 
 //
-//  
+// Interface definitions for theme, token, view (AttrTarget)
 //
 // TODO: rethink Themes and Tokens; can we avoid ITheme & IToken without introducing circular dependencies?
 //
 
 export interface ITheme {
   colorForKey(key: string): Color;
+  tonalPaletteForKey(key: string): TonalPalette;
   fontForKey(key: string): Font;
   spaceForKey(key: string): string;
   roundingForKey(key: string): string;

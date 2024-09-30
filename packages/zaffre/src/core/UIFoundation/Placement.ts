@@ -1,9 +1,11 @@
-import { zget, ZType, Rect2D, point2D, Point2D, Size2D, Sz2D, cardinalPointToPoint2D, CardinalPoint } from ":foundation";
+import { zget, ZType, Rect2D, point2D, Point2D, Size2D, Sz2D } from ":foundation";
+import { cardinalPointToPoint2D, CardinalPoint } from ":foundation";
 import { ZWindow } from "./Window";
 
 //
-//
-//
+// A Placement is a specification of the positioning of a view relative to a reference view. 
+// The idea is to identify one point on each box, and position the box so that the two points 
+// coincide. An offset from this point can also be specified.
 
 export type PlacementPoint = CardinalPoint | Point2D;
 
@@ -53,14 +55,18 @@ function autoPlace(viewBox: Rect2D, refBox: Rect2D, delta = 2): Placement {
   ];
   return <Placement>autoPlaces[maxIndex];
 }
-function normalizePlacement(place: Placement): { refPt2D: Point2D, viewPt2D: Point2D, sizeFn?: PlacementSizeFn } {
+function normalizePlacement(place: Placement): { refPt2D: Point2D; viewPt2D: Point2D; sizeFn?: PlacementSizeFn } {
   const refPt = convertPlacementPointToPoint2D(place.referencePt);
   place.viewPt ??= place.side === "inside" ? place.referencePt : outsidePlacementPoint(place.referencePt);
   const viewPt = convertPlacementPointToPoint2D(place.viewPt);
   return { refPt2D: refPt, viewPt2D: viewPt, sizeFn: place.sizeFn };
 }
 
-export function placementOffsetAndSize(viewBox: Rect2D, refBox: Rect2D, placement: PlacementOption = "auto"): { offset: Point2D, size: Size2D } {
+export function placementOffsetAndSize(
+  viewBox: Rect2D,
+  refBox: Rect2D,
+  placement: PlacementOption = "auto"
+): { offset: Point2D; size: Size2D } {
   let placeValue = zget(placement) || "auto";
 
   if (placeValue === "cursor") {
@@ -79,8 +85,16 @@ export function placementOffset(viewBox: Rect2D, refBox: Rect2D, placement: Plac
   return offset;
 }
 
-
-export type PlaceName = "left" | "top" | "right" | "bottom" | "center" | "topLeft" | "topRight" | "bottomLeft" | "bottomRight";
+export type PlaceName =
+  | "left"
+  | "top"
+  | "right"
+  | "bottom"
+  | "center"
+  | "topLeft"
+  | "topRight"
+  | "bottomLeft"
+  | "bottomRight";
 
 export const place: Record<PlaceName, Placement> = {
   left: { referencePt: "xstart-ycenter" },
@@ -92,5 +106,4 @@ export const place: Record<PlaceName, Placement> = {
   topRight: { referencePt: "xend-ystart" },
   bottomLeft: { referencePt: "xstart-yend" },
   bottomRight: { referencePt: "xend-yend" },
-
 };

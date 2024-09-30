@@ -2,10 +2,12 @@ import { znumber, zrect2D, zstring } from ":foundation";
 import { View } from ":view";
 import { RectToken, rectToken } from ":attributes";
 import { defineComponentDefaults, mergeComponentDefaults } from ":theme";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "../SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "../SVG";
+import { SVGOptions } from "../SVGOptions";
+import { CreateSVGView } from "../SVGDelegate";
 
 //
-//
+// An SVGMarker is 
 //
 
 export interface SVGMarkerOptions extends SVGOptions {

@@ -25,7 +25,7 @@ export function DropDownButton(
 
   const buttonOptions: ButtonOptions = {
     ...options,
-    rounding: core.rounding.r0,
+    rounding: core.rounding.none,
     padding: core.space.s0,
     label: atom(() => title(zget(selectedValue))),
     justifyContent: "end",
@@ -39,7 +39,7 @@ export function DropDownButton(
       sizeFn: (refSize) => Sz2D(refSize.width, 0),
     },
     font: options.font,
-    rounding: core.rounding.r0,
+    rounding: core.rounding.none,
   };
   function title(s: string): string {
     return s === "" ? "&nbsp;" : s;

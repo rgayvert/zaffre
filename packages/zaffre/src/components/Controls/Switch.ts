@@ -1,5 +1,5 @@
 import { atom, zget, ToggleAtom } from ":foundation";
-import { css_color, tdiv, tsub, css_background, px, em, View, addOptionEvents } from ":core";
+import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents } from ":core";
 import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
@@ -33,8 +33,8 @@ export function Switch(value: ToggleAtom, inOptions: SwitchOptions = {}): View {
   addOptionEvents(options, { click: (): void => value.toggle() });
   options.background = atom(() => (zget(value) ? zget(options.backgroundOn)! : zget(options.backgroundOff)!));
   options.width = em(options.widthInEm!);
-  const diameter = tdiv(options.width, 2);
-  const sz = tsub(diameter, px(2));
+  const diameter = calcDiv(options.width, 2);
+  const sz = calcSub(diameter, px(2));
 
   return Box(options).append(
     Box({

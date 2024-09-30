@@ -4,7 +4,7 @@ import { EventHandler } from "./EventHandler";
 import { FocusEventType } from "./Listener";
 
 //
-//
+// Handler for focus events: focus, blur
 //
 
 export interface FocusHandlerOptions {

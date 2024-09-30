@@ -1,4 +1,4 @@
-import { core, View, atom, Spacer, pct, em, place, transitions, point2D, tsub, ch } from "zaffre";
+import { core, View, atom, Spacer, pct, em, place, transitions, point2D, calcSub, ch, baseURL } from "zaffre";
 import { Floating, SimpleMenu, TextLabelOptions, HStack, Button, I18n, ZWindow, Theme } from "zaffre";
 import { GalleryModel } from "../Model";
 import { GalleryTree } from "./GalleryTree";
@@ -8,11 +8,9 @@ export function GalleryTopBar(model: GalleryModel): View {
     return Floating(GalleryTree(model, { hidden: model.floatingTreeHidden }), {
       background: core.color.background,
       hidden: model.floatingTreeHidden,
-      //top: em(2),
       paddingLeft: ch(1),
       width: ch(20),
-      height: tsub("100%", "2em"),
-      //height: pct(100),
+      height: calcSub("100%", "2em"),
       overflow: "auto",
       effects: { hidden: transitions.slide("in&out", "left") },
       placement: { referencePt: "xstart-yend", viewPt: "xstart-ystart", offset: point2D(-40, 5) },
@@ -44,10 +42,11 @@ export function GalleryTopBar(model: GalleryModel): View {
     Button({
       ...buttonOptions,
       leadingIconURI: "icon.home",
-      action: () => location.assign("/"),
+      action: () => location.assign(baseURL()),
       transform: "scale(0.8)",
       color: core.color.primary,
-      tooltip: "Home page",
+      //tooltip: "Home page",
+      tooltip: `${import.meta.env.VITE_BUILD_DATE}`,
       font: core.font.headline_medium,
     }),
     Button({

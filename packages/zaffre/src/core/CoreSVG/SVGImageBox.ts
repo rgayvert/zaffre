@@ -1,9 +1,13 @@
 import { ZType, znumber, zget, zstring } from ":foundation";
 import { View } from ":view";
-import { CreateSVGView, SVGViewCSSKeys, SVGOptions, SVGViewSVGKeys } from "./SVG";
+import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
+import { SVGOptions } from "./SVGOptions";
+import { CreateSVGView } from "./SVGDelegate";
 
 //
+// SVGImageBox contains a single image.
 //
+// TODO: make this reactive (see SVGText)
 //
 
 export interface SVGImageBoxOptions extends SVGOptions {

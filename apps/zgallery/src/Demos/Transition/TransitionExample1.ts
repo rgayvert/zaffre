@@ -14,7 +14,7 @@ function TransitionBox(model: TransitionModel1, effectName: string, effect: Effe
     }).append(
       Box({
         hidden: model.effectsHidden,      // the trigger
-        rounding: core.rounding.r0,
+        rounding: core.rounding.none,
         width: ch(10),
         height: ch(10),
         border: core.border.thin,

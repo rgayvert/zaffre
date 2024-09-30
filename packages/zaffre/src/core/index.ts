@@ -1,6 +1,7 @@
 export * from "./App";
 export * from "./Attributes";
 export * from "./CoreHTML";
+export * from "./CoreOptions";
 export * from "./CoreSVG";
 export * from "./DOM";
 export * from "./Effects";

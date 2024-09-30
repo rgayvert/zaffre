@@ -87,7 +87,7 @@ export function SegmentedButton(
       ripple: options.ripple,
       background: options.buttonBackground || options.buttonOptions?.background,
       border: core.border.none,
-      rounding: core.rounding.r0,
+      rounding: core.rounding.none,
       selectionColor: options.selectionColor,
       padding: core.space.s1,
       disabled: disabled,

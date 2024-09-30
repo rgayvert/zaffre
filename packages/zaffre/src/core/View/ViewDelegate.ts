@@ -1,9 +1,9 @@
 import { Attributes } from ":attributes";
 import { View, ViewOptions, ZElement } from "./View";
-import { Effects } from ":effect";
+import { EffectsBundle} from ":effect";
 
 //
-//
+// A ViewDelegate handles the specifics for either HTML or SVG views.
 //
 
 export abstract class ViewDelegate {
@@ -20,7 +20,7 @@ export abstract class ViewDelegate {
   abstract offsetTop(): number;
   abstract get overlay(): View;
   abstract setCSSClass(clsName: string): void;
-  abstract defaultInteractionEffects(): Effects;
+  abstract defaultInteractionEffects(): EffectsBundle;
 
   beforeAddedToDOM(): void {}
   afterAddedToDOM(): void {}

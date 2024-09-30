@@ -1,7 +1,9 @@
 import { Atom, AtomOptions } from "./Atom";
 
 //
-//
+// A ToggleAtom is a boolean atom that adds a toggle method. In addition, a ToggleAtom
+// can be configured with a complementary negated ToggleAtom, which is useful for 
+// asynchronous cases where we need both to fire independently.
 //
 
 export function toggleAtom(value: boolean, options: AtomOptions = {}): ToggleAtom {

@@ -3,7 +3,7 @@ import { rect2D, point2D, Point2D, RouteAtom, zlog, zutil, lazyinit, znumber, zb
 import { ZType, zstring, BasicAction, TAction, reactiveAction, ReactiveAction, SanitizeService } from ":foundation";
 import { PlacementOption, ZWindow, placementOffsetAndSize } from ":uifoundation";
 import { Attributes, AttrTarget, AttrBundle, ITheme, ZStyleSheet, ZStyle } from ":attributes";
-import { AnimationSpec, AnimationTarget, EffectTarget, Effects, InteractionState, isInteractionState } from ":effect";
+import { AnimationSpec, AnimationTarget, EffectTarget, EffectsBundle, InteractionState, isInteractionState } from ":effect";
 import { EventAction, Events, Listener, ListenerTarget, EventType, MouseAction, handleEvents } from ":events";
 import { EventsKey, isEventActionsKey, GenericEventHandlerOptions, InputHandlerOptions } from ":events";
 import { DropHandlerOptions, PointerHandlerOptions, ClipboardHandlerOptions, Handler } from ":events";
@@ -15,11 +15,12 @@ import { FocusHandlerOptions, KeyHandlerOptions, MouseHandlerOptions, WheelHandl
 import { DragHandlerOptions } from ":events";
 
 //
-//
-//
+// A View is the primary object in the Zaffre UI. All components create a View, and component
+// options are translated into View properties. A View will have either an HTMLDelegate or an 
+// SVGDelegate, which handles the behavioral differences between HTML and SVG. 
 //
 // TODO:
-//  - refactor this module; nontrivial, since there are so many dependencies among View, VList & ViewDelegate
+//  - refactor this monster module; nontrivial, since there are so many dependencies among View, VList & ViewDelegate
 //  - can we move observers into delegates?
 //  - should be have more interfaces like AttrTarget to limit how much clients need to see
 // 
@@ -95,7 +96,7 @@ export interface ViewOptionsRecord {
   scaleToParent?: zboolean;
   animations?: AnimationSpec[];
 
-  effects?: Effects;
+  effects?: EffectsBundle;
   actors?: Handler<unknown>[];
 
   tooltip?: zstring;
@@ -547,7 +548,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     return Boolean(this.options.events?.click);
   }
 
-  initializeEffects(effects: Effects): void {
+  initializeEffects(effects: EffectsBundle): void {
     const interactionKeys = Object.keys(effects).filter((key) => isInteractionState(key));
     if (interactionKeys.length > 0) {
       this.actors.push(interactionHandler(zutil.pick(effects, interactionKeys)));
@@ -988,6 +989,9 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
   }
   public get viewName(): string {
     return this.options.name || this.componentName;
+  }
+  public get url(): string {
+    return `url(#${this.zname})`;
   }
 
   protected applyStyle(): void {
@@ -1599,7 +1603,7 @@ export abstract class ViewDelegate {
   abstract offsetTop(): number;
   abstract get overlay(): View;
   abstract setCSSClass(clsName: string): void;
-  abstract defaultInteractionEffects(): Effects;
+  abstract defaultInteractionEffects(): EffectsBundle;
 
   beforeAddedToDOM(): void {}
   afterAddedToDOM(): void {}

@@ -41,7 +41,7 @@ export function SimpleTree<T>(
       iconSide: options.iconSide,
       padding: core.space.s0,
       border: core.border.none,
-      rounding: core.rounding.r0,
+      rounding: core.rounding.none,
       background: core.color.inherit,
       font: core.font.inherit,
       alwaysExpanded: options.alwaysExpanded,

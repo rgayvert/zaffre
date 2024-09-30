@@ -1,7 +1,9 @@
 import { Router } from "./Router";
 
 //
-//
+// A HashRouter implements routing by inserting a hash mark (#) into each URL. When the window
+// location is changed to a path with the same base URL and a hash, it doesn't reload the page,
+// but instead generates a popstate history event. 
 //
 
 export class HashRouter extends Router {
@@ -12,20 +14,24 @@ export class HashRouter extends Router {
     return true;
   }
 
-  async routeToInitialPath(): Promise<void> {
+  async routeToInitialPath(): Promise<void> { 
     const href = window.location.href;
-    let path = window.location.pathname;
     if (href.includes("/#")) {
-      const url = new URL(href);
-      path = href.substring(url.origin.length);
-      this.routeToPath(url.pathname);
+      this.routeToPath(href.substring(href.indexOf("/#") + 2));
     } else {
-      this.routeToPath(path);
+      this.routeToPath(window.location.pathname);
     }
   }
 
+  historyChanged(event: PopStateEvent): void {
+    // handle back/forward buttons
+    this.restoring = true;
+    this.routeToPath(window.location.href);
+    this.restoring = false; 
+  }
+
   createFullPath(path: string): string {
-    return `${this.baseURL}"/#"${path}`;
+    return `${this.baseURL}/#${path}`;
   }
 
   adjustPath(inPath: string): string {

@@ -29,4 +29,7 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'import.meta.env.VITE_BUILD_DATE': JSON.stringify(new Date().toString())
+  }
 });

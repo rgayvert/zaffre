@@ -4,7 +4,7 @@ import { EventHandler } from "./EventHandler";
 import { WheelEventType } from "./Listener";
 
 //
-//
+// Handler for wheel event
 //
 
 export interface WheelHandlerOptions {

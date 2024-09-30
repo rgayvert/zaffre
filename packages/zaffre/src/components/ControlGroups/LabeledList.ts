@@ -6,7 +6,6 @@ import { TextLabel, TextLabelOptions } from "../Content";
 //
 // A LabeledList component is a stack of controls with aligned labels
 //
-//
 // TODO: it would be more consistent for a LabeledList to have the pairs appended, like LabeledBox
 //
 

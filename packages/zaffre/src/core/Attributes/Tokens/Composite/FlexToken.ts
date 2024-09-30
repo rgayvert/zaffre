@@ -1,9 +1,11 @@
 import { znumber } from ":foundation";
-import { LengthToken, PercentToken, Token, TokenOptions } from "../Token";
+import { Token, TokenOptions } from "../Token";
+import { LengthToken, PercentToken } from "../SimpleTokens";
+
 import { ITheme } from "../AttrTypes";
 
 //
-//
+// A FlexToken contains a description of a CSS flex shorthand property. 
 //
 
 export interface FlexTokenOptions extends TokenOptions {

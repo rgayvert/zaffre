@@ -1,7 +1,7 @@
 import { Color, TonalPalette } from ":uifoundation";
 
 //
-//
+// Definitions of the core color scheme, based on Material 3.
 //
 
 export const keyCoreColorNames = ["primary", "secondary", "tertiary", "neutral", "error"] as const;

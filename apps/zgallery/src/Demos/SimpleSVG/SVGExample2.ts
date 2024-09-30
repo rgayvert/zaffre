@@ -1,4 +1,5 @@
-import { SVG, SVGCircle, SVGEllipse, SVGRectangle, SVGLine, View, core, SVGPolyline, SVGPolygon, SVGPath, px, Polygon2D } from "zaffre";
+import { View, core, px, SVG, SVGCircle, SVGEllipse } from "zaffre";
+import { SVGRectangle, SVGLine, SVGPolyline, SVGPolygon, SVGPath } from "zaffre";
 
 export function SVGExample2(): View {
   const black5 = { stroke: core.color.black, fill: core.color.transparent, strokeWidth: 5 };
