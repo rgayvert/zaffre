@@ -1,20 +1,19 @@
 import { zstring } from ":foundation";
-import { View, SVGConstants, resolveURI, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, SVGConstants, resolveURI, core, defineComponentDefaults, mergeComponentDefaults, beforeAddedToDOM } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
 // Box containing an HTML <image> element.
 //
-// TODO: is lazy of any utility?
 //
 
 export interface ImageBoxOptions extends BoxOptions {
-  lazy?: boolean;
+  preload?: boolean;
 }
 defineComponentDefaults<ImageBoxOptions>("ImageBox", "Box", {
   background: core.color.none,
   draggable: false,
-  lazy: false,
+  preload: false,
 });
 
 export function EmptyImage(): View {
@@ -29,6 +28,10 @@ export function ImageWithSVG(svg: string): View {
 export function ImageBox(uri: zstring, inOptions: ImageBoxOptions = {}): View {
   const options = mergeComponentDefaults("ImageBox", inOptions);
   options.model = uri;
+  if (options.preload) {
+    const img = document.createElement("img");
+    img.setAttribute("src", resolveURI(uri));
+  }
 
   function setImageSrc(view: View, uri: zstring): void {
     view.elt.setAttribute("src", resolveURI(uri));

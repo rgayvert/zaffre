@@ -28,6 +28,8 @@ export function PlayingCard(card: Card, clickAction: BasicAction): View {
   function eventsForCard(card: Card): Events {
     return card instanceof BaseCard ? eventsForBaseCard() : eventsForOtherCard(card);
   }
+  const _preloadedImage = ImageBox(card.frontImageName(), { preload: true });
+
   const options: ImageBoxOptions = {
     id: card.cardID.toString(),
     name: card.fullName,
