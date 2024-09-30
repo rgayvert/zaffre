@@ -1,5 +1,5 @@
 import { atom, Atom, incrementAtom, decrementAtom, zutil, zboolean } from ":foundation";
-import { HTMLOptions, css, View, beforeAddedToDOM, core } from ":core";
+import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow } from ":core";
 import { defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { Box, BoxOptions } from "./Box";
 
@@ -23,6 +23,7 @@ export interface FloatingOptions extends BoxOptions {
   showOnReferenceClick?: boolean;
   showOnReferenceHover?: boolean;
   showOn?: zboolean;
+  hideOnWindowResize?: zboolean;
 }
 defineComponentDefaults<FloatingOptions>("Floating", "Box", {
   background: core.color.transparent,
@@ -36,6 +37,7 @@ defineComponentDefaults<FloatingOptions>("Floating", "Box", {
   content: css("_"),
   floating: true,
   zIndex: 1000,
+  hideOnWindowResize: false,
 });
 
 export const floatingCount = atom(0);
@@ -80,6 +82,9 @@ export function Floating(enclosedView: View, inOptions: FloatingOptions = {}): V
       view.referenceView.iState("hovered").addAction(() => options.hidden?.set(false));
     } else if (options.showOnReferenceClick) {
       view.referenceView.addOptionEvents({ click: () => options.hidden?.set(false) });
+    }
+    if (options.hideOnWindowResize) {
+      ZWindow.instance.addWindowResizeAction(() => options.hidden?.set(true));
     }
   });
 

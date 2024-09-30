@@ -8,6 +8,7 @@ export function GalleryTopBar(model: GalleryModel): View {
     return Floating(GalleryTree(model, { hidden: model.floatingTreeHidden }), {
       background: core.color.background,
       hidden: model.floatingTreeHidden,
+      hideOnWindowResize: true,
       paddingLeft: ch(1),
       width: ch(20),
       height: calcSub("100%", "2em"),

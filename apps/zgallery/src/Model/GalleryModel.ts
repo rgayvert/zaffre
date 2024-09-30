@@ -16,10 +16,19 @@ export class GalleryModel {
   selectedDemo = atom<TreeNode<KeyAndTitle> | undefined>(undefined, { action: (node) => node && this.selectedDemoKey.set(node.data.key)});
   selectedDemoKey = routeAtom("demos", "", { values: [...galleryTopics.keys()] });
 
+  // hide the floating menu only if the selection is a leaf node with a topic
+  hideFloatingTree(): void {
+    const node = this.selectedDemo.get();
+    if (node) {
+      if (galleryTopics.get(node.data.key)) {
+        this.floatingTreeHidden.set(true)
+      }
+    }    
+  }
   constructor() {
     // expand the gallery tree when the route changes
     this.selectedDemoKey.addAction((key) => this.selectedDemo.set(galleryTree.bfs((node) => node.data.key === key)));
-    this.selectedDemo.addAction(() => this.floatingTreeHidden.set(true));
+    this.selectedDemo.addAction(() => this.hideFloatingTree());
   }
 
   public currentThemeName = atom<galleryThemeKey>("blue", {
