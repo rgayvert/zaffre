@@ -1,6 +1,6 @@
 Creating a web application using current development tools can be complicated. The process typically involves multiple technologies (HTML/CSS/JS/SVG), a myriad of APIs and dependencies, and a complex workflow. Zaffre is an experimental webapp framework which attempts to reduce this complexity by using a single language (Typescript) together with a reactive mechanism that encourages building higher-level abstractions via declarative composition. There are no required runtime dependencies, and the build process is simplified with vite and rollup. The result is that you effectively get reactive CSS, HTML, and SVG without having to code in those languages.
 
-In Zaffre you use Typecript to create a model containing reactive values, along with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
+In Zaffre you use Typescript to create a model containing reactive values, along with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
 
 <p align="center"><img src='./assets/DOM<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
@@ -117,7 +117,7 @@ See this in action
 
 Each time the "Add" button is clicked, a new value is added to the values list (an *ArrayAtom*), which results in a new label being created and added to the DOM. Likewise, when the Remove button is clicked, a value is removed from the values list, and the label which corresponded to that value is removed because it is no longer in the list.
 
-The key to reactive content is the *ViewList()* pseudocomponent. A ViewList contains a reactive array along with a childID function and a childCreator function. As the array changes, the ViewList will update the list of children to match the array, preserving children with matching ids.
+The key to reactive content is the *ViewList* pseudocomponent. A ViewList contains a reactive array along with a childID function and a childCreator function. As the array changes, the ViewList will update the list of children to match the array, preserving children with matching ids.
 
 Note also that in this example, the key reactive values and associated logic are placed in a  model class (which is usually in a different file). This provides a clean model-view separation. Components are implemented as functions, and models as classes.
 
