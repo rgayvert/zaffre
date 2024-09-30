@@ -17,8 +17,6 @@ defineComponentDefaults<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
 
 export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: YouTubeIFrameOptions): View {
   const options = mergeComponentDefaults("YouTubeIFrame", inOptions);
-  //options.id = "player";
-  //console.log("YouTubeIFrame");
 
   const ready = atom(false);
   options.background = atom(() => (ready.get() ? core.color.transparent : core.color.gray));
@@ -27,8 +25,6 @@ export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: YouT
   afterAddedToDOM(options, (view: View): void => {
     boxElement = <HTMLElement>view.elt;
     boxElement.id = `yt-${view.viewID}`;
-
-    // /console.log("YouTubeIFrame.afterAddedToDOM, player="+player+", viewID="+view.viewID);
 
     const playerConfig: YouTubePlayerConfig = {
       videoID: videoID,

@@ -120,7 +120,6 @@ export class TreeNode<T> {
     while (queue.length > 0) {
       const v = queue.shift()!;
       for (const w of v.getChildrenWhetherExpandedOrNot()) {
-        //console.log("checking "+w.viewName);F
         if (match(w)) {
           return w;
         } else {

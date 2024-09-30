@@ -1,4 +1,5 @@
 import { Atom, AtomOptions } from "../Atom";
+import { zlog } from "../Util";
 
 //
 // A SharedModel contains a collection of named atoms, for use with a web worker.
@@ -68,7 +69,7 @@ export class SharedModel {
     return this.worker ? "local" : "remote";
   }
   log(value: any): void {
-    console.log(`${this.side}: ${value}`);
+    zlog.info(`${this.side}: ${value}`);
   }
   sendChange(name: string, value: ShareableValue): void {
     this.sendChanges([[name, value]]);

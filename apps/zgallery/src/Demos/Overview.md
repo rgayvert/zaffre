@@ -198,7 +198,7 @@ The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that thi
 
 #### Acknowledgments
  
- The development of Zaffre drew inspiration from a variety of sources. In particular,
+ The development of Zaffre drew inspiration from a variety of sources, including:
   - React, for concepts of reactivity and DOM reconciliation;
   - Vue, for ideas on routing and dynamic imports;
   - MDN, for awesome documentation and samples;

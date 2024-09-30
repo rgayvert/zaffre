@@ -1,4 +1,4 @@
-import { TreeNode, View, core, SimpleTree, SoftGrid, loremTree } from "zaffre";
+import { TreeNode, View, core, SimpleTree, SoftGrid, loremTree, zlog } from "zaffre";
 import { TreeOptions, atom, Atom, ch, em, KeyAndTitle } from "zaffre";
 import { galleryTree } from "../../Model/GalleryRoutes";
 
@@ -11,9 +11,9 @@ export function BasicTreeExample(): View {
     justifyContent: "start" 
   };
   const selection1: Atom<TreeNode<string> | undefined> = atom(undefined, {
-    action: (item) => console.log("selection1: " + item),
+    action: (item) => zlog.info("selection1: " + item),
   });
-  const selection2: Atom<TreeNode<KeyAndTitle> | undefined> = atom(undefined, { action: (item) => console.log(item) });
+  const selection2: Atom<TreeNode<KeyAndTitle> | undefined> = atom(undefined, { action: (item) => zlog.info(item) });
 
   return SoftGrid({ justifyItems: "center", minColumnWidth: "40ch", rowGap: core.space.s5 }).append(
     SimpleTree(tree, selection1, (node) => node.data, { 

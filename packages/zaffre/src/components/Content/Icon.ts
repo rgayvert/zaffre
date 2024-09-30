@@ -25,7 +25,7 @@ export function Icon(uri: zstring, inOptions: IconOptions = {}): View {
 
   options.id ??= zget(uri);
   if (!zget(uri)) {
-    console.log("null icon uri");
+    zlog.info("null icon uri");
   }
 
   function applyMaterialContent(view: View, url: string): void {
@@ -45,7 +45,7 @@ export function Icon(uri: zstring, inOptions: IconOptions = {}): View {
       zlog.info("possible missing icon resource: " + url);
     }
     if (!url) {
-      console.log("null icon uri");
+      zlog.info("null icon uri");
     }
     if (url.startsWith("<svg")) {
       setInnerHTML(view, url);

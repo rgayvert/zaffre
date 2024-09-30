@@ -588,7 +588,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
         .filter((animation) => animation.playState === "running")
         .forEach((animation) => animation.cancel());
     } catch (e) {
-      console.log("cancelRunningAnimations: " + e);
+      zlog.info("cancelRunningAnimations: " + e);
     }
   }
   waitForAnimationsToFinish(fn?: BasicAction): void {

@@ -108,7 +108,6 @@ export function setSelectionInterval(elt: HTMLElement, interval: Interval): void
     const oldFocus = <HTMLElement>document.activeElement;
     elt.focus();
     const selection = window.getSelection();
-    //console.log("setSelectionInterval: interval="+JSON.stringify(interval));
     const range = convertIntervalToRange(elt, interval);
     if (selection && range) {
       selection.removeAllRanges();

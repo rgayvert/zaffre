@@ -1,9 +1,9 @@
-import { Button, arrayAtom, atom, StringListBox, em, HStack, BasicAction, ch } from "zaffre";
+import { Button, arrayAtom, atom, StringListBox, em, HStack, BasicAction, ch, zlog } from "zaffre";
 import { VStack, View, core, lorem, zutil } from "zaffre";
 
 class ListBoxModel {
   loremList = arrayAtom(zutil.sequence(0, 5).map((i) => lorem.words(i + 2)));
-  selectedItem = atom("", { action: (item) => console.log("selection: " + item) });
+  selectedItem = atom("", { action: (item) => zlog.info("selection: " + item) });
 
   removeListItem(item: string): void {
     this.loremList.delete(item);

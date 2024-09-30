@@ -67,13 +67,6 @@ export class Graph<V, E> {
     return this.edges.find((edge) => edge.containsVertex(vertex1) && edge.containsVertex(vertex2));
   }
 
-  dump(): void {
-    console.log("Vertices:");
-    this.vertices.forEach((v) => console.log(`  ${v}`));
-    console.log("Edges:");
-    this.edges.forEach((e) => console.log(`  ${e}`));
-  }
-
   // breadth-first search
   findShortestPath(startVertex: Vertex<V, E>, destVertex: Vertex<V, E>): number[] {
     const queue = [];

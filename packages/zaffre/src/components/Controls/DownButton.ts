@@ -20,7 +20,6 @@ export interface DownButtonOptions extends ButtonOptions {
     const options = mergeComponentDefaults("DownButton", inOptions);
     let timerID: ReturnType<typeof setTimeout> | undefined;
     function mouseDown(evt: MouseEvent): void {
-      console.log("mouseDown");
       options.downAction?.(evt)
       timerID = setTimeout(() => mouseDown(evt), options.intervalMillis);
     }

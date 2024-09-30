@@ -46,7 +46,6 @@ export class ContrastingColorsModel {
   adjustBackground(): void {
     const newColor = this.findTone(this.bgColor.get(), this.fgColor.get(), this.targetRatio.get());
     newColor && this.bgColor.set(newColor);
-   // newColor && console.log("bgColor="+newColor.toCSS());
   }
   adjustForeground(): void {
     const newColor = this.findTone(this.fgColor.get(), this.bgColor.get(), this.targetRatio.get());

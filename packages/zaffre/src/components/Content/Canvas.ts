@@ -1,4 +1,4 @@
-import { zget, znumber, zstring, Atom, atom } from ":foundation";
+import { zget, znumber, zstring, Atom, atom, zlog } from ":foundation";
 import { View, resolveURI, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
@@ -68,7 +68,7 @@ export function Canvas(inOptions: CanvasOptions = {}): View {
         setFilter();
         ctx?.drawImage(img, 0, 0);
       } catch (e) {
-        console.log("failed to load " + src + ": " + e);
+        zlog.info("failed to load " + src + ": " + e);
       }
     }
   }

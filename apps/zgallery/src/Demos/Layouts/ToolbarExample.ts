@@ -1,4 +1,4 @@
-import { core, View, Box, px, Toolbar, Button, em, ch } from "zaffre";
+import { core, View, Box, px, Toolbar, Button, em, ch, zlog } from "zaffre";
 
 export function ToolbarExample(): View {
   const icons = ["icon.bold", "icon.italic", "icon.unordered-list", "icon.numbered-list", "icon.quote"];
@@ -15,7 +15,7 @@ export function ToolbarExample(): View {
       ...icons.map((iconName) =>
         Button({
           leadingIconURI: iconName,
-          action: () => console.log(iconName),
+          action: () => zlog.info(iconName),
           border: core.border.none,
           tooltip: iconName,
         })
