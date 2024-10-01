@@ -1,8 +1,8 @@
-import { Rect2D, Size2D, Sz2D, zget, Atom, atom, arrayAtom, ArrayAtom } from ":foundation";
+import { Rect2D, Size2D, Sz2D, zget, Atom, atom, arrayAtom, ArrayAtom, zpoint2D, zsize2D } from ":foundation";
 import { rect2D, point2D, Point2D, RouteAtom, zlog, zutil, lazyinit, znumber, zboolean } from ":foundation";
 import { ZType, zstring, BasicAction, TAction, reactiveAction, ReactiveAction, SanitizeService } from ":foundation";
 import { PlacementOption, ZWindow, placementOffsetAndSize } from ":uifoundation";
-import { Attributes, AttrTarget, AttrBundle, ITheme, ZStyleSheet, ZStyle } from ":attributes";
+import { Attributes, AttrTarget, AttrBundle, ITheme, ZStyleSheet, ZStyle, ztheme } from ":attributes";
 import { AnimationSpec, AnimationTarget, EffectTarget, EffectsBundle, InteractionState, isInteractionState } from ":effect";
 import { EventAction, Events, Listener, ListenerTarget, EventType, MouseAction, handleEvents } from ":events";
 import { EventsKey, isEventActionsKey, GenericEventHandlerOptions, InputHandlerOptions } from ":events";
@@ -43,15 +43,21 @@ export interface SharedViewState {
 export interface LocalDefaults {
   [key: string]: any;
 }
+export interface Fashion {
+  [key: string]: any;
+}
+export type zfashion = ZType<Fashion>;
 
 export interface ViewOptionsRecord {
   name?: string;
   id?: string;
-  theme?: ZType<ITheme>;
   tag?: string;
   componentName?: string;
   extraClasses?: string;
   extraVars?: [string, string][];
+
+  theme?: ztheme;
+  fashions?: zfashion[];
 
   resources?: Map<string, string>;
   disabled?: Atom<boolean>;
@@ -90,8 +96,8 @@ export interface ViewOptionsRecord {
   onUndo?: BasicAction;
   onRedo?: BasicAction;
 
-  origin?: ZType<Point2D>;
-  extent?: ZType<Size2D>;
+  origin?: zpoint2D; 
+  extent?: zsize2D; 
   fitToParent?: zboolean;
   scaleToParent?: zboolean;
   animations?: AnimationSpec[];
@@ -405,7 +411,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
       this.initialize();
       this.initialized = true;
     }
-    this.delegate.afterAddedToDOM();
+    this.delegate.beforeAddedToDOM();
   }
 
   afterAddedToDOM(): void {
@@ -1086,28 +1092,20 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
 
   public render(): void {
     if (!this.rendered) {
-      // no parent yet, so make the view theme available on a stack
-      //View.pushTheme(this.theme);
-      //View.pushResources(this.resources);
-
       this.applyLayout();
-
       this.children.forEach((child) => this.renderChild(child));
       this.viewLists?.forEach((viewList) => viewList.composeSubviews(this));
-
       if (this.options.onApplyContent) {
         this.applyContentAction.perform();
       }
-      //View.popTheme();
-      //View.popResources();
       this.rendered = true;
     }
   }
 
-  //
   renderChild(childView: View): void {
     let child = childView;
     if (!child.rendered) {
+      child.setParent(this); 
       child.beforeAddedToDOM();
       child.render();
       this.addChildToDOM(child);

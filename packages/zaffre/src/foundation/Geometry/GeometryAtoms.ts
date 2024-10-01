@@ -1,6 +1,6 @@
 
 import { Atom, ZType, atom, znumber } from "../Atom";
-import { LineSegment2D, Point2D, Rect2D } from "./Geometry2D";
+import { LineSegment2D, Point2D, Rect2D, Size2D } from "./Geometry2D";
 
 //
 // When a geometric object is the value of an atom, it can be cumbersome to deal with
@@ -11,6 +11,7 @@ import { LineSegment2D, Point2D, Rect2D } from "./Geometry2D";
 //
 
 export type zpoint2D = ZType<Point2D>;
+export type zsize2D = ZType<Size2D>;
 export type zrect2D = ZType<Rect2D>;
 export type zsegment2D = ZType<LineSegment2D>;
 export type zpath2D = ZType<Path2D>;

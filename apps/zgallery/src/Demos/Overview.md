@@ -52,7 +52,8 @@ A Zaffre *component* is just a function which returns an opaque View object. In 
 
   - Composition is done with the *append()* method.
   - Each component typically takes a list of *options* which result in CSS/HTML/SVG attributes being set on the underlying DOM element.
-  - Styles are generated automatically from component options.
+  - CSS styles are generated automatically from component options. Reactive CSS values are translated into element-level CSS variables.
+  - This example uses inline options. Non-reactive options may be grouped into reusable *fashions*, which are analogous to CSS stylesheets.
   - A component may have one or more required arguments if they are always needed; for example, a TextLabel requires a label (a literal or reactive string).
   - Attributes are often specified using *tokens*. A token is an object that combines with the current *theme* to construct HTML/CSS attributes. 
   - The *core* object contains a collection of predefined tokens for color, font, borders, space, and rounding. These are generally turned into CSS properties when rendered.
@@ -73,6 +74,7 @@ DOM structure can also be reactive. Below is a simple example.
       this.values.pop();
     }
   }
+
  function HelloWorld4(): View {
    const model = new HelloModel4();
    function ValueLabel(value: number): View {
@@ -138,6 +140,7 @@ when the form is visible. Switching between the two views is a simple matter of 
     lastName: string,
     ... more properties
   }
+
   function UserTFEnsemble(store: TableStore<UserRecord>): View {
     const columns = { 
       stringColumn({ title: "Name", value: (r) => r.name, alignment: "left" }),
@@ -201,9 +204,9 @@ The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that thi
  The development of Zaffre drew inspiration from a variety of sources, including:
   - React, for concepts of reactivity and DOM reconciliation;
   - Vue, for ideas on routing and dynamic imports;
-  - MDN, for awesome documentation and samples;
+  - MDN, for documentation and samples;
   - SwiftUI, for declarative UI syntax;
   - Material Design, for ideas on themes, tokens, fonts, and colors;
-  - Every Layout, for excellent layout examples and guidelines; and
-  - Stack Overflow, for solutions to countless problems.
+  - Every Layout, for layout examples and guidelines; and
+  - Stack Overflow, for solutions to problems.
 

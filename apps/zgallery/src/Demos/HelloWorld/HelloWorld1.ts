@@ -2,7 +2,7 @@ import { core, atom, zutil, View, VStack, TextInput, TextLabel, ch, Spacer } fro
 
 export function HelloWorld1(): View {
   // create a reactive value
-  const text = atom("Hello World"); 
+  const text = atom("Hello World");
   return VStack({
     padding: core.space.s6,
     maxWidth: ch(120),
@@ -17,10 +17,22 @@ export function HelloWorld1(): View {
     }),
     Spacer(core.space.s6),
     // add a text label with reactive content and opacity
-    TextLabel(text, {   
+    TextLabel(text, {
       color: core.color.primary,
-      opacity: atom(() => zutil.clamp(text.get().length / 20, 0, 1)), 
+      opacity: atom(() => zutil.clamp(text.get().length / 20, 0, 1)),
       font: core.font.headline_medium,
     })
   );
 }
+
+function HelloWorld01(): View {
+  const text = atom("Hello World");
+  return VStack().append(
+    TextInput(text),
+    TextLabel(text)
+  );
+}
+
+/**
+ * fashion = Map<component_selector, component_options>
+ */

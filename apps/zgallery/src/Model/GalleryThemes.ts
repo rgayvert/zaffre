@@ -1,5 +1,10 @@
 import { Theme, coreTheme, Color, CoreKeyColors, CoreThemeOptions } from "zaffre";
 
+//
+// Some simple themes for demonstration in the gallery. These can be chosen from 
+// the settings dialog.
+//
+
 export const themeKeyColorValues = {
   blue: { primary: "#0b57d0", secondary: "#8a90a5", tertiary: "#a886a5" },
   green: { primary: "#386a20", secondary: "#87957c", tertiary: "#6b9999" },

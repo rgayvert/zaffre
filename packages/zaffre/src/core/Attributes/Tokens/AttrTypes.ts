@@ -1,4 +1,4 @@
-import { Atom } from ":foundation";
+import { Atom, ZType } from ":foundation";
 import { Color, Font, TonalPalette } from ":uifoundation";
 
 //
@@ -20,6 +20,7 @@ export interface ITheme {
   setTarget(target: AttrTarget): void;
   currentColorContractRatio: number;
 }
+export type ztheme = ZType<ITheme>;
 
 export interface IToken {
   cssKey(): string;

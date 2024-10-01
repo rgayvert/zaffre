@@ -1,5 +1,9 @@
 import { keyAndTitleTreeNodeFromText } from "zaffre";
 
+// 
+// The galleryTree is a TreeNode, defined here in declarative text form.
+//
+
 const textTree = `
 overview :: Overview
 conventions :: Conventions

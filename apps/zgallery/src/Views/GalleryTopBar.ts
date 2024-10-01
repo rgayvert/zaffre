@@ -3,11 +3,28 @@ import { Floating, SimpleMenu, TextLabelOptions, HStack, Button, I18n, ZWindow, 
 import { GalleryModel } from "../Model";
 import { GalleryTree } from "./GalleryTree";
 
+//
+// The GalleryTopBar extends across the top of the window, and contains a set of buttons.
+// At small window size, the buttons collapse to a single menu which has a floating gallery tree.
+//
+// TODO: 
+//  - implement this using a Toolbar component
+//
+
 export function GalleryTopBar(model: GalleryModel): View {
+
+  // hide the floating menu if the selection is a leaf node with a topic
+  const floatingTreeHidden = atom(true);
+  model.selectedDemo.addAction(() => {
+    if (model.selectedDemoHasTopicOrInfo()) {
+      floatingTreeHidden.set(true);
+    }
+  });
+
   function FloatingGalleryTree(): View {
-    return Floating(GalleryTree(model, { hidden: model.floatingTreeHidden }), {
+    return Floating(GalleryTree(model, { includeInfo: false, hidden: floatingTreeHidden }), {
       background: core.color.background,
-      hidden: model.floatingTreeHidden,
+      hidden: floatingTreeHidden,
       hideOnWindowResize: true,
       paddingLeft: ch(1),
       width: ch(20),
@@ -43,20 +60,18 @@ export function GalleryTopBar(model: GalleryModel): View {
     Button({
       ...buttonOptions,
       leadingIconURI: "icon.home",
-      action: () => location.assign(baseURL()),
+      action: () => location.assign(`${baseURL()}/`),
       transform: "scale(0.8)",
       color: core.color.primary,
-      //tooltip: "Home page",
-      tooltip: `${import.meta.env.VITE_BUILD_DATE}`,
+      tooltip: "Home page",
       font: core.font.headline_medium,
     }),
     Button({
       ...buttonOptions,
       leadingIconURI: "icon.show-menu",
       hidden: atom(() => !ZWindow.instance.smallDisplay()),
-      action: () => model.floatingTreeHidden.set(false),
+      action: () => floatingTreeHidden.set(false),
       tooltip: "Demo menu",
-    //}),
     }).append(FloatingGalleryTree()),
     Spacer(1),
     Button({

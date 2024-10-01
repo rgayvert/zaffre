@@ -1,6 +1,11 @@
 import { ImportAtom, Loading, View, ViewCreator, ch, importAtom } from "zaffre";
 import { Markdown } from "../Demos/Common";
 
+// 
+// The list of all demos and info pages is contained here. These are combined with the 
+// gallery routes for use in the the gallery tree and demo ensemble.
+//
+
 export const galleryTopics = new Map([
   ["animation", importAtom(async () => import(":demos/Animation/AnimationDemo"))],
   ["atoms", importAtom(async () => import(":demos/Atoms/AtomDemo"))],

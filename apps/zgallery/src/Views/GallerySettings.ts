@@ -3,6 +3,14 @@ import { transitions, TextLabelOptions, HStack } from "zaffre";
 import { Button, TextLabel, Switch, App } from "zaffre";
 import { GalleryModel, galleryThemeNames } from "../Model";
 
+//
+// GallerySettings is a panel that allows various app settings to be modified, including
+// default theme, fluid fonts, contrast level, and log level.
+//
+// TODO: 
+//  - generalize this to a Settings component that can be used in other window layouts
+//
+
 export function GallerySettings(model: GalleryModel): View {
   const textLabelOptions: TextLabelOptions = {
     background: core.color.inherit,

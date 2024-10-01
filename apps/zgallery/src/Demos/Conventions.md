@@ -31,6 +31,7 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - derived atom = reactive value defined as a function of other reactive values
 - disclosure = component that contains a title and toggling detail
 - effect = animation or transition
+- fashion = reusable map of component selectors to non-reactive component options
 - floating = temporary view that appears in the floating layer
 - foundation = core non-UI classes/functions
 - handler = object that manages a set of event types
