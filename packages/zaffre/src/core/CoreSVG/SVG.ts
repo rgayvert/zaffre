@@ -1,7 +1,7 @@
 import { zlength, zstring, zrect2D, Point2D, zboolean, zget } from ":foundation";
 import { RectToken, rectToken } from ":attributes";
-import { View, viewThatTriggeredEvent } from ":view";
-import { defineComponentDefaults, mergeComponentDefaults } from "../Theme";
+import { BV, View, viewThatTriggeredEvent } from ":view";
+import { defineBaseOptions, mergeComponentOptions } from ":view";
 import { CSSAttributeOptions } from "../CoreOptions";
 import { SVGOptions } from "./SVGOptions";
 import { CreateSVGView, getSVGPointFromEvent } from "./SVGDelegate";
@@ -20,12 +20,12 @@ export interface SVGContainerOptions extends CSSAttributeOptions, SVGOptions {
   preserveAspectRatio?: zstring;
   draggableElements?: zboolean;
 }
-defineComponentDefaults<SVGContainerOptions>("SVGContainer", "", {
+defineBaseOptions<SVGContainerOptions>("SVGContainer", "", {
   tag: "svg",
 });
 
-export function SVG(inOptions: SVGContainerOptions): View {
-  const options = mergeComponentDefaults("SVGContainer", inOptions);
+export function SVG(inOptions: BV<SVGContainerOptions> = {}): View {
+  const options = mergeComponentOptions("SVGContainer", inOptions);
   if (options.bounds) {
     options.viewBox = rectToken(options.bounds);
   }

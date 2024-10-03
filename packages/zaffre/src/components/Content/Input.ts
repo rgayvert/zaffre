@@ -1,5 +1,5 @@
 import { zget, Atom } from ":foundation";
-import { View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -20,7 +20,7 @@ export interface InputOptions extends BoxOptions {
   maySetContent?: boolean;
   valid?: Atom<boolean>;
 }
-defineComponentDefaults<InputOptions>("Input", "Box", {
+defineBaseOptions<InputOptions>("Input", "Box", {
   color: core.color.primary,
   background: core.color.inherit,
   appearance: "none",
@@ -34,8 +34,8 @@ defineComponentDefaults<InputOptions>("Input", "Box", {
   maySetContent: true,
 });
 
-export function Input(content: Atom<string>, inOptions: InputOptions = {}): View {
-  const options = mergeComponentDefaults("Input", inOptions);
+export function Input(content: Atom<string>, inOptions: BV<InputOptions> = {}): View {
+  const options = mergeComponentOptions("Input", inOptions);
 
   options.model = content;
 

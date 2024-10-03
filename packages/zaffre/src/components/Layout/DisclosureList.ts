@@ -1,5 +1,5 @@
 import { Atom, ZType, atom, counterAtomForDataSelection, toggleAtom } from ":foundation";
-import { counterKeyBindings, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { counterKeyBindings, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { SelectionList, SelectionListOptions } from "./SelectionList";
 import { Disclosure, DisclosureComponent, DisclosureOptions } from "./Disclosure";
 
@@ -8,7 +8,7 @@ import { Disclosure, DisclosureComponent, DisclosureOptions } from "./Disclosure
 // disclosure component which manages the expansion of the summary and detail components.
 
 export interface DisclosureListOptions extends SelectionListOptions {}
-defineComponentDefaults<DisclosureListOptions>("DisclosureList", "SelectionList", {
+defineBaseOptions<DisclosureListOptions>("DisclosureList", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -20,9 +20,9 @@ export function DisclosureList<T>(
   selectedItem: Atom<T | undefined>,
   summaryCreator: DisclosureComponent<T>,
   detailCreator: DisclosureComponent<T>,
-  inOptions: DisclosureListOptions = {}
+  inOptions: BV<DisclosureListOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("DisclosureList", inOptions);
+  const options = mergeComponentOptions("DisclosureList", inOptions);
 
   const currentIndex = counterAtomForDataSelection(data, selectedItem);
 

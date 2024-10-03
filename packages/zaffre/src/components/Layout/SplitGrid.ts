@@ -1,6 +1,6 @@
 import { zget, atom, zutil } from ":foundation";
-import { View, css_cursor, CursorName, beforeAddedToDOM } from ":core";
-import { HTMLOptions, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, css_cursor, CursorName, beforeAddedToDOM, BV } from ":core";
+import { HTMLOptions, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -17,7 +17,7 @@ export interface SplitGridOptions extends GridOptions {
   columnMaxes?: number[];
   threshold?: number;
 }
-defineComponentDefaults<SplitGridOptions>("SplitGrid", "Grid", {
+defineBaseOptions<SplitGridOptions>("SplitGrid", "Grid", {
   rowMins: [1],
   rowMaxes: [1],
   columnMins: [1],
@@ -38,8 +38,8 @@ function createSpec(mins: number[], maxes: number[]): string {
     .join(" ");
 }
 
-export function SplitGrid(inOptions: SplitGridOptions = {}): View {
-  const options = mergeComponentDefaults("SplitGrid", inOptions);
+export function SplitGrid(inOptions: BV<SplitGridOptions> = {}): View {
+  const options = mergeComponentOptions("SplitGrid", inOptions);
 
   options.templateRows = createSpec(options.rowMins || [1], options.rowMaxes || [1]);
   options.templateColumns = createSpec(options.columnMins || [1], options.columnMaxes || [1]);

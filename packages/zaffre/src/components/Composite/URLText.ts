@@ -1,5 +1,5 @@
 import {zstring, fetchTextAtom, atom, Atom } from ":foundation";
-import { View, resolveURI, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, resolveURI, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { TextBox, TextBoxOptions } from "../Content";
 
 //
@@ -17,12 +17,12 @@ export interface URLTextOptions extends TextBoxOptions {
   errorMessage?: zstring;
   copyOfContents?: Atom<string>;
 }
-defineComponentDefaults<URLTextOptions>("URLText", "Text", {
+defineBaseOptions<URLTextOptions>("URLText", "Text", {
   errorMessage: "Failed to retrieve file",
 });
 
-export function URLText(uri: zstring, inOptions: URLTextOptions = {}): View {
-  const options = mergeComponentDefaults("URLText", inOptions);
+export function URLText(uri: zstring, inOptions: BV<URLTextOptions> = {}): View {
+  const options = mergeComponentOptions("URLText", inOptions);
   const url = atom(() => resolveURI(uri));
   const fetchAtom = fetchTextAtom(url);
   if (options.copyOfContents) {

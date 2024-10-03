@@ -1,5 +1,5 @@
 import { atom, zget, Rect2D, ArrayAtom, arrayAtom } from ":foundation";
-import { place, View, em, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { place, View, em, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Floating } from "../HTML";
 import { Stack, StackOptions } from "../Layout";
 import { SimpleMenu } from "../Floating";
@@ -22,7 +22,7 @@ import { Button } from "../Controls";
 export interface ToolbarOptions extends StackOptions {
   menuIconName?: string;
 }
-defineComponentDefaults<ToolbarOptions>("Toolbar", "Stack", {
+defineBaseOptions<ToolbarOptions>("Toolbar", "Stack", {
   flexDirection: "row",
   justifyContent: "start",
   height: em(1.5),
@@ -33,8 +33,8 @@ defineComponentDefaults<ToolbarOptions>("Toolbar", "Stack", {
   overflow: "hidden"
 });
 
-export function Toolbar(inOptions: ToolbarOptions = {}): View {
-  const options = mergeComponentDefaults("Toolbar", inOptions);
+export function Toolbar(inOptions: BV<ToolbarOptions> = {}): View {
+  const options = mergeComponentOptions("Toolbar", inOptions);
 
   const collapsed = atom(false);
 

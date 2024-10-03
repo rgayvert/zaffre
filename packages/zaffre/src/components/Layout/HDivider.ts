@@ -1,6 +1,6 @@
 import { zstring } from ":foundation";
-import { calc, em, pct, px, View } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, calc, em, pct, px, View } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 import { Icon } from "../Content";
 
@@ -11,15 +11,15 @@ import { Icon } from "../Content";
 export interface HDividerOptions extends BoxOptions {
   iconName?: zstring;
 }
-defineComponentDefaults<HDividerOptions>("HDivider", "Box", {
+defineBaseOptions<HDividerOptions>("HDivider", "Box", {
   color: core.color.gray,
   margin: core.space.s5,
   width: pct(90),
   height: px(1),
 });
 
-export function HDivider(inOptions: HDividerOptions = {}): View {
-  const options = mergeComponentDefaults("HDivider", inOptions);
+export function HDivider(inOptions: BV<HDividerOptions> = {}): View {
+  const options = mergeComponentOptions("HDivider", inOptions);
 
   const outerOptions = <HDividerOptions>{
     marginTop: options.margin,

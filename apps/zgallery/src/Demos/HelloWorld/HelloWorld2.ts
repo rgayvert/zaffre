@@ -7,13 +7,14 @@ export function HelloWorld2(): View {
   return VStack({ alignItems: "center", gap: core.space.s5 }).append(
     Spacer(1),
     TextInput(model.text, {
+      bundles: ["textinput1"],
       disabled: model.disabled,
-      rounding: core.rounding.r3,
-      border: core.border.thin,
-      setOnInput: model.setOnInput,
-      textAlign: "center",
-      font: core.font.display_medium,
-      placeholder: "Enter some text",
+      // rounding: core.rounding.r3,
+      // border: core.border.thin,
+      // setOnInput: model.setOnInput,
+      // textAlign: "center",
+      // font: core.font.display_medium,
+      // placeholder: "Enter some text",
     }),
     TextLabel(model.text, {
       color: core.color.primary.tone(70),

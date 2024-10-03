@@ -1,5 +1,5 @@
 import { Atom, atom, zget, zboolean, zstring } from ":foundation";
-import { CalcToken, calcMult, View, HTMLOptions, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { CalcToken, calcMult, View, HTMLOptions, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -16,13 +16,13 @@ export interface ZStackOptions extends GridOptions {
   offsetY?: zstring;
   hasBaseView?: zboolean;
 }
-defineComponentDefaults<ZStackOptions>("ZStack", "Grid", {
+defineBaseOptions<ZStackOptions>("ZStack", "Grid", {
   offsetX: "0",
   offsetY: "0",
 });
 
-export function ZStack(inOptions: ZStackOptions = {}): View {
-  const options = mergeComponentDefaults("ZStack", inOptions);
+export function ZStack(inOptions: BV<ZStackOptions> = {}): View {
+  const options = mergeComponentOptions("ZStack", inOptions);
 
   function yOffsetOfSubview(view: View, defaultIndex: number): CalcToken | undefined {
     let index = view.indexInParent();

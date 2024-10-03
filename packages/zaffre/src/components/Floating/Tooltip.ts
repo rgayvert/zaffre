@@ -1,5 +1,5 @@
 import { zget, atom, Atom } from ":foundation";
-import { View, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { TextLabelOptions, TextLabel } from "../Content";
 import { Box, Floating, floatingCount } from "../HTML";
 
@@ -16,7 +16,7 @@ export interface TooltipOptions extends TextLabelOptions {
   textOptions?: TextLabelOptions;
   textCreator?: (tip: Atom<string>) => View;
 }
-defineComponentDefaults<TooltipOptions>("BasicTooltip", "Box", {
+defineBaseOptions<TooltipOptions>("BasicTooltip", "Box", {
   padding: core.space.s2,
   background: core.color.tertiaryContainer,
   pointerEvents: "none",
@@ -34,8 +34,8 @@ function DefaultTooltipText(tip: Atom<string>): View {
   };
   return TextLabel(tip, options);
 }
-export function BasicTooltip(inOptions: TooltipOptions = {}): View {
-  const options = mergeComponentDefaults("BasicTooltip", inOptions);
+export function BasicTooltip(inOptions: BV<TooltipOptions> = {}): View {
+  const options = mergeComponentOptions("BasicTooltip", inOptions);
 
   const tip = atom("");
   const delayBeforeShowing = 1500;

@@ -1,5 +1,5 @@
-import { View, pct, px, css_flexBasis, css_length_pct } from ":core";
-import { HTMLOptions, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, pct, px, css_flexBasis, css_length_pct, BV } from ":core";
+import { HTMLOptions, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -13,14 +13,14 @@ export interface SidebarOptions extends BoxOptions {
   sideWidth?: css_flexBasis;
   contentMinWidth?: css_length_pct;
 }
-defineComponentDefaults<SidebarOptions>("Sidebar", "Box", {
+defineBaseOptions<SidebarOptions>("Sidebar", "Box", {
   contentMinWidth: pct(50),
   display: "flex",
   flexWrap: "wrap",
 });
 
-export function Sidebar(inOptions: SidebarOptions = {}): View {
-  const options = mergeComponentDefaults("Sidebar", inOptions);
+export function Sidebar(inOptions: BV<SidebarOptions> = {}): View {
+  const options = mergeComponentOptions("Sidebar", inOptions);
 
   options.afterAppendChild = (view: View, child: View): void => {
     const childOptions = <HTMLOptions>child.options;

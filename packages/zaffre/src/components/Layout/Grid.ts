@@ -1,5 +1,5 @@
 import { znumber, zstring, zget, atom } from ":foundation";
-import { View, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -18,12 +18,12 @@ export interface GridOptions extends BoxOptions {
   areas?: zstring;
   templateAreas?: zstring;
 }
-defineComponentDefaults<GridOptions>("Grid", "Box", {
+defineBaseOptions<GridOptions>("Grid", "Box", {
   display: "grid",
 });
 
-export function Grid(inOptions: GridOptions = {}): View {
-  const options = mergeComponentDefaults("Grid", inOptions);
+export function Grid(inOptions: BV<GridOptions> = {}): View {
+  const options = mergeComponentOptions("Grid", inOptions);
 
   options.gridTemplateRows = options.templateRows;
   options.gridTemplateColumns = options.templateColumns;

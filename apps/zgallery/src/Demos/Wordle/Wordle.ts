@@ -1,13 +1,13 @@
-import { Box, Button, BoxOptions, Spacer, ToastStack, VStack, View, place, mergeComponentDefaults } from "zaffre";
+import { Box, Button, BoxOptions, Spacer, ToastStack, VStack, View, place, mergeComponentOptions, BV } from "zaffre";
 import { pct, addOptionEvents, core } from "zaffre";
-import { defineComponentDefaults } from "zaffre";
+import { defineBaseOptions } from "zaffre";
 import { WordleModel } from "./WordleModel";
 import { WordleGuesses } from "./WordleGuesses";
 import { WordleKeyboard } from "./WordleKeyboard";
 
 export interface WordleOptions extends BoxOptions {}
 
-defineComponentDefaults<WordleOptions>("Wordle", "Box", {
+defineBaseOptions<WordleOptions>("Wordle", "Box", {
   height: pct(100),
   font: core.font.headline_medium,
   position: "relative",
@@ -33,8 +33,8 @@ function NewGameButton(model: WordleModel): View {
   });
 }
 
-export function Wordle(inOptions: WordleOptions = {}): View {
-  const options = mergeComponentDefaults("Wordle", inOptions);
+export function Wordle(inOptions: BV<WordleOptions> = {}): View {
+  const options = mergeComponentOptions("Wordle", inOptions);
   const model = new WordleModel();
   options.model = model;
   addOptionEvents(options, { keyDown: (evt: KeyboardEvent): void => keyDown(model, evt) });

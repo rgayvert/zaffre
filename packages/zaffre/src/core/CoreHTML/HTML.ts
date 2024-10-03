@@ -1,6 +1,7 @@
 import { Atom, atom, lazyinit, zget, znumber } from ":foundation";
 import { Attributes, ColorToken, css_color, css_rounding, pct, px, vh, vw } from ":attributes";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":theme";
+import { allOptionBundles, BV, defineBaseOptions, mergeComponentOptions } from ":view";
+import { core } from ":theme";
 import { place } from ":uifoundation";
 import { View, ViewDelegate, ViewOptions, beforeAddedToDOM } from ":view";
 import { dropShadowForElevation, EffectsBundle, standardHTMLInteractionEffects } from ":effect";
@@ -200,18 +201,22 @@ export class HTMLDelegate extends ViewDelegate {
   public cssAttributes(): Attributes {
     return { ...this.extractCSSAttributes(this.options), ...this.selectionAttributes() };
   }
+
+  getAllOptionBundles(): any {
+    return allOptionBundles;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-defineComponentDefaults<HTMLOptions>("HTML", "", {
+defineBaseOptions<HTMLOptions>("HTML", "", {
   color: core.color.primary,
   cursor: "default",
   userSelect: "none",
 });
 
-export function HTML(inOptions: HTMLOptions = {}): View {
-  const options = mergeComponentDefaults("HTML", inOptions);
+export function HTML(inOptions: BV<HTMLOptions> = {}): View {
+  const options = mergeComponentOptions("HTML", inOptions);
 
   return new View(new HTMLDelegate(), options);
 }
@@ -244,7 +249,7 @@ function HTMLBody(): View {
 
 interface ViewOverlayOptions extends HTMLOptions {}
 
-defineComponentDefaults<ViewOverlayOptions>("Overlay", "HTML", {
+defineBaseOptions<ViewOverlayOptions>("Overlay", "HTML", {
   background: core.color.transparent,
   position: "absolute",
   left: px(0),
@@ -256,8 +261,8 @@ defineComponentDefaults<ViewOverlayOptions>("Overlay", "HTML", {
   borderRadius: "inherit",
 });
 
-export function ViewOverlay(inOptions: ViewOverlayOptions = {}): View {
-  const options = mergeComponentDefaults("Overlay", inOptions);
+export function ViewOverlay(inOptions: BV<ViewOverlayOptions> = {}): View {
+  const options = mergeComponentOptions("Overlay", inOptions);
   return HTML(options);
 }
 

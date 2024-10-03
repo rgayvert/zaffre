@@ -1,0 +1,1 @@
+This example is the same as the previous, but uses option bundles to split the non-reactive attributes into a separate bundles file. The net result is identical.

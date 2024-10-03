@@ -1,6 +1,6 @@
 import { atom, Atom, incrementAtom, decrementAtom, zutil, zboolean } from ":foundation";
-import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow, BV } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
 //
@@ -25,7 +25,7 @@ export interface FloatingOptions extends BoxOptions {
   showOn?: zboolean;
   hideOnWindowResize?: zboolean;
 }
-defineComponentDefaults<FloatingOptions>("Floating", "Box", {
+defineBaseOptions<FloatingOptions>("Floating", "Box", {
   background: core.color.transparent,
   useArrow: false,
   dismissOnOutsideClick: true,
@@ -49,8 +49,8 @@ export const floatingCount = atom(0);
  * The hidden atom of the view is set to be that of the floating container.
  */
 
-export function Floating(enclosedView: View, inOptions: FloatingOptions = {}): View {
-  let options = mergeComponentDefaults("Floating", inOptions);
+export function Floating(enclosedView: View, inOptions: BV<FloatingOptions> = {}): View {
+  let options = mergeComponentOptions("Floating", inOptions);
   const enclosedOptions = <HTMLOptions>enclosedView.options;
 
   options.name = enclosedOptions.componentName;

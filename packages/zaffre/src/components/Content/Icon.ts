@@ -1,5 +1,5 @@
 import { zlog, zget, zstring, ContentSecurity } from ":foundation";
-import { em, View, setInnerHTML, resolveURI, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { em, View, setInnerHTML, resolveURI, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 /*
@@ -14,14 +14,14 @@ import { Box, BoxOptions } from "../HTML";
 export interface IconOptions extends BoxOptions {
   //inline?: zboolean;
 }
-defineComponentDefaults<IconOptions>("Icon", "Box", {
+defineBaseOptions<IconOptions>("Icon", "Box", {
   color: core.color.inherit,
   background: core.color.inherit,
   lineHeight: em(1),
 });
 
-export function Icon(uri: zstring, inOptions: IconOptions = {}): View {
-  const options = mergeComponentDefaults("Icon", inOptions);
+export function Icon(uri: zstring, inOptions: BV<IconOptions> = {}): View {
+  const options = mergeComponentOptions("Icon", inOptions);
 
   options.id ??= zget(uri);
   if (!zget(uri)) {

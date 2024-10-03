@@ -1,6 +1,6 @@
 import { zboolean, zget, Atom, atom, zstring, zset } from ":foundation";
-import { View, addOptionEvents, handleEvents, beforeAddedToDOM } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, addOptionEvents, handleEvents, beforeAddedToDOM, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Input, InputOptions, InputType } from "../Content";
 
 //
@@ -22,7 +22,7 @@ export interface TextInputOptions extends InputOptions {
   step?: string;
   autocomplete?: zstring;
 }
-defineComponentDefaults<TextInputOptions>("TextInput", "Input", {
+defineBaseOptions<TextInputOptions>("TextInput", "Input", {
   font: core.font.body_medium,
   setOnInput: true,
   preserveCursorLocation: true,
@@ -33,9 +33,9 @@ export function GenericTextInput<T>(
   inputType: InputType,
   formatter: (value: T) => string,
   parser: (text: string) => T,
-  inOptions: TextInputOptions = {}
+  inOptions: BV<TextInputOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("TextInput", inOptions);
+  const options = mergeComponentOptions("TextInput", inOptions);
 
   options.type = inputType;
 

@@ -1,6 +1,5 @@
 import { znumber } from ":foundation";
-import { View } from ":view";
-import { defineComponentDefaults, mergeComponentDefaults } from ":theme";
+import { BV, View, defineBaseOptions, mergeComponentOptions } from ":view";
 import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
 import { SVGOptions } from "./SVGOptions";
 import { CreateSVGView } from "./SVGDelegate";
@@ -14,13 +13,13 @@ export interface SVGGroupOptions extends SVGOptions {
   x?: znumber;
   y?: znumber;
 }
-defineComponentDefaults<SVGGroupOptions>("SVGGroup", "SVGView", {
+defineBaseOptions<SVGGroupOptions>("SVGGroup", "SVGView", {
   x: 0,
   y: 0,
 });
 
-export function SVGGroup(inOptions: SVGGroupOptions = {}): View {
-  const options = mergeComponentDefaults("SVGGroup", inOptions);
+export function SVGGroup(inOptions: BV<SVGGroupOptions> = {}): View {
+  const options = mergeComponentOptions("SVGGroup", inOptions);
 
   if (options.x && options.y) {
     options.transform = `translate(${options.x}, ${options.y})`;

@@ -1,5 +1,5 @@
 import { zstring } from ":foundation";
-import { View, resolveURI, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, resolveURI, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -7,10 +7,10 @@ import { Box, BoxOptions } from "../HTML";
 //
 
 export interface IFrameOptions extends BoxOptions {}
-defineComponentDefaults<IFrameOptions>("IFrame", "Box", {});
+defineBaseOptions<IFrameOptions>("IFrame", "Box", {});
 
-export function IFrame(uri: zstring, inOptions: IFrameOptions = {}): View {
-  const options = mergeComponentDefaults("IFrame", inOptions);
+export function IFrame(uri: zstring, inOptions: BV<IFrameOptions> = {}): View {
+  const options = mergeComponentOptions("IFrame", inOptions);
 
   options.componentName = "IFrame";
   options.tag = "iframe";

@@ -1,6 +1,6 @@
 import { zget, Atom, TreeNode, atom, counterAtomForDataSelection, zboolean } from ":foundation";
-import { ChildCreator, ChildDataIDFn, View, LengthToken, ch, counterKeyBindings } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { ChildCreator, ChildDataIDFn, View, LengthToken, ch, counterKeyBindings, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { StackOptions, VStack } from "./Stack";
 import { ViewList } from "./ViewList";
 
@@ -25,7 +25,7 @@ export interface TreeOptions extends StackOptions {
   showRoot?: zboolean;
   alwaysExpanded?: boolean;
 }
-defineComponentDefaults<TreeOptions>("Tree", "VStack", {
+defineBaseOptions<TreeOptions>("Tree", "VStack", {
   background: core.color.background,
   font: core.font.title_medium,
   allowMultipleExpanded: true,
@@ -51,9 +51,9 @@ export function Tree<T>(
   selectedNode: Atom<TreeNode<T> | undefined>,
   idFn: ChildDataIDFn<TreeNode<T>>,
   labelFn: ChildCreator<TreeNode<T>>,
-  inOptions: TreeOptions = {}
+  inOptions: BV<TreeOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("Tree", inOptions);
+  const options = mergeComponentOptions("Tree", inOptions);
 
   // expand the tree to the selection
   selectedNode.addAction((node) => node && root.expandTo(node));

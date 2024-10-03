@@ -1,5 +1,5 @@
 import { zstring, zboolean, atom } from ":foundation";
-import { View, resolveURI, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, resolveURI, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -10,12 +10,12 @@ export interface AudioOptions extends BoxOptions {
   autoplay?: zboolean;
 }
 
-defineComponentDefaults<AudioOptions>("Audio", "Box", {
+defineBaseOptions<AudioOptions>("Audio", "Box", {
   autoplay: true,
 });
 
-export function Audio(uri: zstring, inOptions: AudioOptions = {}): View {
-  const options = mergeComponentDefaults("Audio", inOptions);
+export function Audio(uri: zstring, inOptions: BV<AudioOptions> = {}): View {
+  const options = mergeComponentOptions("Audio", inOptions);
 
   options.componentName = "Audio";
   options.tag = "audio";

@@ -1,5 +1,5 @@
 import { Atom, ZType, CounterAtom, TAction, counterAtomForDataSelection } from ":foundation";
-import { View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { StackOptions, VStack } from "./Stack";
 import { ViewList } from "./ViewList";
 
@@ -14,7 +14,7 @@ export interface SelectionListOptions extends StackOptions {
   dblClickAction?: TAction<unknown>;
   currentIndex?: CounterAtom;
 }
-defineComponentDefaults<SelectionListOptions>("SelectionList", "VStack", {
+defineBaseOptions<SelectionListOptions>("SelectionList", "VStack", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -25,9 +25,9 @@ export function SelectionList<T>(
   data: ZType<T[]>,
   selectedItem: Atom<T | undefined>,
   itemCreator: (item: T, index: number) => View,
-  inOptions: SelectionListOptions = {}
+  inOptions: BV<SelectionListOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("SelectionList", inOptions);
+  const options = mergeComponentOptions("SelectionList", inOptions);
 
   // TODO
   const currentIndex = counterAtomForDataSelection(data, selectedItem);

@@ -1,5 +1,5 @@
 import { Atom, DateTimeFormatter } from ":foundation";
-import { View, px, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, px, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Button } from "../Controls";
 import { HStack } from "../Layout";
 import { InputType } from "../Content";
@@ -16,14 +16,14 @@ export interface ChronoInputOptions extends TextInputOptions {
   iconName?: string;
   useNativePickerIcon?: boolean;
 }
-defineComponentDefaults<ChronoInputOptions>("ChronoInput", "Input", {
+defineBaseOptions<ChronoInputOptions>("ChronoInput", "Input", {
   iconName: "icon.calendar",
   useNativePickerIcon: true,
   paddingLeft: core.space.s4,
 });
 
-function ChronoInput(date: Atom<Date>, inputType: InputType, inOptions: ChronoInputOptions = {}): View {
-  const options = mergeComponentDefaults("ChronoInput", inOptions);
+function ChronoInput(date: Atom<Date>, inputType: InputType, inOptions: BV<ChronoInputOptions> = {}): View {
+  const options = mergeComponentOptions("ChronoInput", inOptions);
   options.type = inputType;
 
   function dateFromShortString(s: string): Date {

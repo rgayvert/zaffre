@@ -10,12 +10,12 @@ export class AnimationModel {
   public animator: BasicAnimator;
   public running: ToggleAtom;
 
-  constructor(options: AnimatorOptions = {}) {
+  constructor(public options: AnimatorOptions = {}) {
     this.animator = this.basicAnimator(); 
     this.running = this.animator.running;
   }
   basicAnimator(): BasicAnimator {
-    return new BasicAnimator();
+    return new BasicAnimator(this.options);
   }
 
   get isRunning(): boolean {

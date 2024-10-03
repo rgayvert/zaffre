@@ -1,6 +1,6 @@
 import { zget, zboolean, atom } from ":foundation";
-import { ch, View, addOptionEvents, standardHTMLInteractionEffects, SVGEffect } from ":core";
-import { MouseAction, handleEvents, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { ch, View, addOptionEvents, standardHTMLInteractionEffects, SVGEffect, BV } from ":core";
+import { MouseAction, handleEvents, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { LabelWithIcons, LabelWithIconsOptions } from "./LabelWithIcons";
 
 //
@@ -19,7 +19,7 @@ export interface ButtonOptions extends LabelWithIconsOptions {
   /** show a ripple effect */
   ripple?: zboolean;
 }
-defineComponentDefaults<ButtonOptions>("Button", "LabelWithIcons", {
+defineBaseOptions<ButtonOptions>("Button", "LabelWithIcons", {
   ripple: false,
   preserveFocus: true,
   border: core.border.thin,
@@ -28,8 +28,8 @@ defineComponentDefaults<ButtonOptions>("Button", "LabelWithIcons", {
   role: "button",
 });
 
-export function Button(inOptions: ButtonOptions = {}): View {
-  const options = mergeComponentDefaults("Button", inOptions);
+export function Button(inOptions: BV<ButtonOptions> = {}): View {
+  const options = mergeComponentOptions("Button", inOptions);
 
   function isLabelOnly(): boolean {
     return !options.leadingIconURI && !options.trailingIconURI;

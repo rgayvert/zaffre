@@ -1,5 +1,5 @@
-import { Atom, atom, core, TreeNode, pct, vh, px, Ensemble, ScrollPane, mergeComponentDefaults } from "zaffre";
-import { SplitGridOptions, defineComponentDefaults } from "zaffre";
+import { Atom, atom, core, TreeNode, pct, vh, px, Ensemble, ScrollPane, mergeComponentOptions, BV } from "zaffre";
+import { SplitGridOptions, defineBaseOptions } from "zaffre";
 import { TextBox, View, SplitGrid, BoxOptions } from "zaffre";
 import { viewStyleText } from "./ViewStyle";
 import { DOMObjectTree } from "./DOMObjectTree";
@@ -17,7 +17,7 @@ export interface DOMInspectorOptions extends SplitGridOptions {
   reset?: Atom<boolean>;
 }
 
-defineComponentDefaults<DOMInspectorOptions>("DOMInspector", "SplitGrid", {
+defineBaseOptions<DOMInspectorOptions>("DOMInspector", "SplitGrid", {
   columnMins: [100, 100, 100],
   columnMaxes: [2, 3, 3],
   width: pct(100),
@@ -30,8 +30,8 @@ function treeNodeFromView(view: View): TreeNode<View> {
   return new TreeNode(view, () => view.children.get().map((child) => treeNodeFromView(child)));
 }
 
-export function DOMInspector(baseView: View, inOptions: DOMInspectorOptions = {}): View {
-  const options = mergeComponentDefaults("DOMInspector", inOptions);
+export function DOMInspector(baseView: View, inOptions: BV<DOMInspectorOptions> = {}): View {
+  const options = mergeComponentOptions("DOMInspector", inOptions);
   const selectedDOMView = atom(baseView);
   const viewStyle = atom(() => viewStyleText(selectedDOMView));
   const selectedViewID = atom(() => selectedDOMView.get().zname);

@@ -1,4 +1,4 @@
-import { View, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 // 
@@ -9,11 +9,11 @@ import { Box, BoxOptions } from "../HTML";
 
 export interface ScrollPaneOptions extends BoxOptions {}
 
-defineComponentDefaults<ScrollPaneOptions>("ScrollPane", "Box", {
+defineBaseOptions<ScrollPaneOptions>("ScrollPane", "Box", {
   overflow: "auto",
 });
 
-export function ScrollPane(inOptions: ScrollPaneOptions = {}): View {
-  const options = mergeComponentDefaults("ScrollPane", inOptions);
+export function ScrollPane(inOptions: BV<ScrollPaneOptions> = {}): View {
+  const options = mergeComponentOptions("ScrollPane", inOptions);
   return Box(options);
 }

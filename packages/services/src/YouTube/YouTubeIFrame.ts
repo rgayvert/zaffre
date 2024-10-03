@@ -1,5 +1,5 @@
-import { atom, Box, View, Atom, IFrameOptions, mergeComponentDefaults, afterAddedToDOM } from "zaffre";
-import { core, defineComponentDefaults } from "zaffre";
+import { atom, Box, View, Atom, IFrameOptions, mergeComponentOptions, afterAddedToDOM, BV } from "zaffre";
+import { core, defineBaseOptions } from "zaffre";
 import { createYouTubePlayer, YouTubePlayerConfig, YTPlayer } from "./YouTubePlayer";
 
 export interface YouTubeIFrameOptions extends IFrameOptions {
@@ -8,15 +8,15 @@ export interface YouTubeIFrameOptions extends IFrameOptions {
   disableKeyboard?: boolean;
   allowFullscreen?: boolean;
 }
-defineComponentDefaults<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
+defineBaseOptions<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
   controls: true,
   disableKeyboard: true,
   allowFullscreen: false,
   border: core.border.thin,
 });
 
-export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: YouTubeIFrameOptions): View {
-  const options = mergeComponentDefaults("YouTubeIFrame", inOptions);
+export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: BV<YouTubeIFrameOptions>): View {
+  const options = mergeComponentOptions("YouTubeIFrame", inOptions);
 
   const ready = atom(false);
   options.background = atom(() => (ready.get() ? core.color.transparent : core.color.gray));

@@ -1,6 +1,6 @@
 import { atom, toggleAtom, ToggleAtom, Tuple2, zlog, zstring, zutil } from ":foundation";
 import { ColorMode, ZWindow } from "../UIFoundation";
-import { View, ViewCreator } from "../View";
+import { BV, View, ViewCreator } from "../View";
 import { Theme, defaultCoreTheme } from "../Theme";
 import { HTMLDelegate } from "../CoreHTML";
 import { addDocumentHeaderLink } from "../DOM";
@@ -52,7 +52,7 @@ export class App {
   options: AppOptions;
   router: Router;
 
-  constructor(public appContext = AppContext.Web, inOptions: AppOptions = {}) {
+  constructor(public appContext = AppContext.Web, inOptions: BV<AppOptions> = {}) {
     this.options = zutil.mergeOptions(defaultAppOptions, inOptions);
     App.instance = this;
     this.resources = new AppResources();

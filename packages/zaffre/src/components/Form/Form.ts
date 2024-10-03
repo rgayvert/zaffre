@@ -1,6 +1,6 @@
 import { Atom, BasicAction, RecordEditor, atom, updateRecordFromEditor } from ":foundation";
 import { zget, zstring, gridAreaToString } from ":foundation";
-import { View, core, em, pct, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, core, em, pct, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Grid, HStack, VStack, GridOptions, StackOptions } from "../Layout";
 import { LabelBox, LabelBoxOptions } from "../ControlGroups";
 import { Button } from "../Controls";
@@ -41,7 +41,7 @@ export interface FormOptions extends GridOptions {
   validationOn?: Atom<boolean>;
   containerOptions?: StackOptions;
 }
-defineComponentDefaults<FormOptions>("Form", "Grid", {
+defineBaseOptions<FormOptions>("Form", "Grid", {
   fieldFns: DefaultFormFieldFns,
   cancelLabel: "Cancel",
   resetLabel: "Reset",
@@ -57,9 +57,9 @@ export function Form<R>(
   record: Atom<R>,
   editor: RecordEditor<R>,
   fields: FormFieldSpecs<R>,
-  inOptions: FormOptions = {}
+  inOptions: BV<FormOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("Form", inOptions);
+  const options = mergeComponentOptions("Form", inOptions);
 
   function FormFieldView(property: keyof R, field: FormField<unknown>): View | undefined {
     const fieldFn = options.fieldFns!.get(field.type);

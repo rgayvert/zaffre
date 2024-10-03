@@ -1,20 +1,20 @@
-import { View, BoxOptions, Checkbox, HStack, SharedViewState, TextButton, TextInput, Atom } from "zaffre";
+import { View, BoxOptions, Checkbox, HStack, SharedViewState, TextButton, TextInput, Atom, BV } from "zaffre";
 import { atom, calc, core, pct, em, tableRecordEditor } from "zaffre";
-import { defineComponentDefaults, mergeComponentDefaults } from "zaffre";
+import { defineBaseOptions, mergeComponentOptions } from "zaffre";
 import { ToDoModel } from "../Model";
 import { ToDoRecord } from "../Data";
  
 export interface ToDoItemRowOptions extends BoxOptions {} 
 
-defineComponentDefaults<ToDoItemRowOptions>("ToDoItemRow", "Box", {
+defineBaseOptions<ToDoItemRowOptions>("ToDoItemRow", "Box", {
   width: pct(100),
   padding: core.space.s0,
   alignItems: "center",
   justifyContent: "center",
 });
 
-export function ToDoItemRow(item: ToDoRecord, model: ToDoModel, inOptions: ToDoItemRowOptions = {}): View {
-  const options = mergeComponentDefaults("ToDoItemRow", inOptions);
+export function ToDoItemRow(item: ToDoRecord, model: ToDoModel, inOptions: BV<ToDoItemRowOptions> = {}): View {
+  const options = mergeComponentOptions("ToDoItemRow", inOptions);
   const readOnly = atom(true);
   const sharedItemRowState: SharedViewState = {
     hovered: atom(false),

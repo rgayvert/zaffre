@@ -1,6 +1,6 @@
 import { zstring, zget, atom } from ":foundation";
-import { View, setInnerHTML, resolveURI, simpleEffect, routeToPath, core } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, setInnerHTML, resolveURI, simpleEffect, routeToPath, core, BV } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 /**
@@ -19,7 +19,7 @@ export interface LinkOptions extends BoxOptions {
   referrerpolicy?: zstring;
   target?: LinkTarget;
 }
-defineComponentDefaults<LinkOptions>("Link", "Box", {
+defineBaseOptions<LinkOptions>("Link", "Box", {
   cursor: "pointer",
   textDecoration: "underline",
   target: "",
@@ -28,8 +28,8 @@ defineComponentDefaults<LinkOptions>("Link", "Box", {
   },
 });
 
-export function Link(uri: zstring, inOptions: LinkOptions = {}): View {
-  const options = mergeComponentDefaults("Link", inOptions);
+export function Link(uri: zstring, inOptions: BV<LinkOptions> = {}): View {
+  const options = mergeComponentOptions("Link", inOptions);
 
   function setLinkContent(view: View, options: LinkOptions): void {
     options.text && setInnerHTML(view, zget(options.text));

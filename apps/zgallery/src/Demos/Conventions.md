@@ -31,7 +31,6 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - derived atom = reactive value defined as a function of other reactive values
 - disclosure = component that contains a title and toggling detail
 - effect = animation or transition
-- fashion = reusable map of component selectors to non-reactive component options
 - floating = temporary view that appears in the floating layer
 - foundation = core non-UI classes/functions
 - handler = object that manages a set of event types
@@ -41,13 +40,14 @@ To follow the source code, it's helpful to know some of the naming conventions t
 - lorem = testing data generator
 - model = object which controls one or more components via reactive values
 - option = optional value passed to component; may be attribute or other value
+- option bundle = named collection of non-reactive component options; analogous to css class
 - placement = specification of relative arrangement of two components
 - routing = navigation within the app in conjunction with browser history
 - service = external package encapsulated in a well-defined API
 - theme = collection of mappings of tokens to attribute values
 - token = object which is converted into attributes by a theme
 - view = object containing an HTML or SVG element
-- viewlist = pseudocomponent that manages reactive lists of components 
+- viewlist = pseudocomponent that manages reactive lists of components
 
 **Monorepo Organization:**
 

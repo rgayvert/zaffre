@@ -1,5 +1,5 @@
-import { addOptionEvents, View } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { addOptionEvents, BV, View } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "./Button";
 
 //
@@ -12,12 +12,12 @@ export interface DownButtonOptions extends ButtonOptions {
     intervalMillis?: number;
     downAction?: (evt: MouseEvent) => void;
   }
-  defineComponentDefaults<DownButtonOptions>("DownButton", "Button", {
+  defineBaseOptions<DownButtonOptions>("DownButton", "Button", {
     intervalMillis: 100,
   });
   
-  export function DownButton(inOptions: DownButtonOptions = {}): View {
-    const options = mergeComponentDefaults("DownButton", inOptions);
+  export function DownButton(inOptions: BV<DownButtonOptions> = {}): View {
+    const options = mergeComponentOptions("DownButton", inOptions);
     let timerID: ReturnType<typeof setTimeout> | undefined;
     function mouseDown(evt: MouseEvent): void {
       options.downAction?.(evt)

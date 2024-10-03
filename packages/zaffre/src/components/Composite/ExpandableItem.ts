@@ -1,5 +1,5 @@
 import { zstring, znumber, Atom,  } from ":foundation";
-import { View, css_color, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, css_color, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { HStack, Spacer, StackOptions } from "../Layout";
 import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 
@@ -28,7 +28,7 @@ export interface ExpandableItemOptions extends StackOptions {
   alwaysExpanded?: boolean;
   labelOptions?: TextLabelOptions;
 }
-defineComponentDefaults<ExpandableItemOptions>("ExpandableItem", "HStack", {
+defineBaseOptions<ExpandableItemOptions>("ExpandableItem", "HStack", {
   background: core.color.surface,
   rounding: core.rounding.none,
   padding: core.space.s2,
@@ -39,8 +39,8 @@ defineComponentDefaults<ExpandableItemOptions>("ExpandableItem", "HStack", {
   outline: core.border.none,
 });
 
-export function ExpandableItem(inOptions: ExpandableItemOptions): View {
-  const options = mergeComponentDefaults("ExpandableItem", inOptions);
+export function ExpandableItem(inOptions: BV<ExpandableItemOptions> = {}): View {
+  const options = mergeComponentOptions("ExpandableItem", inOptions);
   
   const labelOptions: TextLabelOptions = {
     extraClasses: options.extraLabelClasses,
@@ -48,7 +48,7 @@ export function ExpandableItem(inOptions: ExpandableItemOptions): View {
     font: core.font.body_medium,
     textPositionX: "start",
     color: options.textColor,
-    selected: inOptions.selected,
+    selected: options.selected,
     overflow: "hidden",
     ...options.labelOptions
   };

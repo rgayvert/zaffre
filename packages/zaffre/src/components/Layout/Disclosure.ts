@@ -1,6 +1,6 @@
 import { zget, znumber, ZType, toggleAtom, ToggleAtom } from ":foundation";
-import { beforeAddedToDOM, transitions, View, ViewOptions, css_color, pct } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { beforeAddedToDOM, transitions, View, ViewOptions, css_color, pct, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box } from "../HTML";
 import { StackOptions, VStack } from "./Stack";
 
@@ -18,7 +18,7 @@ export interface DisclosureOptions extends StackOptions {
   effectDuration?: znumber;
   labelSelectionColor?: css_color;
 }
-defineComponentDefaults<DisclosureOptions>("Disclosure", "VStack", {
+defineBaseOptions<DisclosureOptions>("Disclosure", "VStack", {
   alignItems: "start",
   width: pct(100),
   outline: core.border.none,
@@ -31,9 +31,9 @@ export function Disclosure<T>(
   data: ZType<T>,
   summaryCreator: DisclosureComponent<T>,
   detailCreator: DisclosureComponent<T>,
-  inOptions: DisclosureOptions = {}
+  inOptions: BV<DisclosureOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("Disclosure", inOptions);
+  const options = mergeComponentOptions("Disclosure", inOptions);
 
   const expanded = options.expanded || toggleAtom(options.initiallyExpanded!);
   const hidden = expanded.negation;

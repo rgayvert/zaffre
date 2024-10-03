@@ -1,13 +1,13 @@
-import { View, StackOptions, routeAtom, Resettable, VStack, counterAtom } from "zaffre";
+import { View, StackOptions, routeAtom, Resettable, VStack, counterAtom, BV } from "zaffre";
 import { core, pct, zutil } from "zaffre";
-import { defineComponentDefaults, mergeComponentDefaults } from "zaffre";
+import { defineBaseOptions, mergeComponentOptions } from "zaffre";
 import { GalleryTopic, GallerySection } from "../GalleryTypes";
 import { DemoBoxHeader } from "./DemoBoxHeader";
 import { DemoBoxEnsemble } from "./DemoBoxEnsemble";
 
 interface DemoBoxOptions extends StackOptions {}
 
-defineComponentDefaults<DemoBoxOptions>("DemoBox", "VStack", {
+defineBaseOptions<DemoBoxOptions>("DemoBox", "VStack", {
   width: pct(95),
   marginTop: core.space.s3,
   border: core.border.thin.color(core.color.gray.opacity(0.5)),
@@ -21,8 +21,8 @@ defineComponentDefaults<DemoBoxOptions>("DemoBox", "VStack", {
  *   - if the demo has only one section, it is considered "fullpage"; otherwise, space is added around the sections
  *
  */
-export function DemoBox(section: GallerySection, topic: GalleryTopic, inOptions: DemoBoxOptions = {}): View {
-  const options = mergeComponentDefaults("DemoBox", inOptions);
+export function DemoBox(section: GallerySection, topic: GalleryTopic, inOptions: BV<DemoBoxOptions> = {}): View {
+  const options = mergeComponentOptions("DemoBox", inOptions);
     options.id = zutil.stripWhitespace(section.title);
     const fullPage = topic.sections.length === 1;
     if (fullPage) {

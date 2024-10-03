@@ -1,5 +1,5 @@
 import { zboolean, TableModel, TableHeaderCell } from ":foundation";
-import { px, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { px, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { CenteredTextLabel, TextLabelOptions } from "../Content";
 
 //
@@ -10,7 +10,7 @@ import { CenteredTextLabel, TextLabelOptions } from "../Content";
 export interface TableHeaderCellViewOptions extends TextLabelOptions {
   sortable?: zboolean;
 }
-defineComponentDefaults<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel", {
+defineBaseOptions<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel", {
   padding: core.space.s2,
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -26,9 +26,9 @@ defineComponentDefaults<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel
 export function HeaderCellView<R>(
   tableModel: TableModel<R>,
   cell: TableHeaderCell<R, unknown>,
-  inOptions: TableHeaderCellViewOptions = {}
+  inOptions: BV<TableHeaderCellViewOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("HeaderCellView", inOptions);
+  const options = mergeComponentOptions("HeaderCellView", inOptions);
   if (tableModel.maySelectColumns || options.sortable) {
     options.clickAction = () => handleClick();
   }

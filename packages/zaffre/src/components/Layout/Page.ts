@@ -1,5 +1,5 @@
-import { View, ch, css, pct } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, ch, css, pct } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -12,7 +12,7 @@ import { Box, BoxOptions } from "../HTML";
 
 export interface PageOptions extends BoxOptions {}
 
-defineComponentDefaults<PageOptions>("Page", "Box", {
+defineBaseOptions<PageOptions>("Page", "Box", {
   width: pct(100),
   height: pct(100),
   maxWidth: ch(100), 
@@ -20,8 +20,8 @@ defineComponentDefaults<PageOptions>("Page", "Box", {
 });
 
 
-export function Page(inOptions: PageOptions = {}): View {
-  const options = mergeComponentDefaults("Page", inOptions);
+export function Page(inOptions: BV<PageOptions> = {}): View {
+  const options = mergeComponentOptions("Page", inOptions);
 
   return Box(options);
 }

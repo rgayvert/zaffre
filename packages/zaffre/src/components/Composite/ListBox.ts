@@ -1,5 +1,5 @@
 import { Atom, ZType, TAction, atom, counterAtomForDataSelection, SimpleAction } from ":foundation";
-import { View, counterKeyBindings, core, defineComponentDefaults, mergeComponentDefaults,  } from ":core";
+import { View, counterKeyBindings, core, defineBaseOptions, mergeComponentOptions, BV,  } from ":core";
 import { SelectionList, SelectionListOptions } from "../Layout";
 import { LabelWithIcons } from "../Controls";
 
@@ -11,7 +11,7 @@ export interface ListBoxOptions extends SelectionListOptions {
   dblClickAction?: TAction<unknown>;
   onClick?: SimpleAction;
 }
-defineComponentDefaults<ListBoxOptions>("ListBox", "SelectionList", {
+defineBaseOptions<ListBoxOptions>("ListBox", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -22,9 +22,9 @@ export function ListBox<T>(
   data: ZType<T[]>,
   selectedItem: Atom<T | undefined>,
   labelFn: (item: T, index: number) => string,
-  inOptions: ListBoxOptions = {}
+  inOptions: BV<ListBoxOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("ListBox", inOptions);
+  const options = mergeComponentOptions("ListBox", inOptions);
 
   function handleClick(dataItem: T, index: number): void {
     selectedItem.set(dataItem);

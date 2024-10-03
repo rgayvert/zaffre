@@ -1,6 +1,6 @@
 import { zget, zboolean, znumber, zstring, atom, rect2D } from ":foundation";
-import { beforeAddedToDOM, standardSVGInteractionEffects, css_color, px, View } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { beforeAddedToDOM, standardSVGInteractionEffects, css_color, px, View, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { SVG, SVGContainerOptions, SVGRectangle, SVGText } from ":core";
 
 //
@@ -17,14 +17,14 @@ export interface SVGTextLabelOptions extends SVGContainerOptions {
   textColor?: css_color;
   vOffset?: znumber;
 }
-defineComponentDefaults<SVGTextLabelOptions>("SVGTextLabel", "", {
+defineBaseOptions<SVGTextLabelOptions>("SVGTextLabel", "", {
   bounds: rect2D(0, 0, 100, 100),
   textColor: core.color.primary,
   userSelect: "none",
 });
 
-export function SVGTextLabel(content: zstring, inOptions: SVGTextLabelOptions = {}): View {
-  const options = mergeComponentDefaults("SVGTextLabel", inOptions);
+export function SVGTextLabel(content: zstring, inOptions: BV<SVGTextLabelOptions> = {}): View {
+  const options = mergeComponentOptions("SVGTextLabel", inOptions);
 
   beforeAddedToDOM(options, (view: View): void => {
     const viewOptions = <SVGTextLabelOptions>view.options;

@@ -1,8 +1,8 @@
 import { View } from "zaffre";
 import { GalleryDemo, GalleryTopic } from "../Common";
 import { BasicOptionsExample } from "./BasicOptionsExample";
-import { LocalDefaultsExample } from "./LocalDefaultsExample";
-import { DefaultsInheritanceExample } from "./DefaultsInheritanceExample";
+import { OptionBundlesExample } from "./OptionBundlesExample";
+import { InheritanceExample } from "./InheritanceExample";
 import { ReactiveOptionsExample } from "./ReactiveOptionsExample";
 
 export function OptionsDemo(): View {
@@ -25,16 +25,16 @@ const topic: GalleryTopic = {
       markdown: "ReactiveOptionsExample.md",
     },
     {
-      title: "Defaults Inheritance",
-      componentFn: DefaultsInheritanceExample,
-      sources: ["DefaultsInheritanceExample.ts"],
-      markdown: "DefaultsInheritanceExample.md",
+      title: "Options Inheritance",
+      componentFn: InheritanceExample,
+      sources: ["InheritanceExample.ts"],
+      markdown: "InheritanceExample.md",
     },
     {
-      title: "Local Defaults",
-      componentFn: LocalDefaultsExample, 
-      sources: ["LocalDefaultsExample.ts"],
-      markdown: "LocalDefaultsExample.md",
+      title: "Option Bundles",
+      componentFn: OptionBundlesExample, 
+      sources: ["OptionBundlesExample.ts", "OptionBundles.ts"],
+      markdown: "OptionBundlesExample.md",
     },
   ],
 };

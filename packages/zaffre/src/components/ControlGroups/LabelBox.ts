@@ -1,7 +1,7 @@
 import { ZType, zget, zstring, atom, EdgePoint, BoxSide, zboolean } from ":foundation";
 import { convertBoxSideToEdgePoint } from ":foundation";
-import { CSSAlign, CSSFlexDirection, View, disableEffectsWhile } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, CSSAlign, CSSFlexDirection, View, disableEffectsWhile } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { TextLabel, TextLabelOptions } from "../Content";
 import { Stack, StackOptions } from "../Layout";
 
@@ -23,7 +23,7 @@ export interface LabelBoxOptions extends StackOptions {
   extendClick?: zboolean;
   labelOptions?: TextLabelOptions;
 }
-defineComponentDefaults<LabelBoxOptions>("LabelBox", "Stack", {
+defineBaseOptions<LabelBoxOptions>("LabelBox", "Stack", {
   side: "left",
   justifyContent: "unset",
   extendClick: true,
@@ -50,15 +50,15 @@ function extractAlign(pt: EdgePoint): CSSAlign {
     ? "end"
     : "center";
 }
-export function LabelBox(label: zstring, inOptions: LabelBoxOptions = {}): View {
-  const options = mergeComponentDefaults("LabelBox", inOptions);
+export function LabelBox(label: zstring, inOptions: BV<LabelBoxOptions> = {}): View {
+  const options = mergeComponentOptions("LabelBox", inOptions);
   const pt = options.placementPt || convertBoxSideToEdgePoint(options.side!);
   const dir = atom(() => extractDirection(zget(pt)));
   const align = atom(() => extractAlign(zget(pt)));
   // make sure horizontal labels have some space
   options.gap ??= atom(() => (dir.get().startsWith("row") ? core.space.s2 : core.space.s0));
 
-  const labelOptions = mergeComponentDefaults("TextLabel", options.labelOptions || {});
+  const labelOptions = mergeComponentOptions("TextLabel", options.labelOptions || {});
   const textLabel = TextLabel(label, labelOptions);
 
   if (zget(options.extendClick)) {

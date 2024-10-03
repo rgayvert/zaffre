@@ -1,5 +1,5 @@
 import { Atom, atom, BasicAction, TableCell, zboolean, TableDataCell, TableModel, TableHeaderCell } from ":foundation";
-import { View, px, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, px, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Grid, GridOptions, ViewList } from "../Layout";
 import { TextLabelOptions } from "../Content";
 import { Box } from "../HTML";
@@ -33,14 +33,14 @@ export interface TableOptions extends GridOptions {
   doubleClickAction?: BasicAction;
   selectableColumns?: zboolean;
 }
-defineComponentDefaults<TableOptions>("Table", "Grid", {
+defineBaseOptions<TableOptions>("Table", "Grid", {
   showHeader: true,
   gridLines: "both",
   background: core.color.primary,
 });
 
-export function Table<R>(tableModel: TableModel<R>, inOptions: TableOptions = {}): View {
-  const options = mergeComponentDefaults("Table", inOptions);
+export function Table<R>(tableModel: TableModel<R>, inOptions: BV<TableOptions> = {}): View {
+  const options = mergeComponentOptions("Table", inOptions);
   options.model = tableModel;
   options.alignItems = "start";
   options.nrows = atom(() => tableModel.numRows.get());

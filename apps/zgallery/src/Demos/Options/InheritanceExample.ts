@@ -36,7 +36,7 @@ function FoxAndFoxInVStack(): View {
   return VStack(stackOptions).append(Fox(), Fox());
 }
 
-export function DefaultsInheritanceExample(): View {
+export function InheritanceExample(): View {
   return SoftGrid({ minColumnWidth: "17ch" }).append(
     LabeledStack("Fox", Fox()),
     LabeledStack("FoxInBox", FoxInBox()),

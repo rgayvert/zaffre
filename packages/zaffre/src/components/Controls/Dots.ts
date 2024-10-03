@@ -1,5 +1,5 @@
 import { ZType, atom, zboolean, zget } from ":foundation";
-import { ColorToken, ch, css_length, em, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { ColorToken, ch, css_length, em, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Stack, StackOptions, ViewList } from "../Layout";
 import { Box, BoxOptions } from "../HTML";
 
@@ -22,7 +22,7 @@ interface DotOptions extends BoxOptions {
   dotSize?: css_length;
   dotColor?: ColorToken;
 }
-defineComponentDefaults<DotsOptions>("Dots", "StackOptions", {
+defineBaseOptions<DotsOptions>("Dots", "StackOptions", {
   flexDirection: "row",
   spaceBetweenDots: ch(1),
 });
@@ -39,8 +39,8 @@ function DefaultDot(_index: number, value: zboolean, options: DotOptions): View 
   });
 }
 
-export function Dots(values: ZType<boolean[]>, inOptions: DotsOptions = {}): View {
-  const options = mergeComponentDefaults("Dots", inOptions);
+export function Dots(values: ZType<boolean[]>, inOptions: BV<DotsOptions> = {}): View {
+  const options = mergeComponentOptions("Dots", inOptions);
   options.gap = options.spaceBetweenDots;
   const dotCreator = options.dotCreator || DefaultDot;
   return Stack(options).append(

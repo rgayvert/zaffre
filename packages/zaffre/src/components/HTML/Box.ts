@@ -1,5 +1,5 @@
-import { View, HTML, HTMLOptions } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, HTML, HTMLOptions, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 
 //
 // A Box is the most basic HTML component. Usually used as a simple container, 
@@ -9,12 +9,12 @@ import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
 export interface BoxOptions extends HTMLOptions {
 }
 
-defineComponentDefaults<BoxOptions>("Box", "HTML", {
+defineBaseOptions<BoxOptions>("Box", "HTML", {
   position: "relative",
   background: core.color.background,
 });
 
-export function Box(inOptions: BoxOptions = {}): View {
-  const options = mergeComponentDefaults("Box", inOptions);
+export function Box(inOptions: BV<BoxOptions> = {}): View {
+  const options = mergeComponentOptions("Box", inOptions);
   return HTML(options);
 }

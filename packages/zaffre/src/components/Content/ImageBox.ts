@@ -1,5 +1,5 @@
 import { zstring } from ":foundation";
-import { View, SVGConstants, resolveURI, core, defineComponentDefaults, mergeComponentDefaults, beforeAddedToDOM } from ":core";
+import { View, SVGConstants, resolveURI, core, defineBaseOptions, mergeComponentOptions, beforeAddedToDOM, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -10,7 +10,7 @@ import { Box, BoxOptions } from "../HTML";
 export interface ImageBoxOptions extends BoxOptions {
   preload?: boolean;
 }
-defineComponentDefaults<ImageBoxOptions>("ImageBox", "Box", {
+defineBaseOptions<ImageBoxOptions>("ImageBox", "Box", {
   background: core.color.none,
   draggable: false,
   preload: false,
@@ -25,8 +25,8 @@ export function ImageWithSVG(svg: string): View {
   return ImageBox(content);
 }
 
-export function ImageBox(uri: zstring, inOptions: ImageBoxOptions = {}): View {
-  const options = mergeComponentDefaults("ImageBox", inOptions);
+export function ImageBox(uri: zstring, inOptions: BV<ImageBoxOptions> = {}): View {
+  const options = mergeComponentOptions("ImageBox", inOptions);
   options.model = uri;
   if (options.preload) {
     const img = document.createElement("img");

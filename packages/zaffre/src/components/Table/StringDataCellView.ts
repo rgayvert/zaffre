@@ -1,5 +1,5 @@
 import { Atom, atom, BasicAction, zboolean, TableDataCell, TableModel } from ":foundation";
-import { Lazy, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, Lazy, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { CenterBox, CenterBoxOptions } from "../Layout";
 import { TextLabelOptions, FormattedLabel } from "../Content";
 import { StringCellEditor } from "./StringCellEditor";
@@ -20,7 +20,7 @@ export interface StringDataCellViewOptions extends TextLabelOptions {
 }
 // TODO: figure out why changing the font here can cause extra space at the bottom
 // of each data cell
-defineComponentDefaults<StringDataCellViewOptions>("StringDataCellView", "TextLabel", {
+defineBaseOptions<StringDataCellViewOptions>("StringDataCellView", "TextLabel", {
   padding: core.space.s2,
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -35,9 +35,9 @@ export function StringDataCellView<R>(
   tableModel: TableModel<R>,
   dataCell: TableDataCell<R, string>,
   editedCell: Atom<TableDataCell<R, string> | undefined>,
-  inOptions: StringDataCellViewOptions = {}
+  inOptions: BV<StringDataCellViewOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("StringDataCellView", inOptions);
+  const options = mergeComponentOptions("StringDataCellView", inOptions);
 
   options.textAlign = dataCell.column.alignment;
   options.selected = atom(() => tableModel.cellIsSelected(dataCell));

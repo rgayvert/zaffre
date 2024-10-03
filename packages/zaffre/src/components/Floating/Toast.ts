@@ -1,6 +1,6 @@
 import { zstring, znumber, zget, BasicAction, IndexedArrayAtom } from ":foundation";
-import { place, View, TransitionEffect, transitions } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { place, View, TransitionEffect, transitions, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { TextLabel } from "../Content";
 import { Box, BoxOptions } from "../HTML";
 import { StackOptions, ViewList, VStack } from "../Layout";
@@ -19,7 +19,7 @@ export interface ToastOptions extends BoxOptions {
   duration?: znumber;
   message?: zstring;
 }
-defineComponentDefaults<ToastOptions>("Toast", "Box", {
+defineBaseOptions<ToastOptions>("Toast", "Box", {
   background: core.color.primaryContainer,
   rounding: core.rounding.r2,
   initialDelay: 0,
@@ -28,8 +28,8 @@ defineComponentDefaults<ToastOptions>("Toast", "Box", {
   effects: { mounted: transitions.fadeIn() },
 });
 
-function Toast(removalAction: BasicAction, message: string, inOptions: ToastOptions = {}): View {
-  const options = mergeComponentDefaults("Toast", inOptions);
+function Toast(removalAction: BasicAction, message: string, inOptions: BV<ToastOptions> = {}): View {
+  const options = mergeComponentOptions("Toast", inOptions);
 
   const delta = zget(options.initialDelay)! + zget(options.duration)!;
   setTimeout(removalAction, delta);
@@ -39,7 +39,7 @@ function Toast(removalAction: BasicAction, message: string, inOptions: ToastOpti
       background: core.color.none,
       color: core.color.background.contrast,
       padding: core.space.s5,
-      ...inOptions,
+      ...options,
     })
   );
 }
@@ -51,7 +51,7 @@ export interface ToastStackOptions extends StackOptions {
   mountEffect?: TransitionEffect;
   itemOptions?: ToastOptions;
 }
-defineComponentDefaults<ToastStackOptions>("ToastStack", "VStack", {
+defineBaseOptions<ToastStackOptions>("ToastStack", "VStack", {
   toastStack: true,
   background: core.color.transparent,
   placement: place.bottomRight,
@@ -65,13 +65,13 @@ defineComponentDefaults<ToastStackOptions>("ToastStack", "VStack", {
   mountEffect: transitions.fadeIn("in&out"),
 });
 
-export function ToastStack(toastItems: IndexedArrayAtom<string>, inOptions: ToastStackOptions = {}): View {
-  const options = mergeComponentDefaults("ToastStack", inOptions);
+export function ToastStack(toastItems: IndexedArrayAtom<string>, inOptions: BV<ToastStackOptions> = {}): View {
+  const options = mergeComponentOptions("ToastStack", inOptions);
   const itemOptions: ToastOptions = {
     initialDelay: options.initialDelay,
     duration: options.duration,
     effects: { mounted: options.mountEffect },
-    ...inOptions.itemOptions,
+    ...options.itemOptions,
   };
   return VStack({ ...options }).append(
     ViewList(

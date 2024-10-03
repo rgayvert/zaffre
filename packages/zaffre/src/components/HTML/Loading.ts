@@ -1,6 +1,6 @@
 import { ImportAtom, zutil } from ":foundation";
-import { View, ViewCreator, pct, beforeAddedToDOM } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, ViewCreator, pct, beforeAddedToDOM, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
 //
@@ -17,15 +17,15 @@ export interface LoadingOptions extends BoxOptions {
   delay?: number;
   timeout?: number;
 }
-defineComponentDefaults<LoadingOptions>("Loading", "Box", {
+defineBaseOptions<LoadingOptions>("Loading", "Box", {
   timeout: 2000,
   width: pct(100),
   height: pct(100),
   background: core.color.secondaryContainer,
 });
 
-export function Loading(importComponent: ImportAtom<ViewCreator>, inOptions: LoadingOptions = {}): View {
-  const options = mergeComponentDefaults("Loading", inOptions);
+export function Loading(importComponent: ImportAtom<ViewCreator>, inOptions: BV<LoadingOptions> = {}): View {
+  const options = mergeComponentOptions("Loading", inOptions);
 
   function replaceWithImport(view: View, component: ViewCreator | undefined): void {
     const viewOptions = view.options;

@@ -1,6 +1,6 @@
 import { zget, atom, ZType, zboolean, zstring, zset } from ":foundation";
-import { transitions, beforeAddedToDOM, simpleInteractionEffects, pct, View } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { transitions, beforeAddedToDOM, simpleInteractionEffects, pct, View, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Button } from "../Controls";
 import { ViewList, VStack } from "../Layout";
 import { FloatingOptions } from "../HTML";
@@ -25,7 +25,7 @@ export interface MenuItem<T> {
   iconName?: zstring;
   subitems?: MenuItem<T>[];
 }
-defineComponentDefaults<MenuOptions>("SimpleMenu", "Box", {
+defineBaseOptions<MenuOptions>("SimpleMenu", "Box", {
   outline: core.border.none,
   rounding: core.rounding.none,
   effects: { hidden: transitions.fadeIn() },
@@ -37,9 +37,9 @@ export function SimpleMenu<T>(
   selectedValue: ZType<T>,
   values: ZType<T[]>,
   titleFn: (val: T) => string,
-  inOptions: MenuOptions = {}
+  inOptions: BV<MenuOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("SimpleMenu", inOptions);
+  const options = mergeComponentOptions("SimpleMenu", inOptions);
 
   const items = atom(() =>
     zget(values).map((val, index) => ({

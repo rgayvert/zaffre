@@ -1,6 +1,6 @@
 import { zstring } from ":foundation";
-import { View, css_font, css_space, css_color, pct } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, css_font, css_space, css_color, pct, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { VStack, StackOptions } from "../Layout";
 import { ImageBox, TextBox } from "../Content";
 
@@ -25,7 +25,7 @@ export interface CardOptions extends StackOptions {
   bodyColor?: css_color;
   imageSrc?: zstring;
 }
-defineComponentDefaults<CardOptions>("Card", "VStack", {
+defineBaseOptions<CardOptions>("Card", "VStack", {
   titleFont: core.font.title_medium,
   titleSpace: core.space.s2,
   subtitleFont: core.font.body_medium,
@@ -33,11 +33,11 @@ defineComponentDefaults<CardOptions>("Card", "VStack", {
   overflow: "hidden",
 });
 
-export function Card(inOptions: CardOptions = {}): View {
-  const options = mergeComponentDefaults("Card", inOptions);
+export function Card(inOptions: BV<CardOptions> = {}): View {
+  const options = mergeComponentOptions("Card", inOptions);
 
   return VStack(options).append(
-    options.imageSrc ? ImageBox(options.imageSrc, { width: pct(100), lazy: true }) : undefined,
+    options.imageSrc ? ImageBox(options.imageSrc, { width: pct(100) }) : undefined,
     options.title ? TextBox(options.title, { id: "title", font: options.titleFont, color: options.titleColor }) : undefined,
     options.subtitle ? TextBox(options.subtitle, { id: "subtitle", font: options.subtitleFont, color: options.subtitleColor }) : undefined,
     options.body ? TextBox(options.body, { id: "body", color: options.bodyColor, padding: core.space.s2 }) : undefined

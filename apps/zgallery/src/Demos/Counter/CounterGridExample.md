@@ -15,7 +15,7 @@ Since CounterOptions extends SVGContainerOptions, which extends SVGViewOptions, 
 The defaults for Counter are given as: 
 
 ```js
-defineComponentDefaults<CounterOptions>("Counter", "", {
+defineBaseOptions<CounterOptions>("Counter", "", {
   rounded: true,
   min: 0,
   max: 99,
@@ -30,7 +30,7 @@ Note that bounds and width are inherited options.
 In the Counter() function, the first thing you do is adjust the options passed in:
 
 ```js
-  const options = mergeComponentDefaults("Counter", inOptions);
+  const options = mergeComponentOptions("Counter", inOptions);
 ```
 
 The value of options will be a copy of inOptions, with the default values applied where the corresponding keys were not present.

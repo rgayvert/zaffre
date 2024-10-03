@@ -1,6 +1,6 @@
 import { Atom } from ":foundation";
-import { View, addOptionEvents, Color, beforeAddedToDOM } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, addOptionEvents, Color, beforeAddedToDOM, BV } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { InputOptions } from "../Content";
 import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 
@@ -12,10 +12,10 @@ import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 export interface ColorInputOptions extends InputOptions {
   pickTrigger?: Atom<boolean>;
 }
-defineComponentDefaults<ColorInputOptions>("ColorInput", "Input", {});
+defineBaseOptions<ColorInputOptions>("ColorInput", "Input", {});
 
-export function ColorInput(value: Atom<Color>, inOptions: ColorInputOptions = {}): View {
-  const options = mergeComponentDefaults("ColorInput", inOptions);
+export function ColorInput(value: Atom<Color>, inOptions: BV<ColorInputOptions> = {}): View {
+  const options = mergeComponentOptions("ColorInput", inOptions);
 
   beforeAddedToDOM(options, (view: View): void => {
     const inputElt = <HTMLInputElement>view.elt;

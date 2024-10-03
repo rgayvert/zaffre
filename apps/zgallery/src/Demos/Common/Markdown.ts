@@ -1,5 +1,5 @@
-import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix, zlog } from "zaffre";
-import { core, defineComponentDefaults, mergeComponentDefaults } from "zaffre";
+import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix, BV } from "zaffre";
+import { core, defineBaseOptions, mergeComponentOptions } from "zaffre";
 import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 
 /**
@@ -16,14 +16,14 @@ export interface MarkdownOptions extends TextBoxOptions {
   expandRelativeAssets?: boolean;
   darkModeSuffix?: string;
 }
-defineComponentDefaults<MarkdownOptions>("Markdown", "Box", {
+defineBaseOptions("Markdown", "Box", {
   extraClasses: "markdown-body",
   background: core.color.background,
   minHeight: em(1.2),
   textTransformFn: markdownTransform,
   padding: core.space.s3,
   userSelect: "text",
-  expandRelativeAssets: true, 
+  expandRelativeAssets: true,
   darkModeSuffix: "_dark",
 });
 
@@ -31,11 +31,15 @@ function markdownTransform(s: string): string {
   return MarkdownService.defaultInstance.renderMD(s);
 }
 function fixDarkModeAndLinkBase(s: zstring, darkModeSuffix: string): Atom<string> {
-  return atom(() => (inDarkMode() ? zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", darkModeSuffix) : zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", "")));
+  return atom(() =>
+    inDarkMode()
+      ? zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", darkModeSuffix)
+      : zget(s).replaceAll("<<DARK_MODE_SUFFIX>>", "")
+  );
 }
 
-export function Markdown(inOptions: MarkdownOptions = {}): View {
-  const options = mergeComponentDefaults("Markdown", inOptions);
+export function Markdown(inOptions: BV<MarkdownOptions> = {}): View {
+  const options = mergeComponentOptions("Markdown", inOptions);
   let mdText: zstring;
   if (options.uri) {
     let url = resolveURI(options.uri);
@@ -47,7 +51,7 @@ export function Markdown(inOptions: MarkdownOptions = {}): View {
       options.textTransformFn = (text: string) => {
         const s = text.replaceAll("./assets/", `${path}/assets/`).replaceAll("<<LINK_PREFIX>>", linkPathPrefix());
         return f(s);
-      }
+      };
     }
     mdText = url ? fetchTextAtom(url) : "";
   } else {

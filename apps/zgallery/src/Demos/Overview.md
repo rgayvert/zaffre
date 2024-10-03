@@ -53,7 +53,20 @@ A Zaffre *component* is just a function which returns an opaque View object. In 
   - Composition is done with the *append()* method.
   - Each component typically takes a list of *options* which result in CSS/HTML/SVG attributes being set on the underlying DOM element.
   - CSS styles are generated automatically from component options. Reactive CSS values are translated into element-level CSS variables.
-  - This example uses inline options. Non-reactive options may be grouped into reusable *fashions*, which are analogous to CSS stylesheets.
+  - This example uses inline options. Non-reactive options may be grouped into *option bundles*, which are analogous to CSS classes. Using bundles, this example might look like this:
+  
+  ```js
+    function HelloWorld1(): View {
+      const text = atom("Hello World");      
+      return VStack("vstack1").append(
+        TextInput(text, "input1"),
+        TextLabel(text, "label1", {                    
+          opacity: atom(() => zutil.clamp(text.get().length / 20, 0, 1)), 
+        })
+      );
+    }
+  ```
+
   - A component may have one or more required arguments if they are always needed; for example, a TextLabel requires a label (a literal or reactive string).
   - Attributes are often specified using *tokens*. A token is an object that combines with the current *theme* to construct HTML/CSS attributes. 
   - The *core* object contains a collection of predefined tokens for color, font, borders, space, and rounding. These are generally turned into CSS properties when rendered.
@@ -75,32 +88,27 @@ DOM structure can also be reactive. Below is a simple example.
     }
   }
 
- function HelloWorld4(): View {
-   const model = new HelloModel4();
-   function ValueLabel(value: number): View {
-     return TextLabel(`${value}`, {
-       font: core.font.title_medium,
-       border: core.border.thin,
-        padding: core.space.s2,
-    });
-  }
-  return VStack({ gap: core.space.s5 }).append(
-    HStack({ gap: core.space.s4, padding: core.space.s4 }).append(
-      ViewList(
-        model.values,
-        (val) => val,
-        (val) => ValueLabel(val)
+  export function HelloWorld4a(): View {
+    const model = new HelloModel4();
+
+    return VStack("vstack4").append(
+      HStack("hstack4a").append(
+        ViewList(
+          model.values,
+          (value) => value,
+          (value) => TextLabel(`${value}`, "label4")
+        )
+      ),
+      HStack("hstack4b").append(
+        Button({ label: "Add", action: () => model.addValue() }),
+        Button({ 
+          label: "Remove", 
+          disabled: atom(() => model.values.length === 1),
+          action: () => model.removeValue() 
+        })
       )
-    ),
-    HStack({ gap: core.space.s5 }).append(
-      Button({ label: "Add", action: () => model.addValue() }),
-      Button({ 
-        label: "Remove", 
-        disabled: atom(() => model.values.length === 1),
-        action: () => model.removeValue() 
-      }))
     );
-  }
+  }   
 ```
 
 This produces the following result:
@@ -160,7 +168,7 @@ when the form is visible. Switching between the two views is a simple matter of 
   }
 ```
 
-Both the table and the form are expressed in a declarative fashion, making it easy to modify and maintain.
+Both the table and the form are expressed in a declarative manner, making it easy to modify and maintain.
 
 <details>
   <summary>
@@ -208,5 +216,5 @@ The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that thi
   - SwiftUI, for declarative UI syntax;
   - Material Design, for ideas on themes, tokens, fonts, and colors;
   - Every Layout, for layout examples and guidelines; and
-  - Stack Overflow, for solutions to problems.
+  - Stack Overflow, for solutions to countless problems.
 

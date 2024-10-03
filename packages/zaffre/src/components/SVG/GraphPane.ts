@@ -1,6 +1,6 @@
 import { zget, zboolean, znumber, atom, Graph, VertexData2D, Vertex, Edge, rect2D, zset, BasicAction } from ":foundation";
-import { css_color, View, SVG, SVGContainerOptions, SVGCircle, SVGLine } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { css_color, View, SVG, SVGContainerOptions, SVGCircle, SVGLine, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { ViewList } from "../Layout";
 
 //
@@ -22,7 +22,7 @@ export interface GraphPaneOptions extends SVGContainerOptions {
   vertexRadius?: (v: Vertex<unknown, unknown>) => number;
   onVertexDrag?: BasicAction,
 }
-defineComponentDefaults<GraphPaneOptions>("GraphPane", "SVG", {
+defineBaseOptions<GraphPaneOptions>("GraphPane", "SVG", {
   bounds: rect2D(0, 0, 100, 100),
   textColor: core.color.primary,
   userSelect: "none",
@@ -31,8 +31,8 @@ defineComponentDefaults<GraphPaneOptions>("GraphPane", "SVG", {
   edgeStrokeWidth: 0.5,
 });
 
-export function GraphPane<V extends VertexData2D, E>(graph: Graph<V, E>, inOptions: GraphPaneOptions = {}): View {
-  const options = mergeComponentDefaults("GraphPane", inOptions);
+export function GraphPane<V extends VertexData2D, E>(graph: Graph<V, E>, inOptions: BV<GraphPaneOptions> = {}): View {
+  const options = mergeComponentOptions("GraphPane", inOptions);
 
   function VertexCircle(v: Vertex<V, E>): View {
     const selected = atom(false);

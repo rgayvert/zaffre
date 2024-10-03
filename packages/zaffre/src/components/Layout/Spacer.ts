@@ -1,5 +1,5 @@
 import { znumber } from ":foundation";
-import { View, css_space, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, css_space, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -13,12 +13,12 @@ export interface SpacerOptions extends BoxOptions {
   grow?: znumber;
   space?: css_space;
 }
-defineComponentDefaults<SpacerOptions>("Spacer", "Box", {
+defineBaseOptions<SpacerOptions>("Spacer", "Box", {
   background: core.color.transparent,
 });
 
-export function Spacer(growOrSpace?: css_space | number, inOptions: SpacerOptions = {}): View {
-  const options = mergeComponentDefaults("Spacer", inOptions);
+export function Spacer(growOrSpace?: css_space | number, inOptions: BV<SpacerOptions> = {}): View {
+  const options = mergeComponentOptions("Spacer", inOptions);
 
   if (typeof growOrSpace === "number") {
     options.width = core.space.s1;

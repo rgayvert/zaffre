@@ -1,7 +1,7 @@
 import { znumber, zrect2D, zstring } from ":foundation";
-import { View } from ":view";
+import { BV, View } from ":view";
 import { RectToken, rectToken } from ":attributes";
-import { defineComponentDefaults, mergeComponentDefaults } from ":theme";
+import { defineBaseOptions, mergeComponentOptions } from ":view";
 import { SVGViewCSSKeys, SVGViewSVGKeys } from "../SVG";
 import { SVGOptions } from "../SVGOptions";
 import { CreateSVGView } from "../SVGDelegate";
@@ -21,12 +21,12 @@ export interface SVGMarkerOptions extends SVGOptions {
   bounds?: zrect2D;
   viewBox?: RectToken;
 }
-defineComponentDefaults<SVGMarkerOptions>("SVGMarker", "SVGView", {
+defineBaseOptions<SVGMarkerOptions>("SVGMarker", "SVGView", {
   tag: "marker",
 });
 
-export function SVGMarker(inOptions: SVGMarkerOptions): View {
-  const options = mergeComponentDefaults("SVGMarker", inOptions);
+export function SVGMarker(inOptions: BV<SVGMarkerOptions>): View {
+  const options = mergeComponentOptions("SVGMarker", inOptions);
   options.componentName = "SVGMarker";
   if (options.bounds) {
     options.viewBox = rectToken(options.bounds);

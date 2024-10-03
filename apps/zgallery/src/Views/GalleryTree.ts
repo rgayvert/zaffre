@@ -1,6 +1,6 @@
-import { SimpleTree, SimpleTreeOptions, StackOptions, TextLabel, View, VStack } from "zaffre";
+import { BV, SimpleTree, SimpleTreeOptions, StackOptions, TextLabel, View, VStack } from "zaffre";
 import { ch, flexToken, pct } from "zaffre";
-import { core, defineComponentDefaults, mergeComponentDefaults } from "zaffre";
+import { core, defineBaseOptions, mergeComponentOptions } from "zaffre";
 import { GalleryModel, galleryTree } from "../Model";
 
 //
@@ -17,12 +17,12 @@ import { GalleryModel, galleryTree } from "../Model";
 export interface GalleryTreeOptions extends StackOptions {
   includeInfo?: boolean;
 }
-defineComponentDefaults<GalleryTreeOptions>("GalleryTree", "Stack", {
+defineBaseOptions<GalleryTreeOptions>("GalleryTree", "Stack", {
   includeInfo: true,
 });
 
-export function GalleryTree(model: GalleryModel, inOptions: GalleryTreeOptions = {}): View {
-  const options = mergeComponentDefaults("GalleryTree", inOptions);
+export function GalleryTree(model: GalleryModel, inOptions: BV<GalleryTreeOptions> = {}): View {
+  const options = mergeComponentOptions("GalleryTree", inOptions);
   const infoText = options.includeInfo
     ? TextLabel(`${import.meta.env.VITE_VERSION}`, {
         width: pct(100),

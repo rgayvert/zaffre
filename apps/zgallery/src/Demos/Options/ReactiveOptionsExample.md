@@ -1,4 +1,4 @@
-In addition to literal and token values, options may have reactive values. THese are typically expressed as derived atoms. For a CSS option, you will see an associated CSS property that changes as the reactive value changes. 
+In addition to literal and token values, options may have reactive values. These are typically expressed as derived atoms. For a CSS option, you will see an associated CSS property that changes as the reactive value changes. 
 
 
 In this example, the opacity is specified as an atom whose value is a function of window width, which comes from a reactive value. If you resize the window, you will see the opacity of the box vary between 0 and 1. In the style for this box, you will see something like:

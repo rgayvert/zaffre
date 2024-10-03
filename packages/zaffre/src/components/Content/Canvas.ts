@@ -1,5 +1,5 @@
 import { zget, znumber, zstring, Atom, atom, zlog } from ":foundation";
-import { View, resolveURI, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, resolveURI, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -16,14 +16,14 @@ export interface CanvasOptions extends BoxOptions {
   pixelHeight?: znumber;
   imageSrc?: zstring;
 }
-defineComponentDefaults<CanvasOptions>("Canvas", "Box", {
+defineBaseOptions<CanvasOptions>("Canvas", "Box", {
   color: core.color.primary,
   background: core.color.background,
   tag: "canvas",
 });
 
-export function Canvas(inOptions: CanvasOptions = {}): View {
-  const options = mergeComponentDefaults("Canvas", inOptions);
+export function Canvas(inOptions: BV<CanvasOptions> = {}): View {
+  const options = mergeComponentOptions("Canvas", inOptions);
 
   let image: Atom<HTMLImageElement | undefined>;
   let ctx: CanvasRenderingContext2D | null;

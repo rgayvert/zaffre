@@ -1,6 +1,6 @@
 import { atom, znumber, zget } from ":foundation";
-import { ch, css_color, em, pct, View, css_space, px } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { ch, css_color, em, pct, View, css_space, px, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -15,7 +15,7 @@ interface GaugeOptions extends BoxOptions {
   maxVal?: number;
   innerMargin?: css_space;
 }
-defineComponentDefaults<GaugeOptions>("Gauge", "Box", {
+defineBaseOptions<GaugeOptions>("Gauge", "Box", {
   width: ch(20),
   height: em(1),
   innerMargin: px(0),
@@ -25,8 +25,8 @@ defineComponentDefaults<GaugeOptions>("Gauge", "Box", {
   pendingColor: core.color.primaryContainer,
 });
 
-export function Gauge(value: znumber, inOptions: GaugeOptions = {}): View {
-  const options = mergeComponentDefaults("Gauge", inOptions);
+export function Gauge(value: znumber, inOptions: BV<GaugeOptions> = {}): View {
+  const options = mergeComponentOptions("Gauge", inOptions);
   options.background = options.pendingColor;
   options.padding = options.innerMargin;
   function getPercent(): number {

@@ -1,6 +1,6 @@
 import { zboolean, zstring, Atom, atom } from ":foundation";
-import { View, addOptionEvents, px, beforeAddedToDOM } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, addOptionEvents, px, beforeAddedToDOM, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Input, InputOptions, TextLabel } from "../Content";
 import { ButtonOptions, Button } from "../Controls";
 import { HStack } from "../Layout";
@@ -14,14 +14,14 @@ interface FInputOptions extends InputOptions {
   accept?: zstring;
   multiple?: zboolean;
 }
-defineComponentDefaults<FInputOptions>("FInput", "Input", {
+defineBaseOptions<FInputOptions>("FInput", "Input", {
   opacity: 0,
   multiple: false,
   type: "file",
 });
 
-function FInput(files: Atom<File[]>, inOptions: FInputOptions = {}): View {
-  const options = mergeComponentDefaults("FInput", inOptions);
+function FInput(files: Atom<File[]>, inOptions: BV<FInputOptions> = {}): View {
+  const options = mergeComponentOptions("FInput", inOptions);
 
   beforeAddedToDOM(options, (view: View): void => {
     const inputElt = <HTMLInputElement>view.elt;
@@ -38,7 +38,7 @@ export interface FileInputOptions extends ButtonOptions {
   showFiles?: boolean;
   noFilesLabel?: string;
 }
-defineComponentDefaults<FileInputOptions>("FileInput", "Button", {
+defineBaseOptions<FileInputOptions>("FileInput", "Button", {
   label: "Choose file",
   leadingIconURI: "icon.folder",
   background: core.color.primaryContainer,
@@ -46,8 +46,8 @@ defineComponentDefaults<FileInputOptions>("FileInput", "Button", {
   noFilesLabel: "(no file)",
 });
 
-export function FileInput(fileNames: Atom<File[]>, inOptions: FileInputOptions = {}): View {
-  const options = mergeComponentDefaults("FileInput", inOptions);
+export function FileInput(fileNames: Atom<File[]>, inOptions: BV<FileInputOptions> = {}): View {
+  const options = mergeComponentOptions("FileInput", inOptions);
 
   function formatFileNames(): string {
     const fNames = fileNames.get();

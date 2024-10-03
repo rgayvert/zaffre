@@ -1,6 +1,6 @@
 import { rect2D, Rect2D, Rect4, atom, zget, Atom } from ":foundation";
-import { View, resolveURI, backgroundToken, urlToken, px } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, resolveURI, backgroundToken, urlToken, px, BV } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -19,12 +19,12 @@ export type SpriteMap = Map<string, Rect4>;
 export interface SpriteOptions extends BoxOptions {
   lazy?: boolean;
 }
-defineComponentDefaults<SpriteOptions>("Sprite", "Box", {
+defineBaseOptions<SpriteOptions>("Sprite", "Box", {
   lazy: false,
 });
 
-export function Sprite(spriteName: Atom<string>, uri: string, spriteMap: SpriteMap, inOptions: SpriteOptions = {}): View {
-  const options = mergeComponentDefaults("Sprite", inOptions);
+export function Sprite(spriteName: Atom<string>, uri: string, spriteMap: SpriteMap, inOptions: BV<SpriteOptions> = {}): View {
+  const options = mergeComponentOptions("Sprite", inOptions);
   const url = resolveURI(uri);
 
   function r(): Rect2D {

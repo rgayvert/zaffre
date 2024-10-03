@@ -1,6 +1,6 @@
 import { atom, zget, ToggleAtom } from ":foundation";
-import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -16,7 +16,7 @@ export interface SwitchOptions extends BoxOptions {
   circleColor?: css_color;
   widthInEm?: number;
 }
-defineComponentDefaults<SwitchOptions>("Switch", "Box", {
+defineBaseOptions<SwitchOptions>("Switch", "Box", {
   widthInEm: 4,
   rounding: core.rounding.r4,
   border: core.border.thin,
@@ -27,8 +27,8 @@ defineComponentDefaults<SwitchOptions>("Switch", "Box", {
   circleColor: core.color.white,
 });
 
-export function Switch(value: ToggleAtom, inOptions: SwitchOptions = {}): View {
-  const options = mergeComponentDefaults("Switch", inOptions);
+export function Switch(value: ToggleAtom, inOptions: BV<SwitchOptions> = {}): View {
+  const options = mergeComponentOptions("Switch", inOptions);
 
   addOptionEvents(options, { click: (): void => value.toggle() });
   options.background = atom(() => (zget(value) ? zget(options.backgroundOn)! : zget(options.backgroundOff)!));

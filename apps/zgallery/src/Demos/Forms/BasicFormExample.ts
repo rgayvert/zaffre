@@ -1,6 +1,8 @@
-import { atom, core, recordEditor, evaluateWithLocalDefaults, Form, pct, View } from "zaffre";
+import { atom, core, recordEditor, Form, pct, View } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 import { demoUserFields } from "./DemoUserFields";
+import "./FormBundles";
+
 
 export function BasicFormExample(): View {
   const record = atom(new DemoUserRecord(undefined));
@@ -21,10 +23,5 @@ export function BasicFormExample(): View {
       },
     });
   }
-  const localDefaults = {
-    "TextLabel": {
-      color: core.color.green,
-    },
-  };
-  return evaluateWithLocalDefaults(localDefaults, () => BasicForm());
+  return BasicForm();
 }

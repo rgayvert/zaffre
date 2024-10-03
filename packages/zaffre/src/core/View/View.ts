@@ -1,4 +1,4 @@
-import { Rect2D, Size2D, Sz2D, zget, Atom, atom, arrayAtom, ArrayAtom, zpoint2D, zsize2D } from ":foundation";
+import { Rect2D, Size2D, Sz2D, zget, Atom, atom, arrayAtom, ArrayAtom, zpoint2D, zsize2D, ZArray } from ":foundation";
 import { rect2D, point2D, Point2D, RouteAtom, zlog, zutil, lazyinit, znumber, zboolean } from ":foundation";
 import { ZType, zstring, BasicAction, TAction, reactiveAction, ReactiveAction, SanitizeService } from ":foundation";
 import { PlacementOption, ZWindow, placementOffsetAndSize } from ":uifoundation";
@@ -43,10 +43,7 @@ export interface SharedViewState {
 export interface LocalDefaults {
   [key: string]: any;
 }
-export interface Fashion {
-  [key: string]: any;
-}
-export type zfashion = ZType<Fashion>;
+
 
 export interface ViewOptionsRecord {
   name?: string;
@@ -57,7 +54,7 @@ export interface ViewOptionsRecord {
   extraVars?: [string, string][];
 
   theme?: ztheme;
-  fashions?: zfashion[];
+  bundles?: string[];
 
   resources?: Map<string, string>;
   disabled?: Atom<boolean>;
@@ -123,6 +120,8 @@ export interface ViewOptionsRecord {
 }
 
 export type ViewOptions = Partial<ViewOptionsRecord>;
+
+export type BV<T> = string | string[] | T;
 
 /**
  * view with the event listener
@@ -279,7 +278,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
 
   ////////////////////////////////////////////////////////////////////////////////////
 
-  @lazyinit public get attributeBundle(): AttrBundle {
+  @lazyinit get attributeBundle(): AttrBundle {
     return new AttrBundle(this);
   }
 

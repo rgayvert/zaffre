@@ -1,5 +1,5 @@
 import { Atom, TreeNode, atom } from ":foundation";
-import { View, calc, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, calc, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Tree, TreeOptions } from "../Layout";
 import { TextLabelOptions } from "../Content";
 import { ExpandableItem } from "./ExpandableItem";
@@ -16,7 +16,7 @@ export interface SimpleTreeOptions extends TreeOptions {
   labelOptions?: TextLabelOptions;
 }
 
-defineComponentDefaults<SimpleTreeOptions>("SimpleTree", "Tree", {
+defineBaseOptions<SimpleTreeOptions>("SimpleTree", "Tree", {
 });
 
 type TreeTitleFn<T> = (node: TreeNode<T>) => string;
@@ -25,10 +25,9 @@ export function SimpleTree<T>(
   root: TreeNode<T>,
   selectedItem: Atom<TreeNode<T> | undefined>,
   titleFn: TreeTitleFn<T>,
-  inOptions: SimpleTreeOptions = {},
-  afterCreatedLabel?: (label: View, node: TreeNode<T>) => void,
+  inOptions: BV<SimpleTreeOptions> = {},
 ): View {
-  const options = mergeComponentDefaults("SimpleTree", inOptions);
+  const options = mergeComponentOptions("SimpleTree", inOptions);
 
   function NodeLabel(node: TreeNode<T>): View {
     const level = options.showRoot ? node.level : node.level - 1;
@@ -48,12 +47,11 @@ export function SimpleTree<T>(
       model: node,
       labelOptions: options.labelOptions
     });
-    afterCreatedLabel?.(label, node);
     return label;
   }
   function idFn(node: TreeNode<T>): string {
     return node.fullPath().map((n) => titleFn(n)).join("-");
   }
 
-  return Tree<T>(root, selectedItem, idFn, NodeLabel, inOptions);
+  return Tree<T>(root, selectedItem, idFn, NodeLabel, options);
 }

@@ -1,6 +1,6 @@
-import { core, Box, HDivider, Page, place, Spacer, mergeComponentDefaults, ToastStack } from "zaffre";
+import { core, Box, HDivider, Page, place, Spacer, mergeComponentOptions, ToastStack, BV } from "zaffre";
 import { PageOptions, StackOptions, pct, ch, TextLabel, VStack, View } from "zaffre";
-import { defineComponentDefaults } from "zaffre";
+import { defineBaseOptions } from "zaffre";
 import { ToDoModel } from "../Model";
 import { ToDoInputRow } from "./ToDoInputRow";
 import { ToDoStoreSelector } from "./ToDoStoreSelector";
@@ -9,13 +9,13 @@ import { ToDoButtonBar } from "./ToDoButtonBar";
 
 export interface ToDoOptions extends PageOptions {}
 
-defineComponentDefaults<ToDoOptions>("ToDo", "Page", {
+defineBaseOptions<ToDoOptions>("ToDo", "Page", {
   maxWidth: ch(100),
   width: pct(100),
 });
 
-export function ToDo(inOptions: ToDoOptions = {}): View {
-  const options = mergeComponentDefaults("ToDo", inOptions);
+export function ToDo(inOptions: BV<ToDoOptions> = {}): View {
+  const options = mergeComponentOptions("ToDo", inOptions);
   const model = new ToDoModel();
   options.model = model;
 

@@ -1,5 +1,5 @@
 import { zget, zstring, ZType } from ":foundation";
-import { ch, css_space, em, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { ch, css_space, em, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { HStack, Spacer, StackOptions, ViewList, VStack } from "../Layout";
 import { TextLabel, TextLabelOptions } from "../Content";
 
@@ -16,7 +16,7 @@ export interface LabeledListOptions extends StackOptions {
   labelOptions?: TextLabelOptions;
   labelGap?: css_space;
 }
-defineComponentDefaults<LabeledListOptions>("LabeledList", "Stack", {
+defineBaseOptions<LabeledListOptions>("LabeledList", "Stack", {
   alignItems: "stretch",
   justifyContent: "start",
   labelSide: "left",
@@ -29,8 +29,8 @@ defineComponentDefaults<LabeledListOptions>("LabeledList", "Stack", {
   },
 });
 
-export function LabeledList(entries: ZType<LabelViewPair[]>, inOptions: LabeledListOptions = {}): View {
-  const options = mergeComponentDefaults("LabeledList", inOptions);
+export function LabeledList(entries: ZType<LabelViewPair[]>, inOptions: BV<LabeledListOptions> = {}): View {
+  const options = mergeComponentOptions("LabeledList", inOptions);
 
   function LabelPair(pair: LabelViewPair): View {
     const label = TextLabel(zget(pair[0]), options.labelOptions);
@@ -50,10 +50,10 @@ export function LabeledList(entries: ZType<LabelViewPair[]>, inOptions: LabeledL
 export type SimpleLabelViewPair = [zstring, zstring];
 
 export interface SimpleLabeledListOptions extends LabeledListOptions {}
-defineComponentDefaults<SimpleLabeledListOptions>("SimpleLabeledList", "LabeledList", {});
+defineBaseOptions<SimpleLabeledListOptions>("SimpleLabeledList", "LabeledList", {});
 
-export function SimpleLabeledList(entries: SimpleLabelViewPair[], inOptions: SimpleLabeledListOptions = {}): View {
-  const options = mergeComponentDefaults("SimpleLabeledList", inOptions);
+export function SimpleLabeledList(entries: SimpleLabelViewPair[], inOptions: BV<SimpleLabeledListOptions> = {}): View {
+  const options = mergeComponentOptions("SimpleLabeledList", inOptions);
   const views = entries.map(([_key, value]) => TextLabel(value, options.labelOptions));
   const viewEntries = entries.map(([key, value], index) => [key, views[index]]) as LabelViewPair[];
   return LabeledList(viewEntries, options);

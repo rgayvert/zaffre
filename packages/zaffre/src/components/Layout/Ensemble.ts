@@ -1,6 +1,6 @@
 import { zget, atom, Atom, ZType, setAtom, RouteAtom, SetAtom } from ":foundation";
-import { App, routeChanged, afterAddedToDOM, pct, ChildCreator, ChildModifier, View, VList } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { App, routeChanged, afterAddedToDOM, pct, ChildCreator, ChildModifier, View, VList, BV } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 import { ViewList } from "./ViewList";
 
@@ -26,7 +26,7 @@ export interface EnsembleOptions extends BoxOptions {
   preloadList?: string[];
   //noCache?: boolean;
 }
-defineComponentDefaults<EnsembleOptions>("Ensemble", "Box", {
+defineBaseOptions<EnsembleOptions>("Ensemble", "Box", {
   mode: "lazy",
   width: pct(100),
 });
@@ -39,9 +39,9 @@ defineComponentDefaults<EnsembleOptions>("Ensemble", "Box", {
 export function Ensemble(
   currentKey: Atom<string>,
   childCreator: ChildCreator<string>,
-  inOptions: EnsembleOptions = {}
+  inOptions: BV<EnsembleOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("Ensemble", inOptions);
+  const options = mergeComponentOptions("Ensemble", inOptions);
   options.model = currentKey;
   if (currentKey instanceof RouteAtom) {
     afterAddedToDOM(options, (view: View): void => {
@@ -67,9 +67,9 @@ export function SelectionEnsemble(
   keys: ZType<string[]>,
   currentKey: Atom<string>,
   childCreator: ChildCreator<string>,
-  inOptions: EnsembleOptions = {}
+  inOptions: BV<EnsembleOptions> = {}
 ): VList<string> {
-  const options = mergeComponentDefaults("Ensemble", inOptions);
+  const options = mergeComponentOptions("Ensemble", inOptions);
 
   return ViewEnsemble(keys, currentKey, childCreator, options);
 }
@@ -80,9 +80,9 @@ function ViewEnsemble(
   keys: ZType<string[]>,
   currentKey: Atom<string>,
   childCreator: ChildCreator<string>,
-  inOptions: EnsembleOptions = {}
+  inOptions: BV<EnsembleOptions> = {}
 ): VList<string> {
-  const options = mergeComponentDefaults("Ensemble", inOptions);
+  const options = mergeComponentOptions("Ensemble", inOptions);
   // Allow the view list data to be extended by making it a set to which gets each key is added when requested. So it typically starts
   // with a single value, then grows.
   const pool = setAtom(zget(keys) || []);

@@ -1,5 +1,5 @@
 import { zstring } from ":foundation";
-import { View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { HStack, Spacer, StackOptions } from "../Layout";
 import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 
@@ -30,7 +30,7 @@ const defaultIconOptions: IconOptions = {
   font: core.font.inherit,
   selectionColor: core.color.secondaryContainer,
 };
-defineComponentDefaults<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
+defineBaseOptions<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
   flexDirection: "row",
   background: core.color.inherit,
   rounding: core.rounding.none,
@@ -49,8 +49,8 @@ defineComponentDefaults<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
   },
 });
 
-export function LabelWithIcons(inOptions: LabelWithIconsOptions): View {
-  const options = mergeComponentDefaults("LabelWithIcons", inOptions);
+export function LabelWithIcons(inOptions: BV<LabelWithIconsOptions> = {}): View {
+  const options = mergeComponentOptions("LabelWithIcons", inOptions);
 
   const labelOptions: TextLabelOptions = {
     selected: options.selected,

@@ -1,5 +1,5 @@
 import { Atom, zutil } from ":foundation";
-import { View, ch, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, ch, defineBaseOptions, mergeComponentOptions } from ":core";
 import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 
 //
@@ -10,13 +10,13 @@ import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 export interface NumberInputOptions extends TextInputOptions {
   decimalPlaces?: number;
 }
-defineComponentDefaults<NumberInputOptions>("NumberInput", "TextInput", {
+defineBaseOptions<NumberInputOptions>("NumberInput", "TextInput", {
   decimalPlaces: 0,
   width: ch(10),
 });
 
-export function NumberInput(value: Atom<number>, inOptions: NumberInputOptions = {}): View {
-  const options = mergeComponentDefaults("NumberInput", inOptions);
+export function NumberInput(value: Atom<number>, inOptions: BV<NumberInputOptions> = {}): View {
+  const options = mergeComponentOptions("NumberInput", inOptions);
 
   function parseNumericString(s: string): number {
     const num = parseFloat(s);

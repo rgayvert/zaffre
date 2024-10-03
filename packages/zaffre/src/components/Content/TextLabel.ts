@@ -1,5 +1,5 @@
 import { zget, zstring, ZType, atom, Formatter } from ":foundation";
-import { t, View, setInnerHTML, ColorToken, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { t, View, setInnerHTML, ColorToken, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -17,7 +17,7 @@ export interface TextLabelOptions extends BoxOptions {
   textPositionY?: ZType<TextPosition>;
   emptyValue?: string;
 }
-defineComponentDefaults<TextLabelOptions>("TextLabel", "Box", {
+defineBaseOptions<TextLabelOptions>("TextLabel", "Box", {
   font: core.font.body_medium,
   color: core.color.surface.contrast,
   selectionColor: core.color.secondaryContainer,
@@ -27,8 +27,8 @@ defineComponentDefaults<TextLabelOptions>("TextLabel", "Box", {
   whiteSpace: "nowrap",
 });
 
-export function TextLabel(content: zstring, inOptions: TextLabelOptions = {}): View {
-  const options = mergeComponentDefaults("TextLabel", inOptions);
+export function TextLabel(content: zstring, inOptions: BV<TextLabelOptions> = {}): View {
+  const options = mergeComponentOptions("TextLabel", inOptions);
   const emptyValue = options.emptyValue || "";
 
   // TODO: this is the right idea, but there are issues with named tokens (e.g., "red") and
@@ -54,25 +54,25 @@ export function TextLabel(content: zstring, inOptions: TextLabelOptions = {}): V
 
 export interface CenteredTextLabelOptions extends TextLabelOptions {}
 
-defineComponentDefaults<CenteredTextLabelOptions>("CenteredTextLabel", "TextLabel", {
+defineBaseOptions<CenteredTextLabelOptions>("CenteredTextLabel", "TextLabel", {
   textPositionX: "center",
   textPositionY: "center",
 });
-export function CenteredTextLabel(content: zstring, inOptions: TextLabelOptions = {}): View {
-  const options = mergeComponentDefaults("CenteredTextLabel", inOptions);
+export function CenteredTextLabel(content: zstring, inOptions: BV<TextLabelOptions> = {}): View {
+  const options = mergeComponentOptions("CenteredTextLabel", inOptions);
   return TextLabel(content, options);
 }
 
 export interface FormattedLabelOptions extends TextLabelOptions {}
 
-defineComponentDefaults<FormattedLabelOptions>("FormattedLabel", "TextLabel", {});
+defineBaseOptions<FormattedLabelOptions>("FormattedLabel", "TextLabel", {});
 
 export function FormattedLabel<T>(
   content: ZType<T>,
   formatter: Formatter<T>,
-  inOptions: FormattedLabelOptions = {}
+  inOptions: BV<FormattedLabelOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("FormattedLabel", inOptions);
+  const options = mergeComponentOptions("FormattedLabel", inOptions);
   return TextLabel(
     atom(() => formatter(zget(content))),
     options

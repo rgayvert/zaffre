@@ -1,6 +1,6 @@
 import { zget, zboolean, Atom, ZType, atom } from ":foundation";
 import { counterAtomForDataSelection, toggleAtom, ToggleAtom } from ":foundation";
-import { View, counterKeyBindings, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, counterKeyBindings, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { DisclosureComponent, SelectionList, SelectionListOptions } from "../Layout";
 import { SimpleDisclosure, SimpleDisclosureOptions } from "./SimpleDisclosure";
 
@@ -18,7 +18,7 @@ import { SimpleDisclosure, SimpleDisclosureOptions } from "./SimpleDisclosure";
 export interface SimpleDisclosureListOptions extends SelectionListOptions {
   allowMultipleExpansions?: zboolean;
 }
-defineComponentDefaults<SimpleDisclosureListOptions>("SimpleDisclosureList", "SelectionList", {
+defineBaseOptions<SimpleDisclosureListOptions>("SimpleDisclosureList", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -31,9 +31,9 @@ export function SimpleDisclosureList<T>(
   selectedItem: Atom<T | undefined>,
   labelFn: (item: T) => string,
   detailCreator: DisclosureComponent<T>,
-  inOptions: SimpleDisclosureListOptions = {}
+  inOptions: BV<SimpleDisclosureListOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("SimpleDisclosureList", inOptions);
+  const options = mergeComponentOptions("SimpleDisclosureList", inOptions);
   options.model = [data, selectedItem];
 
   // support keyboard navigation

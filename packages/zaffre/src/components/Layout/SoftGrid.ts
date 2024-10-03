@@ -1,6 +1,6 @@
 import { zget, atom, } from ":foundation";
-import { pct, View } from ":core";
-import { defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, pct, View } from ":core";
+import { defineBaseOptions, mergeComponentOptions } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -13,14 +13,14 @@ import { Grid, GridOptions } from "./Grid";
 export interface SoftGridOptions extends GridOptions {
   minColumnWidth?: string;
 }
-defineComponentDefaults<SoftGridOptions>("SoftGrid", "Grid", {
+defineBaseOptions<SoftGridOptions>("SoftGrid", "Grid", {
   minColumnWidth: "60ch",
   width: pct(100),
   display: "grid",
 });
 
-export function SoftGrid(inOptions: SoftGridOptions = {}): View {
-  const options = mergeComponentDefaults("SoftGrid", inOptions);
+export function SoftGrid(inOptions: BV<SoftGridOptions> = {}): View {
+  const options = mergeComponentOptions("SoftGrid", inOptions);
 
   function minWidth(): string {
     return zget(options.minColumnWidth) || "60ch";

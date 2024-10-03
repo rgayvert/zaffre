@@ -1,4 +1,4 @@
-import { View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -9,7 +9,7 @@ export type StackOrientation = "vertical" | "horizontal";
 
 export interface StackOptions extends BoxOptions {}
 
-defineComponentDefaults<StackOptions>("Stack", "Box", {
+defineBaseOptions<StackOptions>("Stack", "Box", {
   display: "flex",
   flexWrap: "nowrap",
   alignItems: "center",
@@ -17,29 +17,29 @@ defineComponentDefaults<StackOptions>("Stack", "Box", {
   background: core.color.background,
 });
 
-export function Stack(inOptions: StackOptions = {}): View {
-  const options = mergeComponentDefaults("Stack", inOptions);
+export function Stack(inOptions: BV<StackOptions> = {}): View {
+  const options = mergeComponentOptions("Stack", inOptions);
   return Box(options);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-defineComponentDefaults<StackOptions>("HStack", "Stack", {
+defineBaseOptions<StackOptions>("HStack", "Stack", {
   flexDirection: "row",
 });
 
-export function HStack(inOptions: StackOptions = {}): View {
-  const options = mergeComponentDefaults("HStack", inOptions);
+export function HStack(inOptions: BV<StackOptions> = {}): View {
+  const options = mergeComponentOptions("HStack", inOptions);
   return Stack(options);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-defineComponentDefaults<StackOptions>("VStack", "Stack", {
+defineBaseOptions<StackOptions>("VStack", "Stack", {
   flexDirection: "column",
 });
 
-export function VStack(inOptions: StackOptions = {}): View {
-  const options = mergeComponentDefaults("VStack", inOptions);
+export function VStack(inOptions: BV<StackOptions> = {}): View {
+  const options = mergeComponentOptions("VStack", inOptions);
   return Stack(options);
 }

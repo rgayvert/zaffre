@@ -3,7 +3,6 @@ import { MappingAtomR1, stepFunctionAtom, ToggleAtom, toggleAtom } from ":founda
 import { Font, Color, ZWindow, TonalPalette, ColorMode } from "../UIFoundation";
 import { ColorToken, FontToken, ITheme, Token, css_length } from "../Attributes";
 import { View, ViewOptions } from "../View";
-import { currentDefaults } from "./Defaults";
 
 //
 // Base class for Themes.
@@ -120,10 +119,6 @@ export abstract class Theme implements ITheme {
     const colorTokens = Array.from(Theme.activeColorTokens.values());
     this.setCSSVarSet(colorTokens.filter((token) => !token.cssKey().includes("-contrast")));
     this.setCSSVarSet(colorTokens.filter((token) => token.cssKey().includes("-contrast")));
-  }
-
-  getComponentOptions(name: string): ViewOptions {
-    return this.componentOptions.get(name) || currentDefaults().get(name) || {};
   }
 
   abstract colorForKey(key: string): Color;

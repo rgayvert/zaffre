@@ -1,5 +1,5 @@
 import { zget, zboolean, Atom, Condition, znumber, Interval } from ":foundation";
-import { View, beforeAddedToDOM, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -23,7 +23,7 @@ export interface TextAreaOptions extends BoxOptions {
   selectionInterval?: Atom<Interval>;
   extraLinesWhenEditing?: znumber;
 }
-defineComponentDefaults<TextAreaOptions>("TextArea", "Box", {
+defineBaseOptions<TextAreaOptions>("TextArea", "Box", {
   tag: "textarea",
   background: core.color.background,
   spellcheck: true,
@@ -34,8 +34,8 @@ defineComponentDefaults<TextAreaOptions>("TextArea", "Box", {
   display: "block",
 });
 
-export function TextArea(content: Atom<string>, inOptions: TextAreaOptions = {}): View {
-  const options = mergeComponentDefaults("TextArea", inOptions);
+export function TextArea(content: Atom<string>, inOptions: BV<TextAreaOptions> = {}): View {
+  const options = mergeComponentOptions("TextArea", inOptions);
 
   function updateSize(view: View): void {
     if (options.fluidHeight) {

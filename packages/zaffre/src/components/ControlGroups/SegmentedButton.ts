@@ -1,5 +1,5 @@
 import { Atom, zget, zboolean, zstring, atom } from ":foundation";
-import { css_background, px, View, pct, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { css_background, px, View, pct, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Stack, StackOptions, ViewList } from "../Layout";
 import { ButtonOptions, Button } from "../Controls";
 
@@ -26,7 +26,7 @@ export interface SegmentedOptions extends StackOptions {
   disabledValues?: Atom<string[]>;
   buttonOptions?: ButtonOptions;
 }
-defineComponentDefaults<SegmentedOptions>("SegmentedButton", "Stack", {
+defineBaseOptions<SegmentedOptions>("SegmentedButton", "Stack", {
   padding: core.space.s0,
   border: core.border.thin,
   rounding: core.rounding.pill,
@@ -45,9 +45,9 @@ function SimpleButton(options: ButtonOptions): View {
 export function SegmentedButton(
   selectedValue: Atom<string | undefined>,
   values: string[],
-  inOptions: SegmentedOptions = {}
+  inOptions: BV<SegmentedOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("SegmentedButton", inOptions);
+  const options = mergeComponentOptions("SegmentedButton", inOptions);
   const labels = options.labels || values;
 
   const segmentedOptions = {

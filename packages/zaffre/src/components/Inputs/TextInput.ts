@@ -1,5 +1,5 @@
 import { Atom } from ":foundation";
-import { View } from ":core";
+import { BV, View } from ":core";
 import { InputType } from "../Content";
 import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 
@@ -16,11 +16,11 @@ function textIdentity(s: string): string {
   return s;
 }
 
-export function SimpleTextInput(value: Atom<string>, inputType: InputType, inOptions: TextInputOptions = {}): View {
+export function SimpleTextInput(value: Atom<string>, inputType: InputType, inOptions: BV<TextInputOptions> = {}): View {
   return GenericTextInput(value, inputType, textIdentity, textIdentity, inOptions);
 }
 
-export function TextInput(text: Atom<string>, options: TextInputOptions = {}): View {
+export function TextInput(text: Atom<string>, options: BV<TextInputOptions> = {}): View {
   return SimpleTextInput(text, "text", options);
 }
 

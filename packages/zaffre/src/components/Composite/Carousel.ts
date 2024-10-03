@@ -1,6 +1,6 @@
 import { CarouselAtom, znumber, zstring } from ":foundation";
-import { coreColorEffect, ChildCreator, View, afterAddedToDOM } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { coreColorEffect, ChildCreator, View, afterAddedToDOM, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "../Controls";
 import { Ensemble, HStack, StackOptions } from "../Layout";
 
@@ -24,7 +24,7 @@ export interface CarouselOptions extends StackOptions {
   preloadList?: string[];
   intervalMillis?: znumber;
 }
-defineComponentDefaults<CarouselOptions>("Carousel", "HStack", {
+defineBaseOptions<CarouselOptions>("Carousel", "HStack", {
   leftIcon: "icon.chevron-left",
   rightIcon: "icon.chevron-right",
   intervalMillis: 0,
@@ -33,9 +33,9 @@ defineComponentDefaults<CarouselOptions>("Carousel", "HStack", {
 export function Carousel(
   key: CarouselAtom<string>,
   childCreator: ChildCreator<string>,
-  inOptions: CarouselOptions = {}
+  inOptions: BV<CarouselOptions> = {}
 ): View {
-  const options = mergeComponentDefaults("Carousel", inOptions);
+  const options = mergeComponentOptions("Carousel", inOptions);
   afterAddedToDOM(options, (view: View): void => {
     if (options.intervalMillis) {
       view.addIntersectionTimer(options.intervalMillis, () => key.next());

@@ -1,10 +1,10 @@
 import { zboolean, znumber, zstring, ZType, atom, Atom, toggleAtom, ToggleAtom } from ":foundation";
-import { pct, Effect, View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { pct, Effect, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { Disclosure, DisclosureOptions, DisclosureComponent } from "../Layout";
 import { ExpandableItem, ExpandableItemOptions } from "./ExpandableItem";
 
 //
-// A SimpleDisclosure is a disclosure which has a text label 
+// A SimpleDisclosure is a disclosure which has a text label
 // with a disclosure icon. The detail creator must be supplied.
 //
 // TODO: consider going straight to a LabelWithIcons instead of ExpandableItem.
@@ -28,7 +28,7 @@ export interface SimpleDisclosureOptions extends DisclosureOptions {
   summaryInset?: zstring;
   centerSummary?: zboolean;
 }
-defineComponentDefaults<SimpleDisclosureOptions>("SimpleDisclosure", "Disclosure", {
+defineBaseOptions<SimpleDisclosureOptions>("SimpleDisclosure", "Disclosure", {
   flexDirection: "column",
   alignItems: "start",
   iconName: "icon.chevron-right",
@@ -43,8 +43,13 @@ defineComponentDefaults<SimpleDisclosureOptions>("SimpleDisclosure", "Disclosure
   overflow: "hidden",
 });
 
-export function SimpleDisclosure<T>(data: ZType<T>, label: zstring, detailCreator: DisclosureComponent<T>, inOptions: SimpleDisclosureOptions = {}): View {
-  const options = mergeComponentDefaults("SimpleDisclosure", inOptions);
+export function SimpleDisclosure<T>(
+  data: ZType<T>,
+  label: zstring,
+  detailCreator: DisclosureComponent<T>,
+  inOptions: BV<SimpleDisclosureOptions> = {}
+): View {
+  const options = mergeComponentOptions("SimpleDisclosure", inOptions);
 
   const expanded = options.expanded || toggleAtom(false);
   options.expanded = expanded;
@@ -63,7 +68,7 @@ export function SimpleDisclosure<T>(data: ZType<T>, label: zstring, detailCreato
     width: pct(100),
     iconName: options.iconName,
     iconSide: options.iconSide,
-    iconTransform: atom(() => expanded.get() ? "rotate(90deg)" : ""),
+    iconTransform: atom(() => (expanded.get() ? "rotate(90deg)" : "")),
     iconTransition: "transform 0.3s",
   };
 

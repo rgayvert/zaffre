@@ -1,6 +1,6 @@
 import { zget, Atom, atom, znumber, zutil, zboolean, BasicAction, rect2D, point2D } from ":foundation";
-import { View, SVG, SVGLine, ch, css_color, SVGCircle, SVGContainerOptions, getSVGPointFromEvent } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, SVG, SVGLine, ch, css_color, SVGCircle, SVGContainerOptions, getSVGPointFromEvent, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -22,7 +22,7 @@ export interface SliderOptions extends BoxOptions {
   onDragStart?: BasicAction; // applied to circle
   onDragEnd?: BasicAction; // applied to circle
 }
-defineComponentDefaults<SliderOptions>("Slider", "Box", {
+defineBaseOptions<SliderOptions>("Slider", "Box", {
   minVal: 0,
   maxVal: 100,
   minWidth: ch(10),
@@ -33,8 +33,8 @@ defineComponentDefaults<SliderOptions>("Slider", "Box", {
   round: false,
 });
 
-export function Slider(value: Atom<number>, inOptions: SliderOptions = {}): View {
-  const options = mergeComponentDefaults("Slider", inOptions);
+export function Slider(value: Atom<number>, inOptions: BV<SliderOptions> = {}): View {
+  const options = mergeComponentOptions("Slider", inOptions);
   options.model = value;
   const minVal = options.minVal!;
   const maxVal = options.maxVal!;

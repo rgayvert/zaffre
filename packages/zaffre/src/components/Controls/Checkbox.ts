@@ -1,5 +1,5 @@
 import { atom, zget, ztoggle, Atom } from ":foundation";
-import { View, core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "./Button";
 
 //
@@ -11,7 +11,7 @@ export interface CheckboxOptions extends ButtonOptions {
   checkedIcon?: string;
   uncheckedIcon?: string;
 }
-defineComponentDefaults<CheckboxOptions>("Checkbox", "Button", {
+defineBaseOptions<CheckboxOptions>("Checkbox", "Button", {
   checkedIcon: "icon.checkbox-on",
   uncheckedIcon: "icon.checkbox-off",
   background: core.color.none, 
@@ -19,8 +19,8 @@ defineComponentDefaults<CheckboxOptions>("Checkbox", "Button", {
   controlSize: "lg"
 });
 
-export function Checkbox(value: Atom<boolean>, inOptions: CheckboxOptions = {}): View {
-  const options = mergeComponentDefaults("Checkbox", inOptions);
+export function Checkbox(value: Atom<boolean>, inOptions: BV<CheckboxOptions> = {}): View {
+  const options = mergeComponentOptions("Checkbox", inOptions);
 
   options.leadingIconURI = atom(() => (zget(value) ? options.checkedIcon! : options.uncheckedIcon!));
   options.action = (): void => ztoggle(value); 

@@ -1,6 +1,6 @@
 import { zget, zboolean, zstring, Atom, ZType, Interval } from ":foundation";
-import { t, View, addOptionEvents, setInnerHTML, css_textAlign, beforeAddedToDOM } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { t, View, addOptionEvents, setInnerHTML, css_textAlign, beforeAddedToDOM, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Box, BoxOptions, TextRange, getSelectionInterval, insertTextAtCursor, setSelectionInterval } from "../HTML";
 
 //
@@ -23,7 +23,7 @@ export interface TextBoxOptions extends BoxOptions {
   plainText?: Atom<string>;
   autoScrollToBottom?: zboolean;
 }
-defineComponentDefaults<TextBoxOptions>("Text", "Box", {
+defineBaseOptions<TextBoxOptions>("Text", "Box", {
   font: core.font.body_medium,
   color: core.color.primary,
   background: core.color.inherit,
@@ -37,8 +37,8 @@ defineComponentDefaults<TextBoxOptions>("Text", "Box", {
   overflow: "auto",
 });
 
-export function TextBox(content: zstring, inOptions: TextBoxOptions = {}): View {
-  const options = mergeComponentDefaults("Text", inOptions);
+export function TextBox(content: zstring, inOptions: BV<TextBoxOptions> = {}): View {
+  const options = mergeComponentOptions("Text", inOptions);
   if (options.editable) {
     options.contentEditable = zget(options.plainTextOnly) ? "plaintext-only" : true;
   }

@@ -1,5 +1,5 @@
-import { zstring, BasicAction, Atom, } from ":foundation";
-import { place, transitions, View , core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { zstring, BasicAction, Atom } from ":foundation";
+import { place, transitions, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
 import { TextLabel } from "../Content";
 import { BoxOptions, Floating } from "../HTML";
 import { HStack, VStack } from "../Layout";
@@ -18,7 +18,7 @@ export interface AlertDialogOptions extends BoxOptions {
   rejectAction?: BasicAction;
   cancelAction?: BasicAction;
 }
-defineComponentDefaults<AlertDialogOptions>("AlertDialog", "VStack", {
+defineBaseOptions<AlertDialogOptions>("AlertDialog", "VStack", {
   acceptLabel: "OK",
   rejectLabel: "No",
   cancelLabel: "Cancel",
@@ -34,8 +34,13 @@ defineComponentDefaults<AlertDialogOptions>("AlertDialog", "VStack", {
   isDialog: true,
 });
 
-export function AlertDialog(hidden: Atom<boolean>, title: zstring, defaultAction?: BasicAction, inOptions: AlertDialogOptions = {}): View {
-  const options = mergeComponentDefaults("AlertDialog", inOptions);
+export function AlertDialog(
+  hidden: Atom<boolean>,
+  title: zstring,
+  defaultAction?: BasicAction,
+  inOptions: BV<AlertDialogOptions> = {}
+): View {
+  const options = mergeComponentOptions("AlertDialog", inOptions);
 
   options.hidden = hidden;
 
@@ -74,10 +79,11 @@ export function AlertDialog(hidden: Atom<boolean>, title: zstring, defaultAction
       padding: core.space.s5,
     });
   }
-  return Floating(VStack(options).append(
-    titleLabel, 
-    subtitleLabel, 
-    HStack({ gap: core.space.s5, background: core.color.background }).append(
-      ...buttons
-    )));
+  return Floating(
+    VStack(options).append(
+      titleLabel,
+      subtitleLabel,
+      HStack({ gap: core.space.s5, background: core.color.background }).append(...buttons)
+    )
+  );
 }

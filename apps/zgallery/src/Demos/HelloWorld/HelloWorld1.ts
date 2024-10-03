@@ -24,15 +24,3 @@ export function HelloWorld1(): View {
     })
   );
 }
-
-function HelloWorld01(): View {
-  const text = atom("Hello World");
-  return VStack().append(
-    TextInput(text),
-    TextLabel(text)
-  );
-}
-
-/**
- * fashion = Map<component_selector, component_options>
- */

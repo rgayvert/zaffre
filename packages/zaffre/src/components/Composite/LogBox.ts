@@ -1,5 +1,5 @@
 import { atom, Atom, zutil } from ":foundation";
-import { View, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
 import { TextBox, TextBoxOptions } from "../Content";
 
 //
@@ -10,12 +10,12 @@ import { TextBox, TextBoxOptions } from "../Content";
 export interface LogBoxOptions extends TextBoxOptions {
   logContent?: Atom<string>;
 }
-defineComponentDefaults<LogBoxOptions>("LogBox", "Text", {
+defineBaseOptions<LogBoxOptions>("LogBox", "Text", {
   autoScrollToBottom: true,
 });
 
-export function LogBox(entry: Atom<string>, inOptions: LogBoxOptions = {}): View {
-  const options = mergeComponentDefaults("LogBox", inOptions);
+export function LogBox(entry: Atom<string>, inOptions: BV<LogBoxOptions> = {}): View {
+  const options = mergeComponentOptions("LogBox", inOptions);
   entry.options.alwaysFire = true;
   const logContent = options.logContent || atom("");
 

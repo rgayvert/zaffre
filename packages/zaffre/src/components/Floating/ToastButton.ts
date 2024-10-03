@@ -1,6 +1,6 @@
 import { indexedArrayAtom, zstring, zget } from ":foundation";
-import { View, place, handleEvents, addOptionEvents } from ":core";
-import { core, defineComponentDefaults, mergeComponentDefaults } from ":core";
+import { View, place, handleEvents, addOptionEvents, BV } from ":core";
+import { core, defineBaseOptions, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "../Controls";
 import { ToastStack } from "./Toast";
 
@@ -11,9 +11,9 @@ import { ToastStack } from "./Toast";
 //
 
 export interface ToastButtonOptions extends ButtonOptions {}
-defineComponentDefaults<ButtonOptions>("ToastButton", "Button", {});
-export function ToastButton(message: zstring, inOptions: ToastButtonOptions = {}): View {
-  const options = mergeComponentDefaults("ToastButton", inOptions);
+defineBaseOptions<ButtonOptions>("ToastButton", "Button", {});
+export function ToastButton(message: zstring, inOptions: BV<ToastButtonOptions> = {}): View {
+  const options = mergeComponentOptions("ToastButton", inOptions);
   addOptionEvents(options, { click: (evt) => handleClick(evt) });
 
   const toastItems = indexedArrayAtom<string>([]);

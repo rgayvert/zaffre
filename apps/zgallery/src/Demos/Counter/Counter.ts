@@ -1,5 +1,5 @@
-import { Box, SVG, SVGContainerOptions, View, ViewOptions, pct, px, zboolean } from "zaffre";
-import { defineComponentDefaults, mergeComponentDefaults } from "zaffre";
+import { BV, Box, SVG, SVGContainerOptions, View, ViewOptions, pct, px, zboolean } from "zaffre";
+import { defineBaseOptions, mergeComponentOptions } from "zaffre";
 import { SVGTextLabel, SVGTextLabelOptions, rect2D, Rect2D, zstring } from "zaffre";
 import { CounterModel } from "./CounterModel";
 
@@ -9,7 +9,7 @@ export interface CounterOptions extends SVGContainerOptions {
   max?: number;
   initialValue?: number;
 }
-defineComponentDefaults<CounterOptions>("Counter", "", {
+defineBaseOptions<CounterOptions>("Counter", "", {
   rounded: true,
   min: 0,
   max: 99,
@@ -29,8 +29,8 @@ function CounterLabel(label: zstring, bounds: Rect2D, options: SVGTextLabelOptio
   });
 }
 
-export function Counter(key: string, inOptions: CounterOptions = {}): View {
-  const options = mergeComponentDefaults("Counter", inOptions);
+export function Counter(key: string, inOptions: BV<CounterOptions> = {}): View {
+  const options = mergeComponentOptions("Counter", inOptions);
   const model = new CounterModel(key, options.min, options.max, options.initialValue);
 
   return SVG(options).append(

@@ -1,4 +1,4 @@
-Zaffre includes wrapper components for most of the standard input types. The idea is to encapsulate the formatting, parsing and validation required to use them effectively in a reactive fashion. Each of these components takes an atom of some type; in some cases this is a string, but in others it may be a Color, number, or other suitable type. 
+Zaffre includes wrapper components for most of the standard input types. The idea is to encapsulate the formatting, parsing and validation required to use them effectively in a reactive manner. Each of these components takes an atom of some type; in some cases this is a string, but in others it may be a Color, number, or other suitable type. 
 
 Input components may be used in isolation, but more options are available when they are used inside a Form (see the [Form demo](<<LINK_PREFIX>>/demos/forms)).
 

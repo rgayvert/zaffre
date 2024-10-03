@@ -1,5 +1,5 @@
 import { atom } from ":foundation";
-import { core, defineComponentDefaults, mergeComponentDefaults, pct, View } from ":core";
+import { BV, core, defineBaseOptions, mergeComponentOptions, pct, View } from ":core";
 import { StackOptions, VStack } from "../Layout";
 import { FormField, formFieldValidationMessage } from "./FormField";
 import { TextLabel } from "../Content";
@@ -13,13 +13,13 @@ import { TextLabel } from "../Content";
 //
 
 export interface ValidationBoxOptions extends StackOptions {}
-defineComponentDefaults<ValidationBoxOptions>("ValidationBox", "Stack", {
+defineBaseOptions<ValidationBoxOptions>("ValidationBox", "Stack", {
   alignItems: "start",
   width: pct(100),
 });
 
-export function ValidationBox<T>(field: FormField<T>, inputView: View, inOptions: ValidationBoxOptions = {}): View {
-  const options = mergeComponentDefaults("ValidationBox", inOptions);
+export function ValidationBox<T>(field: FormField<T>, inputView: View, inOptions: BV<ValidationBoxOptions> = {}): View {
+  const options = mergeComponentOptions("ValidationBox", inOptions);
 
   return VStack(options).append(
     inputView,
