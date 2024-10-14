@@ -1,5 +1,5 @@
 import { Atom, atom, BasicAction, TableCell, zboolean, TableDataCell, TableModel, TableHeaderCell } from ":foundation";
-import { View, px, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, px, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Grid, GridOptions, ViewList } from "../Layout";
 import { TextLabelOptions } from "../Content";
 import { Box } from "../HTML";
@@ -7,7 +7,7 @@ import { HeaderCellView } from "./HeaderCellView";
 import { StringDataCellView } from "./StringDataCellView";
 
 //
-// A Table is a grid-based component backed by a table model with reactive rows and columns. 
+// A Table is a grid-based component backed by a table model with reactive rows and columns.
 // The table model provides a list of header and data cells, which are mapped here into cell views.
 //
 // TODO:
@@ -33,7 +33,7 @@ export interface TableOptions extends GridOptions {
   doubleClickAction?: BasicAction;
   selectableColumns?: zboolean;
 }
-defineBaseOptions<TableOptions>("Table", "Grid", {
+defineComponentBundle<TableOptions>("Table", "Grid", {
   showHeader: true,
   gridLines: "both",
   background: core.color.primary,
@@ -85,11 +85,13 @@ export function Table<R>(tableModel: TableModel<R>, inOptions: BV<TableOptions> 
     }
   }
 
-  return Grid(options).append(
-    ViewList(
-      tableModel.cells,
-      (cell) => cell,
-      (cell) => TableCellView(cell)
+  return restoreOptions(
+    Grid(options).append(
+      ViewList(
+        tableModel.cells,
+        (cell) => cell,
+        (cell) => TableCellView(cell)
+      )
     )
   );
 }

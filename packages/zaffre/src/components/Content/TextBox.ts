@@ -1,6 +1,6 @@
 import { zget, zboolean, zstring, Atom, ZType, Interval } from ":foundation";
-import { t, View, addOptionEvents, setInnerHTML, css_textAlign, beforeAddedToDOM, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { t, View, addOptionEvents, setInnerHTML, css_textAlign, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions, TextRange, getSelectionInterval, insertTextAtCursor, setSelectionInterval } from "../HTML";
 
 //
@@ -23,7 +23,7 @@ export interface TextBoxOptions extends BoxOptions {
   plainText?: Atom<string>;
   autoScrollToBottom?: zboolean;
 }
-defineBaseOptions<TextBoxOptions>("Text", "Box", {
+defineComponentBundle<TextBoxOptions>("Text", "Box", {
   font: core.font.body_medium,
   color: core.color.primary,
   background: core.color.inherit,
@@ -109,5 +109,5 @@ export function TextBox(content: zstring, inOptions: BV<TextBoxOptions> = {}): V
     });
   }
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

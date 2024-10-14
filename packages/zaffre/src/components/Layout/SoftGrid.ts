@@ -1,6 +1,6 @@
 import { zget, atom, } from ":foundation";
-import { BV, pct, View } from ":core";
-import { defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, pct, restoreOptions, View } from ":core";
+import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -13,7 +13,7 @@ import { Grid, GridOptions } from "./Grid";
 export interface SoftGridOptions extends GridOptions {
   minColumnWidth?: string;
 }
-defineBaseOptions<SoftGridOptions>("SoftGrid", "Grid", {
+defineComponentBundle<SoftGridOptions>("SoftGrid", "Grid", {
   minColumnWidth: "60ch",
   width: pct(100),
   display: "grid",
@@ -27,5 +27,5 @@ export function SoftGrid(inOptions: BV<SoftGridOptions> = {}): View {
   }
   options.templateColumns = atom(() => `repeat(auto-fit, minmax(min(${minWidth()}, 100%), 1fr))`);
 
-  return Grid(options);
+  return restoreOptions(Grid(options));
 }

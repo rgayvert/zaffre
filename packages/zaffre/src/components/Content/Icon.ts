@@ -1,5 +1,6 @@
 import { zlog, zget, zstring, ContentSecurity } from ":foundation";
-import { em, View, setInnerHTML, resolveURI, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { em, View, setInnerHTML, resolveURI, core } from ":core";
+import { defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 /*
@@ -14,7 +15,7 @@ import { Box, BoxOptions } from "../HTML";
 export interface IconOptions extends BoxOptions {
   //inline?: zboolean;
 }
-defineBaseOptions<IconOptions>("Icon", "Box", {
+defineComponentBundle<IconOptions>("Icon", "Box", {
   color: core.color.inherit,
   background: core.color.inherit,
   lineHeight: em(1),
@@ -62,5 +63,5 @@ export function Icon(uri: zstring, inOptions: BV<IconOptions> = {}): View {
         "background-color:inherit;font-size:inherit;vertical-align:center;text-align:center;margin-bottom:0.1em";
     }
   };
-  return Box(options);
+  return restoreOptions(Box(options));
 }

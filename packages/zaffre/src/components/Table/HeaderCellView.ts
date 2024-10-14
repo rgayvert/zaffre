@@ -1,16 +1,16 @@
 import { zboolean, TableModel, TableHeaderCell } from ":foundation";
-import { px, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { px, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { CenteredTextLabel, TextLabelOptions } from "../Content";
 
 //
-// A HeaderCellView displays the contents of a header cell, which will be the title of a 
+// A HeaderCellView displays the contents of a header cell, which will be the title of a
 // table column. When clicked, it may trigger a sort and/or the selection of the associated column.
 //
 
 export interface TableHeaderCellViewOptions extends TextLabelOptions {
   sortable?: zboolean;
 }
-defineBaseOptions<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel", {
+defineComponentBundle<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel", {
   padding: core.space.s2,
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -43,5 +43,5 @@ export function HeaderCellView<R>(
     }
   }
 
-  return CenteredTextLabel(cell.column.title, options);
+  return restoreOptions(CenteredTextLabel(cell.column.title, options));
 }

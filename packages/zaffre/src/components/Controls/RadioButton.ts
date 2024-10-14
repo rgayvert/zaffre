@@ -1,5 +1,5 @@
 import { Atom, atom, zget, zstring } from ":foundation";
-import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Button, ButtonOptions } from "./Button";
 
 //
@@ -11,7 +11,7 @@ export interface RadioButtonOptions extends ButtonOptions {
   onIcon?: zstring;
   offIcon?: zstring;
 }
-defineBaseOptions<RadioButtonOptions>("RadioButton", "Button", {
+defineComponentBundle<RadioButtonOptions>("RadioButton", "Button", {
   onIcon: "icon.radio-button-on",
   offIcon: "icon.radio-button-off",
   background: core.color.none,
@@ -23,5 +23,6 @@ export function RadioButton(groupValue: Atom<string>, value: zstring, inOptions:
 
   options.leadingIconURI = atom(() => (zget(groupValue) === value ? zget(options.onIcon!) : zget(options.offIcon!)));
   options.action = (): void => groupValue.set(zget(value));
-  return Button(options);
+  
+  return restoreOptions(Button(options));
 }

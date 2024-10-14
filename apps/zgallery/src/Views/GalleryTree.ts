@@ -1,23 +1,23 @@
-import { BV, SimpleTree, SimpleTreeOptions, StackOptions, TextLabel, View, VStack } from "zaffre";
+import { BV, restoreOptions, SimpleTree, SimpleTreeOptions, StackOptions, TextLabel, View, VStack } from "zaffre";
 import { ch, flexToken, pct } from "zaffre";
-import { core, defineBaseOptions, mergeComponentOptions } from "zaffre";
+import { core, defineComponentBundle, mergeComponentOptions } from "zaffre";
 import { GalleryModel, galleryTree } from "../Model";
 
 //
 // GalleryTree: the demo navigation tree component.
 //
-// This is used in two forms: 
+// This is used in two forms:
 //   - a floating version, for a small window size; and
 //   - a non-floating version, with an additional bottom label to show the app version number
 //
-// TODO: 
+// TODO:
 //   - generalize this for use in other windows
 //
 
 export interface GalleryTreeOptions extends StackOptions {
   includeInfo?: boolean;
 }
-defineBaseOptions<GalleryTreeOptions>("GalleryTree", "Stack", {
+defineComponentBundle<GalleryTreeOptions>("GalleryTree", "Stack", {
   includeInfo: true,
 });
 
@@ -54,8 +54,10 @@ export function GalleryTree(model: GalleryModel, inOptions: BV<GalleryTreeOption
     alignItems: "start",
   };
 
-  return VStack(treeContainerOptions).append(
-    SimpleTree(galleryTree, model.selectedDemo, (val) => val.data.title, treeOptions),
-    infoText
+  return restoreOptions(
+    VStack(treeContainerOptions).append(
+      SimpleTree(galleryTree, model.selectedDemo, (val) => val.data.title, treeOptions),
+      infoText
+    )
   );
 }

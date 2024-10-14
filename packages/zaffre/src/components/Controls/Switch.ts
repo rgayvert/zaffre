@@ -1,6 +1,6 @@
 import { atom, zget, ToggleAtom } from ":foundation";
-import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -16,7 +16,7 @@ export interface SwitchOptions extends BoxOptions {
   circleColor?: css_color;
   widthInEm?: number;
 }
-defineBaseOptions<SwitchOptions>("Switch", "Box", {
+defineComponentBundle<SwitchOptions>("Switch", "Box", {
   widthInEm: 4,
   rounding: core.rounding.r4,
   border: core.border.thin,
@@ -36,14 +36,16 @@ export function Switch(value: ToggleAtom, inOptions: BV<SwitchOptions> = {}): Vi
   const diameter = calcDiv(options.width, 2);
   const sz = calcSub(diameter, px(2));
 
-  return Box(options).append(
-    Box({
-      rounding: core.rounding.circle,
-      left: atom(() => (zget(value) ? diameter : px(0))),
-      width: sz,
-      height: sz,
-      background: options.circleColor,
-      transition: "left 0.25s",
-    })
+  return restoreOptions(
+    Box(options).append(
+      Box({
+        rounding: core.rounding.circle,
+        left: atom(() => (zget(value) ? diameter : px(0))),
+        width: sz,
+        height: sz,
+        background: options.circleColor,
+        transition: "left 0.25s",
+      })
+    )
   );
 }

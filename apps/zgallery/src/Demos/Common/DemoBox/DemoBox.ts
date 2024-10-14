@@ -1,18 +1,18 @@
-import { View, StackOptions, routeAtom, Resettable, VStack, counterAtom, BV } from "zaffre";
+import { View, StackOptions, routeAtom, Resettable, VStack, counterAtom, BV, restoreOptions } from "zaffre";
 import { core, pct, zutil } from "zaffre";
-import { defineBaseOptions, mergeComponentOptions } from "zaffre";
+import { defineComponentBundle, mergeComponentOptions } from "zaffre";
 import { GalleryTopic, GallerySection } from "../GalleryTypes";
 import { DemoBoxHeader } from "./DemoBoxHeader";
 import { DemoBoxEnsemble } from "./DemoBoxEnsemble";
 
 interface DemoBoxOptions extends StackOptions {}
 
-defineBaseOptions<DemoBoxOptions>("DemoBox", "VStack", {
+defineComponentBundle<DemoBoxOptions>("DemoBox", "VStack", {
   width: pct(95),
   marginTop: core.space.s3,
   border: core.border.thin.color(core.color.gray.opacity(0.5)),
 });
- 
+
 /**
  * #DemoBox
  *   - standard box used for all demo examples
@@ -23,31 +23,30 @@ defineBaseOptions<DemoBoxOptions>("DemoBox", "VStack", {
  */
 export function DemoBox(section: GallerySection, topic: GalleryTopic, inOptions: BV<DemoBoxOptions> = {}): View {
   const options = mergeComponentOptions("DemoBox", inOptions);
-    options.id = zutil.stripWhitespace(section.title);
-    const fullPage = topic.sections.length === 1;
-    if (fullPage) {
-      options.border = undefined;
-      options.marginTop = core.space.s0;
-    }
-    options.justifyContent = undefined;
-    options.overflow = undefined;
+  options.id = zutil.stripWhitespace(section.title);
+  const fullPage = topic.sections.length === 1;
+  if (fullPage) {
+    options.border = undefined;
+    options.marginTop = core.space.s0;
+  }
+  options.justifyContent = undefined;
+  options.overflow = undefined;
 
-    const viewKey = routeAtom(zutil.kebabize(section.title), "demo");
-    const resetCounter = counterAtom(0);
-    const demoContainer = Resettable(section.componentFn, resetCounter, {
-      background: core.color.background,
-    });
-    const header = DemoBoxHeader(section, viewKey, resetCounter);
-    const ensemble = DemoBoxEnsemble(demoContainer, section, topic, viewKey, fullPage);
+  const viewKey = routeAtom(zutil.kebabize(section.title), "demo");
+  const resetCounter = counterAtom(0);
+  const demoContainer = Resettable(section.componentFn, resetCounter, {
+    background: core.color.background,
+  });
+  const header = DemoBoxHeader(section, viewKey, resetCounter);
+  const ensemble = DemoBoxEnsemble(demoContainer, section, topic, viewKey, fullPage);
 
-    // TODO: domInspector does not update when demo is reset
+  // TODO: domInspector does not update when demo is reset
 
-    if (fullPage) {
-      options.width = pct(100);
-      options.height = pct(100);
-      return VStack(options).append(header, ensemble);
-    } else {
-      options.width = pct(95);
-      return VStack(options).append(header, demoContainer, ensemble);
-    }
+  options.width = fullPage ? pct(100) : pct(95);
+  if (fullPage) {
+    options.height = pct(100);
+  }
+  return restoreOptions(
+    fullPage ? VStack(options).append(header, ensemble) : VStack(options).append(header, demoContainer, ensemble)
+  );
 }

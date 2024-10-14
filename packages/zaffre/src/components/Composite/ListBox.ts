@@ -1,5 +1,5 @@
 import { Atom, ZType, TAction, atom, counterAtomForDataSelection, SimpleAction } from ":foundation";
-import { View, counterKeyBindings, core, defineBaseOptions, mergeComponentOptions, BV,  } from ":core";
+import { View, counterKeyBindings, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { SelectionList, SelectionListOptions } from "../Layout";
 import { LabelWithIcons } from "../Controls";
 
@@ -11,7 +11,7 @@ export interface ListBoxOptions extends SelectionListOptions {
   dblClickAction?: TAction<unknown>;
   onClick?: SimpleAction;
 }
-defineBaseOptions<ListBoxOptions>("ListBox", "SelectionList", {
+defineComponentBundle<ListBoxOptions>("ListBox", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -37,7 +37,7 @@ export function ListBox<T>(
       label: labelFn(dataItem, index),
       selectionColor: core.color.secondaryContainer,
       alignItems: options.alignItems,
-      labelOptions: {
+      textLabelOptions: {
         padding: core.space.s0,
         font: core.font.inherit,
         //selectionColor: core.color.secondaryContainer,
@@ -50,7 +50,7 @@ export function ListBox<T>(
       },
     });
   }
-  return SelectionList(data, selectedItem, LabelComponent, options);
+  return restoreOptions(SelectionList(data, selectedItem, LabelComponent, options));
 }
 
 export function StringListBox(

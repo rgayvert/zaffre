@@ -1,7 +1,7 @@
 import { ZType, zget, zstring, atom, EdgePoint, BoxSide, zboolean } from ":foundation";
 import { convertBoxSideToEdgePoint } from ":foundation";
-import { BV, CSSAlign, CSSFlexDirection, View, disableEffectsWhile } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, CSSAlign, CSSFlexDirection, View, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { TextLabel, TextLabelOptions } from "../Content";
 import { Stack, StackOptions } from "../Layout";
 
@@ -21,16 +21,17 @@ export interface LabelBoxOptions extends StackOptions {
   side?: BoxSide;
   placementPt?: ZType<EdgePoint>;
   extendClick?: zboolean;
-  labelOptions?: TextLabelOptions;
+  textLabelOptions?: TextLabelOptions;
 }
-defineBaseOptions<LabelBoxOptions>("LabelBox", "Stack", {
+defineComponentBundle<LabelBoxOptions>("LabelBox", "Stack", {
   side: "left",
   justifyContent: "unset",
   extendClick: true,
-  labelOptions: {
+  textLabelOptions: {
     font: core.font.label_large,
-  },
+  }
 });
+
 
 function extractDirection(pt: EdgePoint): CSSFlexDirection {
   return pt.endsWith("center")
@@ -52,26 +53,29 @@ function extractAlign(pt: EdgePoint): CSSAlign {
 }
 export function LabelBox(label: zstring, inOptions: BV<LabelBoxOptions> = {}): View {
   const options = mergeComponentOptions("LabelBox", inOptions);
+
   const pt = options.placementPt || convertBoxSideToEdgePoint(options.side!);
   const dir = atom(() => extractDirection(zget(pt)));
   const align = atom(() => extractAlign(zget(pt)));
   // make sure horizontal labels have some space
   options.gap ??= atom(() => (dir.get().startsWith("row") ? core.space.s2 : core.space.s0));
 
-  const labelOptions = mergeComponentOptions("TextLabel", options.labelOptions || {});
-  const textLabel = TextLabel(label, labelOptions);
+  // 
+  const textLabel = TextLabel(label, options.textLabelOptions);
 
   if (zget(options.extendClick)) {
     options.afterAppendChild = (view, child): void => {
       if (child.handlesClickEvent()) {
-        textLabel.options.clickAction = (): void => disableEffectsWhile(() => child.click());
+        textLabel.addOptionEvents({ click: child.options.events?.click });
       }
     };
   }
 
-  return Stack({
-    ...options,
-    flexDirection: dir,
-    alignItems: align,
-  }).append(textLabel);
+  return restoreOptions(
+    Stack({
+      ...options,
+      flexDirection: dir,
+      alignItems: align,
+    }).append(textLabel)
+  );
 }

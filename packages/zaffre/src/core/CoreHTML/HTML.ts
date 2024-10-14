@@ -1,16 +1,18 @@
 import { Atom, atom, lazyinit, zget, znumber } from ":foundation";
-import { Attributes, ColorToken, css_color, css_rounding, pct, px, vh, vw } from ":attributes";
-import { allOptionBundles, BV, defineBaseOptions, mergeComponentOptions } from ":view";
+import { Attributes, ColorToken, css_color, css_rounding, css_textAlign, pct, px, vh, vw } from ":attributes";
+import { allSheets, BV, defineBundle, defineComponentBundle, mergeComponentOptions } from ":view";
+import { OptionSheet, restoreOptions, sheetStack } from ":view";
 import { core } from ":theme";
 import { place } from ":uifoundation";
 import { View, ViewDelegate, ViewOptions, beforeAddedToDOM } from ":view";
 import { dropShadowForElevation, EffectsBundle, standardHTMLInteractionEffects } from ":effect";
 import { DragHandler } from ":events";
 import { CSSAttributeOptions, cssOptionKeys, htmlAttributeKeys, HTMLAttributeOptions } from "../CoreOptions";
+import { StatusBarAlignment } from "vscode";
 
 //
 // Base support for HTML views. This includes the HTMLDelegate class, the low-level HTML component,
-// the HTMLBody component, the ViewOverlay component, and components for the floating, dialog and 
+// the HTMLBody component, the ViewOverlay component, and components for the floating, dialog and
 // toast layers.
 //
 
@@ -101,7 +103,7 @@ export class HTMLDelegate extends ViewDelegate {
     return this._overlay;
   }
 
-  public defaultInteractionEffects(): EffectsBundle{
+  public defaultInteractionEffects(): EffectsBundle {
     return standardHTMLInteractionEffects();
   }
 
@@ -137,6 +139,7 @@ export class HTMLDelegate extends ViewDelegate {
     }
   }
   adjustOptions(): void {
+    //expandOptionBundles(this.options);
     if (this.options.elevation) {
       this.options.filter = atom(() => dropShadowForElevation(zget(this.options.elevation)));
     }
@@ -202,14 +205,17 @@ export class HTMLDelegate extends ViewDelegate {
     return { ...this.extractCSSAttributes(this.options), ...this.selectionAttributes() };
   }
 
-  getAllOptionBundles(): any {
-    return allOptionBundles;
+  public getSheetStack(): OptionSheet[] {
+    return sheetStack;
+  }
+  public getAllSheets(): OptionSheet[] {
+    return allSheets;
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-defineBaseOptions<HTMLOptions>("HTML", "", {
+defineComponentBundle<HTMLOptions>("HTML", "", {
   color: core.color.primary,
   cursor: "default",
   userSelect: "none",
@@ -218,7 +224,7 @@ defineBaseOptions<HTMLOptions>("HTML", "", {
 export function HTML(inOptions: BV<HTMLOptions> = {}): View {
   const options = mergeComponentOptions("HTML", inOptions);
 
-  return new View(new HTMLDelegate(), options);
+  return restoreOptions(new View(new HTMLDelegate(), options));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -249,7 +255,7 @@ function HTMLBody(): View {
 
 interface ViewOverlayOptions extends HTMLOptions {}
 
-defineBaseOptions<ViewOverlayOptions>("Overlay", "HTML", {
+defineComponentBundle<ViewOverlayOptions>("Overlay", "HTML", {
   background: core.color.transparent,
   position: "absolute",
   left: px(0),
@@ -263,7 +269,7 @@ defineBaseOptions<ViewOverlayOptions>("Overlay", "HTML", {
 
 export function ViewOverlay(inOptions: BV<ViewOverlayOptions> = {}): View {
   const options = mergeComponentOptions("Overlay", inOptions);
-  return HTML(options);
+  return restoreOptions(HTML(options));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -333,3 +339,40 @@ function ToastLayer(): View {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+Object.entries(core.space).forEach(([key, val]) => {
+  defineBundle<HTMLOptions>(`gap-${key[1]}`, { gap: val });
+  defineBundle<HTMLOptions>(`pad-${key[1]}`, { padding: val });
+});
+Object.entries(core.rounding)
+  .slice(0, -1)
+  .forEach(([key, val]) => defineBundle<HTMLOptions>(key, { rounding: val }));
+defineBundle<HTMLOptions>("b0", { border: core.border.none });
+defineBundle<HTMLOptions>("b1", { border: core.border.thin });
+defineBundle<HTMLOptions>("b2", { border: core.border.medium });
+defineBundle<HTMLOptions>("b3", { border: core.border.thick });
+
+Object.entries(core.color).forEach(([key, val]) => {
+  defineBundle<HTMLOptions>(`bg-${key}`, { background: val });
+  defineBundle<HTMLOptions>(`c-${key}`, { color: val });
+});
+
+Object.entries(core.font).forEach(([key, val]) => {
+  const key2 = key
+    .split("_")
+    .map((p) => p.at(0))
+    .join("");
+  defineBundle<HTMLOptions>(`f-${key2}`, { font: val });
+});
+
+const textAlignments: [string, css_textAlign][] = [
+  ["s", "start"],
+  ["e", "end"],
+  ["l", "left"],
+  ["r", "right"],
+  ["c", "center"],
+  ["j", "justify"],
+  ["m", "match-parent"],
+  ["ja", "justify-all"],
+];
+textAlignments.forEach(([abbr, align]) => defineBundle<HTMLOptions>(`ta-${abbr}`, { textAlign: align }));

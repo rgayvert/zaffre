@@ -1,5 +1,5 @@
-import {zstring, fetchTextAtom, atom, Atom } from ":foundation";
-import { View, resolveURI, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { zstring, fetchTextAtom, atom, Atom } from ":foundation";
+import { View, resolveURI, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { TextBox, TextBoxOptions } from "../Content";
 
 //
@@ -9,7 +9,7 @@ import { TextBox, TextBoxOptions } from "../Content";
 // If you need to manipulate the contents after retrieval, you can pass an atom to
 // get a copy of the contents.
 //
-// TODO: 
+// TODO:
 //   - implement loading and error messages
 //
 
@@ -17,7 +17,7 @@ export interface URLTextOptions extends TextBoxOptions {
   errorMessage?: zstring;
   copyOfContents?: Atom<string>;
 }
-defineBaseOptions<URLTextOptions>("URLText", "Text", {
+defineComponentBundle<URLTextOptions>("URLText", "Text", {
   errorMessage: "Failed to retrieve file",
 });
 
@@ -28,5 +28,5 @@ export function URLText(uri: zstring, inOptions: BV<URLTextOptions> = {}): View 
   if (options.copyOfContents) {
     fetchAtom.addAction((val) => options.copyOfContents?.set(val));
   }
-  return TextBox(fetchAtom, options);
+  return restoreOptions(TextBox(fetchAtom, options));
 }

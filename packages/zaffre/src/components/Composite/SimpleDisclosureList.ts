@@ -1,6 +1,6 @@
 import { zget, zboolean, Atom, ZType, atom } from ":foundation";
 import { counterAtomForDataSelection, toggleAtom, ToggleAtom } from ":foundation";
-import { View, counterKeyBindings, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, counterKeyBindings, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { DisclosureComponent, SelectionList, SelectionListOptions } from "../Layout";
 import { SimpleDisclosure, SimpleDisclosureOptions } from "./SimpleDisclosure";
 
@@ -18,7 +18,7 @@ import { SimpleDisclosure, SimpleDisclosureOptions } from "./SimpleDisclosure";
 export interface SimpleDisclosureListOptions extends SelectionListOptions {
   allowMultipleExpansions?: zboolean;
 }
-defineBaseOptions<SimpleDisclosureListOptions>("SimpleDisclosureList", "SelectionList", {
+defineComponentBundle<SimpleDisclosureListOptions>("SimpleDisclosureList", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -64,5 +64,5 @@ export function SimpleDisclosureList<T>(
     };
     return SimpleDisclosure(dataItem, labelFn(dataItem), detailCreator, disclosureOptions);
   }
-  return SelectionList(data, selectedItem, DisclosureLabel, options);
+  return restoreOptions(SelectionList(data, selectedItem, DisclosureLabel, options));
 }

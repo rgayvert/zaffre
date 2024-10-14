@@ -1,6 +1,6 @@
 import { zstring, zget, atom } from ":foundation";
-import { View, setInnerHTML, resolveURI, simpleEffect, routeToPath, core, BV } from ":core";
-import { defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, setInnerHTML, resolveURI, simpleEffect, routeToPath, core, BV, restoreOptions } from ":core";
+import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 /**
@@ -19,7 +19,7 @@ export interface LinkOptions extends BoxOptions {
   referrerpolicy?: zstring;
   target?: LinkTarget;
 }
-defineBaseOptions<LinkOptions>("Link", "Box", {
+defineComponentBundle<LinkOptions>("Link", "Box", {
   cursor: "pointer",
   textDecoration: "underline",
   target: "",
@@ -46,5 +46,5 @@ export function Link(uri: zstring, inOptions: BV<LinkOptions> = {}): View {
 
   options.onGetContent = (): string => resolveURI(uri);
   options.onApplyContent = (view): void => setLinkContent(view, options);
-  return Box(options);
+  return restoreOptions(Box(options));
 }

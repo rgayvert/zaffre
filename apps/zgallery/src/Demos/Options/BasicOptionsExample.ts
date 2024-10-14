@@ -4,7 +4,7 @@ export function BasicOptionsExample(): View {
   const options: TextLabelOptions = {
     border: core.border.thin,
     font: core.font.headline_small,
-    color: core.color.red, 
+    color: core.color.red,  
     padding: core.space.s2,
     background: core.color.primaryContainer 
   };

@@ -15,7 +15,7 @@ export function BulletListExample(): View {
   return BulletList(bulletText, {
     indent: ch(1.5),
     bullets: "⦿◦+‣",  
-    labelOptions: {
+    textLabelOptions: {
       color: core.color.blue
     }
   });

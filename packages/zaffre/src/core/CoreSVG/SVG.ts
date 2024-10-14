@@ -1,16 +1,15 @@
 import { zlength, zstring, zrect2D, Point2D, zboolean, zget } from ":foundation";
 import { RectToken, rectToken } from ":attributes";
-import { BV, View, viewThatTriggeredEvent } from ":view";
-import { defineBaseOptions, mergeComponentOptions } from ":view";
+import { BV, restoreOptions, View, viewThatTriggeredEvent } from ":view";
+import { defineComponentBundle, mergeComponentOptions } from ":view";
 import { CSSAttributeOptions } from "../CoreOptions";
 import { SVGOptions } from "./SVGOptions";
 import { CreateSVGView, getSVGPointFromEvent } from "./SVGDelegate";
 
-// 
+//
 // SVG is a view with an <svg> element. This is the only SVG component that may be added
 // to an HTML component.
-// 
-
+//
 
 export interface SVGContainerOptions extends CSSAttributeOptions, SVGOptions {
   bounds?: zrect2D;
@@ -20,7 +19,7 @@ export interface SVGContainerOptions extends CSSAttributeOptions, SVGOptions {
   preserveAspectRatio?: zstring;
   draggableElements?: zboolean;
 }
-defineBaseOptions<SVGContainerOptions>("SVGContainer", "", {
+defineComponentBundle<SVGContainerOptions>("SVGContainer", "", {
   tag: "svg",
 });
 
@@ -79,7 +78,7 @@ export function SVG(inOptions: BV<SVGContainerOptions> = {}): View {
       pointerUp: (evt): void => handlePointerEvent(evt, (view, evt) => endDrag(view, evt)),
     };
   }
-  return CreateSVGView("svg", SVG.svgKeys, SVG.cssKeys, options);
+  return restoreOptions(CreateSVGView("svg", SVG.svgKeys, SVG.cssKeys, options));
 }
 
 export const SVGViewCSSKeys = ["transform", "fill", "filter", "transition", "pointerEvents", "cursor", "visibility"];

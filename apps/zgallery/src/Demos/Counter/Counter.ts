@@ -1,5 +1,5 @@
-import { BV, Box, SVG, SVGContainerOptions, View, ViewOptions, pct, px, zboolean } from "zaffre";
-import { defineBaseOptions, mergeComponentOptions } from "zaffre";
+import { BV, SVG, SVGContainerOptions, View, pct, px, restoreOptions, zboolean } from "zaffre";
+import { defineComponentBundle, mergeComponentOptions } from "zaffre";
 import { SVGTextLabel, SVGTextLabelOptions, rect2D, Rect2D, zstring } from "zaffre";
 import { CounterModel } from "./CounterModel";
 
@@ -9,7 +9,7 @@ export interface CounterOptions extends SVGContainerOptions {
   max?: number;
   initialValue?: number;
 }
-defineBaseOptions<CounterOptions>("Counter", "", {
+defineComponentBundle<CounterOptions>("Counter", "", {
   rounded: true,
   min: 0,
   max: 99,
@@ -33,17 +33,19 @@ export function Counter(key: string, inOptions: BV<CounterOptions> = {}): View {
   const options = mergeComponentOptions("Counter", inOptions);
   const model = new CounterModel(key, options.min, options.max, options.initialValue);
 
-  return SVG(options).append(
-    CounterLabel(model.countString, rect2D(10, 10, 80, 80), { ...options, vOffset: -6 }),
-    CounterLabel("-", rect2D(25, 90, 20, 20), {
-      ...options,
-      disabled: model.mayNotDecrement,
-      events: { click: () => model.decrement() },
-    }),
-    CounterLabel("+", rect2D(55, 90, 20, 20), {
-      ...options,
-      disabled: model.mayNotIncrement,
-      events: { click: () => model.increment() },
-    })
+  return restoreOptions(
+    SVG(options).append(
+      CounterLabel(model.countString, rect2D(10, 10, 80, 80), { ...options, vOffset: -6 }),
+      CounterLabel("-", rect2D(25, 90, 20, 20), {
+        ...options,
+        disabled: model.mayNotDecrement,
+        events: { click: () => model.decrement() },
+      }),
+      CounterLabel("+", rect2D(55, 90, 20, 20), {
+        ...options,
+        disabled: model.mayNotIncrement,
+        events: { click: () => model.increment() },
+      })
+    )
   );
 }

@@ -1,6 +1,6 @@
 import { indexedArrayAtom, zstring, zget } from ":foundation";
-import { View, place, handleEvents, addOptionEvents, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, place, handleEvents, addOptionEvents, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "../Controls";
 import { ToastStack } from "./Toast";
 
@@ -11,7 +11,7 @@ import { ToastStack } from "./Toast";
 //
 
 export interface ToastButtonOptions extends ButtonOptions {}
-defineBaseOptions<ButtonOptions>("ToastButton", "Button", {});
+defineComponentBundle<ButtonOptions>("ToastButton", "Button", {});
 export function ToastButton(message: zstring, inOptions: BV<ToastButtonOptions> = {}): View {
   const options = mergeComponentOptions("ToastButton", inOptions);
   addOptionEvents(options, { click: (evt) => handleClick(evt) });
@@ -26,18 +26,20 @@ export function ToastButton(message: zstring, inOptions: BV<ToastButtonOptions> 
     }
     toastItems.addValue(zget(message));
   }
-  return Button(options).append(
-    ToastStack(toastItems, {
-      placement: place.top,
-      maxItems: 1,
-      duration: 1500,
-      itemOptions: {
-        font: core.font.label_small,
-        padding: core.space.s1,
-        background: core.color.primary,
-        color: core.color.white,
-        rounding: core.rounding.none,
-      },
-    })
+  return restoreOptions(
+    Button(options).append(
+      ToastStack(toastItems, {
+        placement: place.top,
+        maxItems: 1,
+        duration: 1500,
+        itemOptions: {
+          font: core.font.label_small,
+          padding: core.space.s1,
+          background: core.color.primary,
+          color: core.color.white,
+          rounding: core.rounding.none,
+        },
+      })
+    )
   );
 }

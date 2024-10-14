@@ -1,5 +1,5 @@
-import { zstring, znumber, Atom,  } from ":foundation";
-import { View, css_color, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { zstring, znumber, Atom } from ":foundation";
+import { View, css_color, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { HStack, Spacer, StackOptions } from "../Layout";
 import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 
@@ -14,26 +14,25 @@ import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 // TODO: consider implementing this using LabelWithIcons (or eliminating it entirely
 // and go straight from SimpleDisclosureList to LabelWithIcons).
 
-
 export interface ExpandableItemOptions extends StackOptions {
   label?: zstring;
   extraLabelClasses?: string;
   textColor?: css_color;
-  expanded?: Atom<boolean>; 
+  expanded?: Atom<boolean>;
   iconName?: zstring;
   iconTransform?: zstring;
   iconTransition?: zstring;
   iconSide?: "left" | "right";
   iconOpacity?: znumber;
   alwaysExpanded?: boolean;
-  labelOptions?: TextLabelOptions;
+  textLabelOptions?: TextLabelOptions;
 }
-defineBaseOptions<ExpandableItemOptions>("ExpandableItem", "HStack", {
+defineComponentBundle<ExpandableItemOptions>("ExpandableItem", "HStack", {
   background: core.color.surface,
   rounding: core.rounding.none,
   padding: core.space.s2,
   textColor: core.color.surface.contrast,
-  font: core.font.title_medium, 
+  font: core.font.title_medium,
   selectionColor: core.color.secondaryContainer,
   alignItems: "stretch",
   outline: core.border.none,
@@ -41,7 +40,7 @@ defineBaseOptions<ExpandableItemOptions>("ExpandableItem", "HStack", {
 
 export function ExpandableItem(inOptions: BV<ExpandableItemOptions> = {}): View {
   const options = mergeComponentOptions("ExpandableItem", inOptions);
-  
+
   const labelOptions: TextLabelOptions = {
     extraClasses: options.extraLabelClasses,
     background: core.color.none,
@@ -50,7 +49,7 @@ export function ExpandableItem(inOptions: BV<ExpandableItemOptions> = {}): View 
     color: options.textColor,
     selected: options.selected,
     overflow: "hidden",
-    ...options.labelOptions
+    ...options.textLabelOptions,
   };
 
   const label = TextLabel(options.label || "", labelOptions);
@@ -61,9 +60,10 @@ export function ExpandableItem(inOptions: BV<ExpandableItemOptions> = {}): View 
     transition: options.iconTransition,
   };
   const icon = options.alwaysExpanded ? undefined : Icon(options.iconName!, iconOptions);
-  if (options.iconSide === "right") {
-    return HStack(options).append(label, Spacer(1), icon);
-  } else {
-    return HStack(options).append(icon, label, Spacer(1));
-  }
+
+  return restoreOptions(
+    options.iconSide === "right"
+      ? HStack(options).append(label, Spacer(1), icon)
+      : HStack(options).append(icon, label, Spacer(1))
+  );
 }

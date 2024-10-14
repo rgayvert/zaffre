@@ -1,6 +1,6 @@
 import { atom, Atom, incrementAtom, decrementAtom, zutil, zboolean } from ":foundation";
-import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow, BV } from ":core";
-import { defineBaseOptions, mergeComponentOptions } from ":core";
+import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow, BV, restoreOptions } from ":core";
+import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
 //
@@ -25,7 +25,7 @@ export interface FloatingOptions extends BoxOptions {
   showOn?: zboolean;
   hideOnWindowResize?: zboolean;
 }
-defineBaseOptions<FloatingOptions>("Floating", "Box", {
+defineComponentBundle<FloatingOptions>("Floating", "Box", {
   background: core.color.transparent,
   useArrow: false,
   dismissOnOutsideClick: true,
@@ -130,5 +130,5 @@ export function Floating(enclosedView: View, inOptions: BV<FloatingOptions> = {}
     }
   }
 
-  return Box(options).append(enclosedView);
+  return restoreOptions(Box(options).append(enclosedView));
 }

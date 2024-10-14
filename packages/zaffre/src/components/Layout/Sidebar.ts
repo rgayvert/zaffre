@@ -1,9 +1,9 @@
-import { View, pct, px, css_flexBasis, css_length_pct, BV } from ":core";
-import { HTMLOptions, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, pct, px, css_flexBasis, css_length_pct, BV, restoreOptions } from ":core";
+import { HTMLOptions, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
-// A Sidebar is a responsive layout intended to contain two children, a sidebar and a content view. 
+// A Sidebar is a responsive layout intended to contain two children, a sidebar and a content view.
 // The two views will be side-by-side when possible, otherwise the sidebar will appear above the content.
 //
 
@@ -13,7 +13,7 @@ export interface SidebarOptions extends BoxOptions {
   sideWidth?: css_flexBasis;
   contentMinWidth?: css_length_pct;
 }
-defineBaseOptions<SidebarOptions>("Sidebar", "Box", {
+defineComponentBundle<SidebarOptions>("Sidebar", "Box", {
   contentMinWidth: pct(50),
   display: "flex",
   flexWrap: "wrap",
@@ -29,11 +29,11 @@ export function Sidebar(inOptions: BV<SidebarOptions> = {}): View {
       childOptions.flexBasis = options.sideWidth;
       childOptions.flexGrow = 1;
     } else {
-       // second child
-       childOptions.flexBasis = px(0);
-       childOptions.flexGrow = 999;
-       childOptions.minInlineSize = pct(50);
+      // second child
+      childOptions.flexBasis = px(0);
+      childOptions.flexGrow = 999;
+      childOptions.minInlineSize = pct(50);
     }
   };
-  return Box(options);
+  return restoreOptions(Box(options));
 }

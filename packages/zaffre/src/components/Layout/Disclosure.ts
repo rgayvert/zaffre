@@ -1,6 +1,6 @@
 import { zget, znumber, ZType, toggleAtom, ToggleAtom } from ":foundation";
-import { beforeAddedToDOM, transitions, View, ViewOptions, css_color, pct, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { beforeAddedToDOM, transitions, View, ViewOptions, css_color, pct, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box } from "../HTML";
 import { StackOptions, VStack } from "./Stack";
 
@@ -18,7 +18,7 @@ export interface DisclosureOptions extends StackOptions {
   effectDuration?: znumber;
   labelSelectionColor?: css_color;
 }
-defineBaseOptions<DisclosureOptions>("Disclosure", "VStack", {
+defineComponentBundle<DisclosureOptions>("Disclosure", "VStack", {
   alignItems: "start",
   width: pct(100),
   outline: core.border.none,
@@ -53,5 +53,5 @@ export function Disclosure<T>(
     effects: { hidden: transitions.collapse("in&out", zget(options.effectDuration)) },
   }).append(detailCreator(zget(data)));
 
-  return VStack(options).append(summaryCreator(zget(data), <ViewOptions>labelOptions), detailContainer);
+  return restoreOptions(VStack(options).append(summaryCreator(zget(data), <ViewOptions>labelOptions), detailContainer));
 }

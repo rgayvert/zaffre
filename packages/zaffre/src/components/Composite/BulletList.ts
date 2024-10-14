@@ -1,5 +1,5 @@
 import { atom, TreeNode, simpleTreeNodeFromText } from ":foundation";
-import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { SimpleTree, SimpleTreeOptions } from "./SimpleTree";
 
 //
@@ -11,7 +11,7 @@ import { SimpleTree, SimpleTreeOptions } from "./SimpleTree";
 export interface BulletListOptions extends SimpleTreeOptions {
   bullets?: string;
 }
-defineBaseOptions<BulletListOptions>("BulletList", "SimpleTree", {
+defineComponentBundle<BulletListOptions>("BulletList", "SimpleTree", {
   bullets: "∙◦-+",
   showRoot: false,
   alignItems: "start",
@@ -24,5 +24,7 @@ export function BulletList(text: string, inOptions: BV<BulletListOptions> = {}):
   function simpleBulletTitle(node: TreeNode<string>): string {
     return `${options.bullets![node.level - 1]} ${node.data}`;
   }
-  return SimpleTree(simpleTreeNodeFromText(text).expandAll(), atom(undefined), simpleBulletTitle, options);
+  return restoreOptions(
+    SimpleTree(simpleTreeNodeFromText(text).expandAll(), atom(undefined), simpleBulletTitle, options)
+  );
 }

@@ -1,6 +1,6 @@
 import { ImportAtom, zutil } from ":foundation";
-import { View, ViewCreator, pct, beforeAddedToDOM, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, ViewCreator, pct, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
 //
@@ -17,7 +17,7 @@ export interface LoadingOptions extends BoxOptions {
   delay?: number;
   timeout?: number;
 }
-defineBaseOptions<LoadingOptions>("Loading", "Box", {
+defineComponentBundle<LoadingOptions>("Loading", "Box", {
   timeout: 2000,
   width: pct(100),
   height: pct(100),
@@ -53,5 +53,5 @@ export function Loading(importComponent: ImportAtom<ViewCreator>, inOptions: BV<
     }
   });
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

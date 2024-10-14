@@ -1,6 +1,6 @@
 import { zget, atom, zutil } from ":foundation";
-import { View, css_cursor, CursorName, beforeAddedToDOM, BV } from ":core";
-import { HTMLOptions, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, css_cursor, CursorName, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { HTMLOptions, core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
@@ -17,7 +17,7 @@ export interface SplitGridOptions extends GridOptions {
   columnMaxes?: number[];
   threshold?: number;
 }
-defineBaseOptions<SplitGridOptions>("SplitGrid", "Grid", {
+defineComponentBundle<SplitGridOptions>("SplitGrid", "Grid", {
   rowMins: [1],
   rowMaxes: [1],
   columnMins: [1],
@@ -54,7 +54,7 @@ export function SplitGrid(inOptions: BV<SplitGridOptions> = {}): View {
   options.afterAppendChild = (childView: View): void => {
     childView.addEventListener("mousemove", (event) => resizer.handleGridItemMouseMove(childView, <MouseEvent>event));
   };
-  return Grid(options);
+  return restoreOptions(Grid(options));
 }
 
 export class SplitGridResizer {

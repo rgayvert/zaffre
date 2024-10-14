@@ -1,5 +1,5 @@
 import { zstring } from ":foundation";
-import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { HStack, Spacer, StackOptions } from "../Layout";
 import { TextLabel, TextLabelOptions, Icon, IconOptions } from "../Content";
 
@@ -15,7 +15,7 @@ export interface LabelWithIconsOptions extends StackOptions {
   /** the text label to display */
   label?: zstring;
   /** options for the label */
-  labelOptions?: TextLabelOptions;
+  textLabelOptions?: TextLabelOptions;
   /** the uri of the leading icon */
   leadingIconURI?: zstring;
   /** the uri of the trailing icon */
@@ -30,13 +30,13 @@ const defaultIconOptions: IconOptions = {
   font: core.font.inherit,
   selectionColor: core.color.secondaryContainer,
 };
-defineBaseOptions<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
+defineComponentBundle<LabelWithIconsOptions>("LabelWithIcons", "Stack", {
   flexDirection: "row",
   background: core.color.inherit,
   rounding: core.rounding.none,
   alignItems: "center",
   outline: core.border.none,
-  labelOptions: {
+  textLabelOptions: {
     background: core.color.inherit,
     padding: core.space.s2,
   },
@@ -55,11 +55,12 @@ export function LabelWithIcons(inOptions: BV<LabelWithIconsOptions> = {}): View 
   const labelOptions: TextLabelOptions = {
     selected: options.selected,
     selectionColor: options.selectionColor,
-    ...options.labelOptions,
+    ...options.textLabelOptions,
   };
   const label = options.label ? TextLabel(options.label, labelOptions) : undefined;
   const leadingIcon = options.leadingIconURI ? Icon(options.leadingIconURI, options.leadingIconOptions) : undefined;
   const trailingIcon = options.trailingIconURI ? Icon(options.trailingIconURI, options.trailingIconOptions) : undefined;
   const trailingSpacer = options.alignItems === "stretch" ? Spacer(1) : undefined;
-  return HStack(options).append(leadingIcon, label, trailingSpacer, trailingIcon);
+
+  return restoreOptions(HStack(options).append(leadingIcon, label, trailingSpacer, trailingIcon));
 }

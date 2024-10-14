@@ -1,10 +1,10 @@
-import { afterAddedToDOM, atom, Atom, Box, BoxOptions, BV, core, CSSPointerEvents } from "zaffre";
-import { defineBaseOptions, mergeComponentOptions, px, View } from "zaffre";
+import { afterAddedToDOM, atom, Atom, Box, BoxOptions, BV, core, CSSPointerEvents, restoreOptions } from "zaffre";
+import { defineComponentBundle, mergeComponentOptions, px, View } from "zaffre";
 
 export interface VideoPlayerOverlayOptions extends BoxOptions {
   disablePlayer?: Atom<boolean>;
 }
-defineBaseOptions<VideoPlayerOverlayOptions>("VideoPlayerOverlay", "Box", {
+defineComponentBundle<VideoPlayerOverlayOptions>("VideoPlayerOverlay", "Box", {
   background: core.color.transparent,
   outline: "none",
   position: "absolute",
@@ -18,9 +18,9 @@ export function VideoPlayerOverlay(inOptions: BV<VideoPlayerOverlayOptions> = {}
     options.pointerEvents = atom<CSSPointerEvents>(() => (options.disablePlayer?.get() ? "auto" : "none"));
   }
   afterAddedToDOM(options, (v: View): void => {
-    view = v; 
+    view = v;
     view.addEventListener("click", () => view?.focus(), true);
   });
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

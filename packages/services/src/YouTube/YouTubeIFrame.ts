@@ -1,5 +1,15 @@
-import { atom, Box, View, Atom, IFrameOptions, mergeComponentOptions, afterAddedToDOM, BV } from "zaffre";
-import { core, defineBaseOptions } from "zaffre";
+import {
+  atom,
+  Box,
+  View,
+  Atom,
+  IFrameOptions,
+  mergeComponentOptions,
+  afterAddedToDOM,
+  BV,
+  restoreOptions,
+} from "zaffre";
+import { core, defineComponentBundle } from "zaffre";
 import { createYouTubePlayer, YouTubePlayerConfig, YTPlayer } from "./YouTubePlayer";
 
 export interface YouTubeIFrameOptions extends IFrameOptions {
@@ -8,7 +18,7 @@ export interface YouTubeIFrameOptions extends IFrameOptions {
   disableKeyboard?: boolean;
   allowFullscreen?: boolean;
 }
-defineBaseOptions<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
+defineComponentBundle<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
   controls: true,
   disableKeyboard: true,
   allowFullscreen: false,
@@ -40,5 +50,5 @@ export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: BV<Y
     createYouTubePlayer(player, playerConfig);
   });
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

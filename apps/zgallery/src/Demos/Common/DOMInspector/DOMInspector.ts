@@ -1,5 +1,5 @@
-import { Atom, atom, core, TreeNode, pct, vh, px, Ensemble, ScrollPane, mergeComponentOptions, BV } from "zaffre";
-import { SplitGridOptions, defineBaseOptions } from "zaffre";
+import { Atom, atom, core, TreeNode, pct, vh, px, Ensemble, ScrollPane, mergeComponentOptions, BV, restoreOptions } from "zaffre";
+import { SplitGridOptions, defineComponentBundle } from "zaffre";
 import { TextBox, View, SplitGrid, BoxOptions } from "zaffre";
 import { viewStyleText } from "./ViewStyle";
 import { DOMObjectTree } from "./DOMObjectTree";
@@ -17,7 +17,7 @@ export interface DOMInspectorOptions extends SplitGridOptions {
   reset?: Atom<boolean>;
 }
 
-defineBaseOptions<DOMInspectorOptions>("DOMInspector", "SplitGrid", {
+defineComponentBundle<DOMInspectorOptions>("DOMInspector", "SplitGrid", {
   columnMins: [100, 100, 100],
   columnMaxes: [2, 3, 3],
   width: pct(100),
@@ -45,15 +45,17 @@ export function DOMInspector(baseView: View, inOptions: BV<DOMInspectorOptions> 
     justifyContent: "start",
     minHeight: pct(100),
   };
-  return SplitGrid(options).append(
-    ScrollPane().append(DomTree(root, selectedDOMView, commonOptions)),
-    TextBox(viewStyle, {
-      ...commonOptions,
-      color: core.color.surface.contrast,
-      font: core.font.body_small,
-      overflow: "auto",
-      paddingLeft: core.space.s2,
-    }),
-    ScrollPane().append(Ensemble(selectedViewID, () => DOMObjectTree(selectedDOMView, commonOptions)))
+  return restoreOptions(
+    SplitGrid(options).append(
+      ScrollPane().append(DomTree(root, selectedDOMView, commonOptions)),
+      TextBox(viewStyle, {
+        ...commonOptions,
+        color: core.color.surface.contrast,
+        font: core.font.body_small,
+        overflow: "auto",
+        paddingLeft: core.space.s2,
+      }),
+      ScrollPane().append(Ensemble(selectedViewID, () => DOMObjectTree(selectedDOMView, commonOptions)))
+    )
   );
 }

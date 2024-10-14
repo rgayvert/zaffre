@@ -1,5 +1,5 @@
 import { atom, Atom, zutil } from ":foundation";
-import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { TextBox, TextBoxOptions } from "../Content";
 
 //
@@ -10,7 +10,7 @@ import { TextBox, TextBoxOptions } from "../Content";
 export interface LogBoxOptions extends TextBoxOptions {
   logContent?: Atom<string>;
 }
-defineBaseOptions<LogBoxOptions>("LogBox", "Text", {
+defineComponentBundle<LogBoxOptions>("LogBox", "Text", {
   autoScrollToBottom: true,
 });
 
@@ -24,5 +24,5 @@ export function LogBox(entry: Atom<string>, inOptions: BV<LogBoxOptions> = {}): 
   }
   entry.addAction((val) => appendEntry(val));
 
-  return TextBox(logContent, options);
+  return restoreOptions(TextBox(logContent, options));
 }

@@ -1,6 +1,6 @@
 import { zget, zboolean, atom } from ":foundation";
-import { ch, View, addOptionEvents, standardHTMLInteractionEffects, SVGEffect, BV } from ":core";
-import { MouseAction, handleEvents, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { ch, View, addOptionEvents, standardHTMLInteractionEffects, SVGEffect, BV, restoreOptions } from ":core";
+import { MouseAction, handleEvents, core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { LabelWithIcons, LabelWithIconsOptions } from "./LabelWithIcons";
 
 //
@@ -19,7 +19,7 @@ export interface ButtonOptions extends LabelWithIconsOptions {
   /** show a ripple effect */
   ripple?: zboolean;
 }
-defineBaseOptions<ButtonOptions>("Button", "LabelWithIcons", {
+defineComponentBundle<ButtonOptions>("Button", "LabelWithIcons", {
   ripple: false,
   preserveFocus: true,
   border: core.border.thin,
@@ -58,8 +58,9 @@ export function Button(inOptions: BV<ButtonOptions> = {}): View {
   if (isIconOnly()) {
     options.padding = core.space.s0;
   }
-  options.labelOptions = {
-    ...options.labelOptions,
+  options.textLabelOptions = {
+    ...options.textLabelOptions,
+    border: core.border.none,
     color: options.color,
     paddingInline: core.space.s2,
     textPositionX: isLabelOnly() ? "center" : "start",
@@ -85,5 +86,5 @@ export function Button(inOptions: BV<ButtonOptions> = {}): View {
     }
   }
 
-  return LabelWithIcons(options);
+  return restoreOptions(LabelWithIcons(options));
 }

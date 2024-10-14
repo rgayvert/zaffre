@@ -1,6 +1,6 @@
 import { zget, atom, ZType, zboolean, zstring, zset } from ":foundation";
-import { transitions, beforeAddedToDOM, simpleInteractionEffects, pct, View, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { transitions, beforeAddedToDOM, simpleInteractionEffects, pct, View, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Button } from "../Controls";
 import { ViewList, VStack } from "../Layout";
 import { FloatingOptions } from "../HTML";
@@ -25,7 +25,7 @@ export interface MenuItem<T> {
   iconName?: zstring;
   subitems?: MenuItem<T>[];
 }
-defineBaseOptions<MenuOptions>("SimpleMenu", "Box", {
+defineComponentBundle<MenuOptions>("SimpleMenu", "Box", {
   outline: core.border.none,
   rounding: core.rounding.none,
   effects: { hidden: transitions.fadeIn() },
@@ -80,11 +80,13 @@ export function SimpleMenu<T>(
       effects: simpleInteractionEffects(),
     });
 
-  return VStack({
-    ...options,
-    alignItems: "start",
-    border: core.border.thin,
-    background: core.color.secondaryContainer,
-    overflow: "hidden",
-  }).append(ViewList(items, itemIDFn, childCreatorFn));
+  return restoreOptions(
+    VStack({
+      ...options,
+      alignItems: "start",
+      border: core.border.thin,
+      background: core.color.secondaryContainer,
+      overflow: "hidden",
+    }).append(ViewList(items, itemIDFn, childCreatorFn))
+  );
 }

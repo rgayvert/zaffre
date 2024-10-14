@@ -7,14 +7,10 @@ export function HelloWorld2(): View {
   return VStack({ alignItems: "center", gap: core.space.s5 }).append(
     Spacer(1),
     TextInput(model.text, {
-      bundles: ["textinput1"],
+      bundles: ["pill", "b1", "f-dm"],
+      textAlign: "center",
       disabled: model.disabled,
-      // rounding: core.rounding.r3,
-      // border: core.border.thin,
-      // setOnInput: model.setOnInput,
-      // textAlign: "center",
-      // font: core.font.display_medium,
-      // placeholder: "Enter some text",
+      setOnInput: model.setOnInput,
     }),
     TextLabel(model.text, {
       color: core.color.primary.tone(70),
@@ -22,12 +18,13 @@ export function HelloWorld2(): View {
       effects: { contentChanged: transitions.fadeIn("in", 2.0) },
     }),
     Spacer(core.space.s3),
-    Button({
-      label: "Reset",
-      rounding: core.rounding.pill,
-      action: () => model.reset(),
-    }),
-    HStack({ gap: core.space.s5 }).append(
+
+    HStack("gap-6").append(
+      Button({
+        label: "Reset",
+        rounding: core.rounding.pill,
+        action: () => model.reset(),
+      }),
       LabelBox("Disabled").append(Switch(model.disabled, { width: em(3) })),
       LabelBox("Set on Input").append(Switch(model.setOnInput, { width: em(3) })),
     ),

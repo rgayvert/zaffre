@@ -1,5 +1,5 @@
 import { zstring } from ":foundation";
-import { pct, px, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { pct, px, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -9,7 +9,7 @@ import { Box, BoxOptions } from "../HTML";
 export interface VDividerOptions extends BoxOptions {
   icon?: zstring;
 }
-defineBaseOptions<VDividerOptions>("VDivider", "Box", {
+defineComponentBundle<VDividerOptions>("VDivider", "Box", {
   color: core.color.gray,
   marginInline: core.space.s5,
   width: px(1),
@@ -33,5 +33,5 @@ export function VDivider(inOptions: BV<VDividerOptions> = {}): View {
     width: options.width,
     height: options.height,
   };
-  return Box(outerOptions).append(Box(innerOptions));
+  return restoreOptions(Box(outerOptions).append(Box(innerOptions)));
 }

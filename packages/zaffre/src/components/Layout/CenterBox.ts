@@ -1,4 +1,4 @@
-import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -8,7 +8,7 @@ import { Box, BoxOptions } from "../HTML";
 
 export interface CenterBoxOptions extends BoxOptions {}
 
-defineBaseOptions<CenterBoxOptions>("CenterBox", "Box", {
+defineComponentBundle<CenterBoxOptions>("CenterBox", "Box", {
   display: "flex",
   flexWrap: "nowrap",
   flexDirection: "column",
@@ -16,8 +16,7 @@ defineBaseOptions<CenterBoxOptions>("CenterBox", "Box", {
   justifyContent: "center",
 });
 
-
 export function CenterBox(inOptions: BV<CenterBoxOptions> = {}): View {
   const options = mergeComponentOptions("CenterBox", inOptions);
-  return Box(options);
+  return restoreOptions(Box(options));
 }

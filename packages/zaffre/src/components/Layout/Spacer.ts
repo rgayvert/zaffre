@@ -1,5 +1,5 @@
 import { znumber } from ":foundation";
-import { View, css_space, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, css_space, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions, defineBundle } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -8,14 +8,16 @@ import { Box, BoxOptions } from "../HTML";
 // it become a box with flexgrow, so it divides up the available space.
 //
 
-
 export interface SpacerOptions extends BoxOptions {
   grow?: znumber;
   space?: css_space;
 }
-defineBaseOptions<SpacerOptions>("Spacer", "Box", {
+defineComponentBundle<SpacerOptions>("Spacer", "Box", {
   background: core.color.transparent,
 });
+
+Object.entries(core.space).forEach(([key, val]) => defineBundle<SpacerOptions>(key, { space: val }));
+
 
 export function Spacer(growOrSpace?: css_space | number, inOptions: BV<SpacerOptions> = {}): View {
   const options = mergeComponentOptions("Spacer", inOptions);
@@ -28,5 +30,5 @@ export function Spacer(growOrSpace?: css_space | number, inOptions: BV<SpacerOpt
     options.width = growOrSpace;
     options.height = growOrSpace;
   }
-  return Box(options);
+  return restoreOptions(Box(options));
 }

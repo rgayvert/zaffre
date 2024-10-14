@@ -1,16 +1,16 @@
 import { Atom, atom, BasicAction, zboolean, TableDataCell, TableModel } from ":foundation";
-import { BV, Lazy, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, Lazy, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { CenterBox, CenterBoxOptions } from "../Layout";
 import { TextLabelOptions, FormattedLabel } from "../Content";
 import { StringCellEditor } from "./StringCellEditor";
 
 //
 // A StringDataCellView is a view that displays the contents of a data cell as a FormattedLabel,
-// using the formatter associated with the cell.  
+// using the formatter associated with the cell.
 //
 // If the cell is editable, a StringCellEditor will also be created. This editor will become visible
 // when the cell is double-clicked (the opacity become one when this cell is the edited cell).
-// 
+//
 //
 
 export interface StringDataCellViewOptions extends TextLabelOptions {
@@ -20,7 +20,7 @@ export interface StringDataCellViewOptions extends TextLabelOptions {
 }
 // TODO: figure out why changing the font here can cause extra space at the bottom
 // of each data cell
-defineBaseOptions<StringDataCellViewOptions>("StringDataCellView", "TextLabel", {
+defineComponentBundle<StringDataCellViewOptions>("StringDataCellView", "TextLabel", {
   padding: core.space.s2,
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -70,8 +70,8 @@ export function StringDataCellView<R>(
         dblClick: () => editedCell.set(dataCell),
       },
     };
-    return CenterBox(containerOptions).append(dataCellView, editor);
+    return restoreOptions(CenterBox(containerOptions).append(dataCellView, editor));
   } else {
-    return dataCellView;
+    return restoreOptions(dataCellView);
   }
 }

@@ -1,5 +1,6 @@
 import { Atom, zget, zboolean, zstring, atom } from ":foundation";
-import { css_background, px, View, pct, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { css_background, px, View, pct } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Stack, StackOptions, ViewList } from "../Layout";
 import { ButtonOptions, Button } from "../Controls";
 
@@ -26,7 +27,7 @@ export interface SegmentedOptions extends StackOptions {
   disabledValues?: Atom<string[]>;
   buttonOptions?: ButtonOptions;
 }
-defineBaseOptions<SegmentedOptions>("SegmentedButton", "Stack", {
+defineComponentBundle<SegmentedOptions>("SegmentedButton", "Stack", {
   padding: core.space.s0,
   border: core.border.thin,
   rounding: core.rounding.pill,
@@ -98,11 +99,13 @@ export function SegmentedButton(
   if (options.initialValue) {
     setTimeout(() => setInitialValue(), 10);
   }
-  return Stack(segmentedOptions).append(
-    ViewList(
-      values,
-      (key) => key,
-      (_key, index) => SegmentButton(index)
+  return restoreOptions(
+    Stack(segmentedOptions).append(
+      ViewList(
+        values,
+        (key) => key,
+        (_key, index) => SegmentButton(index)
+      )
     )
   );
 }

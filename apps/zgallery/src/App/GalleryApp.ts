@@ -8,7 +8,7 @@ import { Gallery } from "../Views";
 //
 
 const galleryOptions: AppOptions = {
-  googleFonts: ["Roboto Mono", "Material+Symbols+Outlined", "Material+Icons", "PT Sans Narrow"],
+  googleFonts: ["Roboto Mono", "Sofia", "Material+Symbols+Outlined", "Material+Icons", "PT Sans Narrow"],
   codicons: true,
 };
 

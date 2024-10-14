@@ -1,5 +1,5 @@
 import { zget, zstring, ZType } from ":foundation";
-import { ch, css_space, em, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { ch, css_space, em, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { HStack, Spacer, StackOptions, ViewList, VStack } from "../Layout";
 import { TextLabel, TextLabelOptions } from "../Content";
 
@@ -13,15 +13,15 @@ export type LabelViewPair = [zstring, View];
 
 export interface LabeledListOptions extends StackOptions {
   labelSide?: "left" | "right"; // TODO: BoxSide - top/bottom becomes 1 column stack
-  labelOptions?: TextLabelOptions;
+  textLabelOptions?: TextLabelOptions;
   labelGap?: css_space;
 }
-defineBaseOptions<LabeledListOptions>("LabeledList", "Stack", {
+defineComponentBundle<LabeledListOptions>("LabeledList", "Stack", {
   alignItems: "stretch",
   justifyContent: "start",
   labelSide: "left",
   gap: em(0.5),
-  labelOptions: {
+  textLabelOptions: {
     background: core.color.inherit,
     font: core.font.body_medium,
     border: core.border.none,
@@ -33,16 +33,18 @@ export function LabeledList(entries: ZType<LabelViewPair[]>, inOptions: BV<Label
   const options = mergeComponentOptions("LabeledList", inOptions);
 
   function LabelPair(pair: LabelViewPair): View {
-    const label = TextLabel(zget(pair[0]), options.labelOptions);
+    const label = TextLabel(zget(pair[0]), options.textLabelOptions);
     const list = options.labelSide === "left" ? [label, Spacer(1), pair[1]] : [Spacer(1), label, pair[1]];
     return HStack({ background: core.color.inherit }).append(...list);
   }
 
-  return VStack(options).append(
-    ViewList(
-      entries,
-      (pair) => pair[0],
-      (pair) => LabelPair(pair)
+  return restoreOptions(
+    VStack(options).append(
+      ViewList(
+        entries,
+        (pair) => pair[0],
+        (pair) => LabelPair(pair)
+      )
     )
   );
 }
@@ -50,11 +52,11 @@ export function LabeledList(entries: ZType<LabelViewPair[]>, inOptions: BV<Label
 export type SimpleLabelViewPair = [zstring, zstring];
 
 export interface SimpleLabeledListOptions extends LabeledListOptions {}
-defineBaseOptions<SimpleLabeledListOptions>("SimpleLabeledList", "LabeledList", {});
+defineComponentBundle<SimpleLabeledListOptions>("SimpleLabeledList", "LabeledList", {});
 
 export function SimpleLabeledList(entries: SimpleLabelViewPair[], inOptions: BV<SimpleLabeledListOptions> = {}): View {
   const options = mergeComponentOptions("SimpleLabeledList", inOptions);
-  const views = entries.map(([_key, value]) => TextLabel(value, options.labelOptions));
+  const views = entries.map(([_key, value]) => TextLabel(value, options.textLabelOptions));
   const viewEntries = entries.map(([key, value], index) => [key, views[index]]) as LabelViewPair[];
-  return LabeledList(viewEntries, options);
+  return restoreOptions(LabeledList(viewEntries, options));
 }

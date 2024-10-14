@@ -1,0 +1,1 @@
+This example is another take on rewriting HelloWorld1 using bundles. Rather than defining a specific bundle for each of the components, we use some predefined single-valued bundles.

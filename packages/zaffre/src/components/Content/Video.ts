@@ -1,5 +1,5 @@
 import { zstring, zboolean, atom } from ":foundation";
-import { View, resolveURI, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, resolveURI, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -10,7 +10,7 @@ export interface VideoOptions extends BoxOptions {
   autoplay?: zboolean;
   controls?: zboolean;
 }
-defineBaseOptions<VideoOptions>("IFrame", "Box", {
+defineComponentBundle<VideoOptions>("IFrame", "Box", {
   autoplay: true,
   controls: true,
 });
@@ -23,5 +23,5 @@ export function Video(uri: zstring, inOptions: BV<VideoOptions> = {}): View {
   options.controls = atom(true);
   options.onGetContent = (): string => resolveURI(uri);
   options.onApplyContent = (view): void => view.elt.setAttribute("src", resolveURI(uri));
-  return Box(options);
+  return restoreOptions(Box(options));
 }

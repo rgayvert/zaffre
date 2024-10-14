@@ -1,6 +1,6 @@
 Creating a web application using current development tools can be complicated. The process typically involves multiple technologies (HTML/CSS/JS/SVG), a myriad of APIs and dependencies, and a complex workflow. Zaffre is an experimental webapp framework which attempts to reduce this complexity by using a single language (Typescript) together with a reactive mechanism that encourages building higher-level abstractions via declarative composition. There are no required runtime dependencies, and the build process is simplified with vite and rollup. The result is that you effectively get reactive CSS, HTML, and SVG without having to code in those languages.
 
-In Zaffre you use Typescript to create a model containing reactive values, along with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
+In Zaffre you use Typescript to create a model containing reactive values, together with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
 
 <p align="center"><img src='./assets/DOM<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
@@ -53,15 +53,16 @@ A Zaffre *component* is just a function which returns an opaque View object. In 
   - Composition is done with the *append()* method.
   - Each component typically takes a list of *options* which result in CSS/HTML/SVG attributes being set on the underlying DOM element.
   - CSS styles are generated automatically from component options. Reactive CSS values are translated into element-level CSS variables.
-  - This example uses inline options. Non-reactive options may be grouped into *option bundles*, which are analogous to CSS classes. Using bundles, this example might look like this:
+  - This example uses inline options. Non-reactive options may be grouped into *option bundles*, which are analogous to CSS classes. Using option bundles, this example could be reduced to:
   
   ```js
     function HelloWorld1(): View {
       const text = atom("Hello World");      
-      return VStack("vstack1").append(
-        TextInput(text, "input1"),
-        TextLabel(text, "label1", {                    
-          opacity: atom(() => zutil.clamp(text.get().length / 20, 0, 1)), 
+      return VStack("space6").append(
+        TextInput(text, "textinput1"),
+        TextLabel(text, {
+          bundles: ["textlabel1"],
+          opacity: atom(() => zutil.clamp(text.get().length / 20, 0, 1)),
         })
       );
     }
@@ -88,27 +89,27 @@ DOM structure can also be reactive. Below is a simple example.
     }
   }
 
-  export function HelloWorld4a(): View {
-    const model = new HelloModel4();
+export function HelloWorld4(): View {
+  const model = new HelloModel4();
 
-    return VStack("vstack4").append(
-      HStack("hstack4a").append(
-        ViewList(
-          model.values,
-          (value) => value,
-          (value) => TextLabel(`${value}`, "label4")
-        )
-      ),
-      HStack("hstack4b").append(
-        Button({ label: "Add", action: () => model.addValue() }),
-        Button({ 
-          label: "Remove", 
-          disabled: atom(() => model.values.length === 1),
-          action: () => model.removeValue() 
-        })
+  return VStack(["gap-5"]).append(
+    HStack(["gap-4", "pad-4"]).append(
+      ViewList(
+        model.values,
+        (value) => value,
+        (value) => TextLabel(`${value}`, ["f-tm", "b1", "pad-2"])
       )
-    );
-  }   
+    ),
+    HStack("gap-5").append(
+      Button({ label: "Add", action: () => model.addValue() }),
+      Button({ 
+        label: "Remove", 
+        disabled: atom(() => model.values.length === 1),
+        action: () => model.removeValue() 
+      })
+    )
+  );
+}   
 ```
 
 This produces the following result:
@@ -129,7 +130,7 @@ Each time the "Add" button is clicked, a new value is added to the values list (
 
 The key to reactive content is the *ViewList* pseudocomponent. A ViewList contains a reactive array along with a childID function and a childCreator function. As the array changes, the ViewList will update the list of children to match the array, preserving children with matching ids.
 
-Note also that in this example, the key reactive values and associated logic are placed in a  model class (which is usually in a different file). This provides a clean model-view separation. Components are implemented as functions, and models as classes.
+Note also that in this example, the key reactive values and associated logic are placed in a model class. This provides a clean model-view separation. Components are implemented as functions, and models as classes.
 
 These two examples are intended to illustrate the key constructs in Zaffre. But the real advantage of using a declarative, reactive, compositional approach is more evident in higher-level abstractions. For example, a typical CRUD interface typically involves tables and forms.
 
@@ -206,15 +207,4 @@ The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that thi
  - Full source for version 0.7 is available in a monorepo at https://github.com/rgayvert/zaffre.
 
  - A gallery of examples can be viewed at https://zaffre-io.github.io/zgallery.
-
-#### Acknowledgments
- 
- The development of Zaffre drew inspiration from a variety of sources, including:
-  - React, for concepts of reactivity and DOM reconciliation;
-  - Vue, for ideas on routing and dynamic imports;
-  - MDN, for documentation and samples;
-  - SwiftUI, for declarative UI syntax;
-  - Material Design, for ideas on themes, tokens, fonts, and colors;
-  - Every Layout, for layout examples and guidelines; and
-  - Stack Overflow, for solutions to countless problems.
 

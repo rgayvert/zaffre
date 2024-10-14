@@ -1,5 +1,6 @@
 import { zget, zstring, ZType, atom, Formatter } from ":foundation";
-import { t, View, setInnerHTML, ColorToken, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { t, View, setInnerHTML, ColorToken, core } from ":core";
+import { defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -17,7 +18,7 @@ export interface TextLabelOptions extends BoxOptions {
   textPositionY?: ZType<TextPosition>;
   emptyValue?: string;
 }
-defineBaseOptions<TextLabelOptions>("TextLabel", "Box", {
+defineComponentBundle<TextLabelOptions>("TextLabel", "Box", {
   font: core.font.body_medium,
   color: core.color.surface.contrast,
   selectionColor: core.color.secondaryContainer,
@@ -49,23 +50,23 @@ export function TextLabel(content: zstring, inOptions: BV<TextLabelOptions> = {}
   options.onApplyContent = (view: View): void => {
     setInnerHTML(view, t(zget(content) || emptyValue));
   };
-  return Box(options);
+  return restoreOptions(Box(options));
 }
 
 export interface CenteredTextLabelOptions extends TextLabelOptions {}
 
-defineBaseOptions<CenteredTextLabelOptions>("CenteredTextLabel", "TextLabel", {
+defineComponentBundle<CenteredTextLabelOptions>("CenteredTextLabel", "TextLabel", {
   textPositionX: "center",
   textPositionY: "center",
 });
 export function CenteredTextLabel(content: zstring, inOptions: BV<TextLabelOptions> = {}): View {
   const options = mergeComponentOptions("CenteredTextLabel", inOptions);
-  return TextLabel(content, options);
+  return restoreOptions(TextLabel(content, options));
 }
 
 export interface FormattedLabelOptions extends TextLabelOptions {}
 
-defineBaseOptions<FormattedLabelOptions>("FormattedLabel", "TextLabel", {});
+defineComponentBundle<FormattedLabelOptions>("FormattedLabel", "TextLabel", {});
 
 export function FormattedLabel<T>(
   content: ZType<T>,
@@ -73,8 +74,10 @@ export function FormattedLabel<T>(
   inOptions: BV<FormattedLabelOptions> = {}
 ): View {
   const options = mergeComponentOptions("FormattedLabel", inOptions);
-  return TextLabel(
-    atom(() => formatter(zget(content))),
-    options
+  return restoreOptions(
+    TextLabel(
+      atom(() => formatter(zget(content))),
+      options
+    )
   );
 }

@@ -1,6 +1,6 @@
 import { zstring, znumber, zget, BasicAction, IndexedArrayAtom } from ":foundation";
-import { place, View, TransitionEffect, transitions, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { place, View, TransitionEffect, transitions, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { TextLabel } from "../Content";
 import { Box, BoxOptions } from "../HTML";
 import { StackOptions, ViewList, VStack } from "../Layout";
@@ -19,7 +19,7 @@ export interface ToastOptions extends BoxOptions {
   duration?: znumber;
   message?: zstring;
 }
-defineBaseOptions<ToastOptions>("Toast", "Box", {
+defineComponentBundle<ToastOptions>("Toast", "Box", {
   background: core.color.primaryContainer,
   rounding: core.rounding.r2,
   initialDelay: 0,
@@ -34,13 +34,15 @@ function Toast(removalAction: BasicAction, message: string, inOptions: BV<ToastO
   const delta = zget(options.initialDelay)! + zget(options.duration)!;
   setTimeout(removalAction, delta);
 
-  return Box(options).append(
-    TextLabel(message, {
-      background: core.color.none,
-      color: core.color.background.contrast,
-      padding: core.space.s5,
-      ...options,
-    })
+  return restoreOptions(
+    Box(options).append(
+      TextLabel(message, {
+        background: core.color.none,
+        color: core.color.background.contrast,
+        padding: core.space.s5,
+        ...options,
+      })
+    )
   );
 }
 
@@ -51,7 +53,7 @@ export interface ToastStackOptions extends StackOptions {
   mountEffect?: TransitionEffect;
   itemOptions?: ToastOptions;
 }
-defineBaseOptions<ToastStackOptions>("ToastStack", "VStack", {
+defineComponentBundle<ToastStackOptions>("ToastStack", "VStack", {
   toastStack: true,
   background: core.color.transparent,
   placement: place.bottomRight,
@@ -73,11 +75,13 @@ export function ToastStack(toastItems: IndexedArrayAtom<string>, inOptions: BV<T
     effects: { mounted: options.mountEffect },
     ...options.itemOptions,
   };
-  return VStack({ ...options }).append(
-    ViewList(
-      toastItems,
-      (dataItem) => dataItem.index,
-      (dataItem) => Toast(() => toastItems.delete(dataItem), dataItem.value, itemOptions)
+  return restoreOptions(
+    VStack({ ...options }).append(
+      ViewList(
+        toastItems,
+        (dataItem) => dataItem.index,
+        (dataItem) => Toast(() => toastItems.delete(dataItem), dataItem.value, itemOptions)
+      )
     )
   );
 }

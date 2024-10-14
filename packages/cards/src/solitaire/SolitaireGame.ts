@@ -1,14 +1,14 @@
-import { View, core, CenterBox, BoxOptions, addOptionEvents, pct, ch, BV } from "zaffre";
-import { defineBaseOptions, mergeComponentOptions } from "zaffre";
+import { View, core, CenterBox, BoxOptions, addOptionEvents, pct, ch, BV, restoreOptions } from "zaffre";
+import { defineComponentBundle, mergeComponentOptions } from "zaffre";
 import { SolitaireModel } from "./SolitaireModel";
 import { SolitaireHeader } from "./SolitaireHeader";
 import { SolitaireGrid } from "./SolitaireGrid";
 
 export interface SolitaireOptions extends BoxOptions {}
 
-defineBaseOptions<SolitaireOptions>("SolitaireGame", "Box", {
+defineComponentBundle<SolitaireOptions>("SolitaireGame", "Box", {
   width: pct(100),
-  maxWidth: ch(100), 
+  maxWidth: ch(100),
   outline: core.border.none,
   onIntersectionVisible: (view) => view.focus(true),
 });
@@ -23,5 +23,5 @@ export function SolitaireGame(inOptions: BV<SolitaireOptions> = {}): View {
   });
   model.deal();
 
-  return CenterBox(options).append(SolitaireHeader(model), SolitaireGrid(model));
+  return restoreOptions(CenterBox(options).append(SolitaireHeader(model), SolitaireGrid(model)));
 }

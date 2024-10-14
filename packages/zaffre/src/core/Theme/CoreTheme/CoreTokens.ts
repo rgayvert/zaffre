@@ -6,41 +6,40 @@ import { borderToken, colorToken, px, ColorToken, FontToken, RoundingToken, Spac
 
 const spaceKeys = ["s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10"] as const;
 type SpaceType = {
-  [Key in typeof spaceKeys[number]]: SpaceToken;
-}
+  [Key in (typeof spaceKeys)[number]]: SpaceToken;
+};
 const space = <SpaceType>Object.fromEntries(spaceKeys.map((s) => [s, new SpaceToken({ key: s })]));
 
 const roundingKeys = ["r0", "r1", "r2", "r3", "r4", "r5", "pill", "circle", "none"] as const;
 type RoundingType = {
-  [Key in typeof roundingKeys[number]]: RoundingToken;
-}
+  [Key in (typeof roundingKeys)[number]]: RoundingToken;
+};
 const rounding = <RoundingType>Object.fromEntries(roundingKeys.map((s) => [s, new RoundingToken({ key: s })]));
 
 const fontKeys = [
-  "display_large", 
-  "display_medium", 
-  "display_small", 
-  "headline_large", 
-  "headline_medium", 
-  "headline_small", 
-  "title_large", 
-  "title_medium", 
-  "title_small", 
-  "body_large", 
-  "body_medium", 
-  "body_small", 
+  "display_large",
+  "display_medium",
+  "display_small",
+  "headline_large",
+  "headline_medium",
+  "headline_small",
+  "title_large",
+  "title_medium",
+  "title_small",
+  "body_large",
+  "body_medium",
+  "body_small",
   "label_large",
   "label_medium",
   "label_small",
-  "none", 
-  "inherit"] as const;
+  "none",
+  "inherit",
+] as const;
 
 type FontType = {
-  [Key in typeof fontKeys[number]]: FontToken;
-}
+  [Key in (typeof fontKeys)[number]]: FontToken;
+};
 const font = <FontType>Object.fromEntries(fontKeys.map((s) => [s, new FontToken({ key: s })]));
-
-
 
 const colorKeys = [
   "primary",
@@ -78,10 +77,11 @@ const colorKeys = [
   "darkgray",
   "none",
   "transparent",
-  "inherit"] as const;
+  "inherit",
+] as const;
 type ColorType = {
-  [Key in typeof colorKeys[number]]: ColorToken;
-}
+  [Key in (typeof colorKeys)[number]]: ColorToken;
+};
 const color = <ColorType>Object.fromEntries(colorKeys.map((s) => [s, colorToken({ key: s })]));
 
 const border = {
@@ -91,7 +91,6 @@ const border = {
   none: borderToken({ key: "none" }),
 };
 
-
 export const core = {
   border,
   color,
@@ -99,3 +98,4 @@ export const core = {
   rounding,
   space,
 };
+

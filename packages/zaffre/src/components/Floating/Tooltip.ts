@@ -1,13 +1,13 @@
 import { zget, atom, Atom } from ":foundation";
-import { BV, View, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, beforeAddedToDOM, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { TextLabelOptions, TextLabel } from "../Content";
 import { Box, Floating, floatingCount } from "../HTML";
 
 //
 // A Tooltip is a special floating component that is used by all descendants of a
 // particular component. Typically, an application will add a single BasicTooltip to
-// the top-level component, so a single tooltip instance will be shared by all 
-// components which have a tooltip option. Each view can have a placement option to 
+// the top-level component, so a single tooltip instance will be shared by all
+// components which have a tooltip option. Each view can have a placement option to
 // indicate where the tooltip should be placed. The tooltip will use this if possible,
 // but may choose a different placement if necessary to make the tooltip visible.
 //
@@ -16,7 +16,7 @@ export interface TooltipOptions extends TextLabelOptions {
   textOptions?: TextLabelOptions;
   textCreator?: (tip: Atom<string>) => View;
 }
-defineBaseOptions<TooltipOptions>("BasicTooltip", "Box", {
+defineComponentBundle<TooltipOptions>("BasicTooltip", "Box", {
   padding: core.space.s2,
   background: core.color.tertiaryContainer,
   pointerEvents: "none",
@@ -89,8 +89,10 @@ export function BasicTooltip(inOptions: BV<TooltipOptions> = {}): View {
     }
   };
 
-  return Floating(Box(options).append(options.textCreator!(tip)), {
-    showOnReferenceClick: false,
-    background: core.color.transparent,
-  });
+  return restoreOptions(
+    Floating(Box(options).append(options.textCreator!(tip)), {
+      showOnReferenceClick: false,
+      background: core.color.transparent,
+    })
+  );
 }

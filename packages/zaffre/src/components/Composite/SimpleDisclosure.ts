@@ -1,5 +1,5 @@
 import { zboolean, znumber, zstring, ZType, atom, Atom, toggleAtom, ToggleAtom } from ":foundation";
-import { pct, Effect, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { pct, Effect, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Disclosure, DisclosureOptions, DisclosureComponent } from "../Layout";
 import { ExpandableItem, ExpandableItemOptions } from "./ExpandableItem";
 
@@ -28,7 +28,7 @@ export interface SimpleDisclosureOptions extends DisclosureOptions {
   summaryInset?: zstring;
   centerSummary?: zboolean;
 }
-defineBaseOptions<SimpleDisclosureOptions>("SimpleDisclosure", "Disclosure", {
+defineComponentBundle<SimpleDisclosureOptions>("SimpleDisclosure", "Disclosure", {
   flexDirection: "column",
   alignItems: "start",
   iconName: "icon.chevron-right",
@@ -72,5 +72,5 @@ export function SimpleDisclosure<T>(
     iconTransition: "transform 0.3s",
   };
 
-  return Disclosure(data, () => ExpandableItem(expandableOptions), detailCreator, options);
+  return restoreOptions(Disclosure(data, () => ExpandableItem(expandableOptions), detailCreator, options));
 }

@@ -1,5 +1,7 @@
-import { zget, em, zstring, fetchTextAtom, resolveURI, atom, Atom, inDarkMode, linkPathPrefix, BV } from "zaffre";
-import { core, defineBaseOptions, mergeComponentOptions } from "zaffre";
+import { zget, em, zstring, fetchTextAtom } from "zaffre";
+import { resolveURI, atom } from "zaffre";
+import { Atom, inDarkMode, linkPathPrefix, BV, restoreOptions } from "zaffre";
+import { core, defineComponentBundle, mergeComponentOptions } from "zaffre";
 import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 
 /**
@@ -16,7 +18,7 @@ export interface MarkdownOptions extends TextBoxOptions {
   expandRelativeAssets?: boolean;
   darkModeSuffix?: string;
 }
-defineBaseOptions("Markdown", "Box", {
+defineComponentBundle("Markdown", "Box", {
   extraClasses: "markdown-body",
   background: core.color.background,
   minHeight: em(1.2),
@@ -44,7 +46,6 @@ export function Markdown(inOptions: BV<MarkdownOptions> = {}): View {
   if (options.uri) {
     let url = resolveURI(options.uri);
     if (options.expandRelativeAssets) {
-      //zlog.info("linkPathPrefix__="+linkPathPrefix());
       // prepend ./assets/ with the path to this file
       const path = url.split("/").slice(0, -1).join("/");
       const f = zget(options.textTransformFn)!;
@@ -57,9 +58,9 @@ export function Markdown(inOptions: BV<MarkdownOptions> = {}): View {
   } else {
     mdText = zget(options.markdown || "");
   }
-  if (options.darkModeSuffix) {
-    return TextBox(fixDarkModeAndLinkBase(mdText, options.darkModeSuffix), options);
-  } else {
-    return TextBox(mdText, options);
-  }
+  return restoreOptions(
+    options.darkModeSuffix
+      ? TextBox(fixDarkModeAndLinkBase(mdText, options.darkModeSuffix), options)
+      : TextBox(mdText, options)
+  );
 }

@@ -15,7 +15,7 @@ Since CounterOptions extends SVGContainerOptions, which extends SVGViewOptions, 
 The defaults for Counter are given as: 
 
 ```js
-defineBaseOptions<CounterOptions>("Counter", "", {
+defineComponentBundle<CounterOptions>("Counter", "", {
   rounded: true,
   min: 0,
   max: 99,

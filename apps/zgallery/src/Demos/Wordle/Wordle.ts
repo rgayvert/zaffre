@@ -1,13 +1,25 @@
-import { Box, Button, BoxOptions, Spacer, ToastStack, VStack, View, place, mergeComponentOptions, BV } from "zaffre";
+import {
+  Box,
+  Button,
+  BoxOptions,
+  Spacer,
+  ToastStack,
+  VStack,
+  View,
+  place,
+  mergeComponentOptions,
+  BV,
+  restoreOptions,
+} from "zaffre";
 import { pct, addOptionEvents, core } from "zaffre";
-import { defineBaseOptions } from "zaffre";
+import { defineComponentBundle } from "zaffre";
 import { WordleModel } from "./WordleModel";
 import { WordleGuesses } from "./WordleGuesses";
 import { WordleKeyboard } from "./WordleKeyboard";
 
 export interface WordleOptions extends BoxOptions {}
 
-defineBaseOptions<WordleOptions>("Wordle", "Box", {
+defineComponentBundle<WordleOptions>("Wordle", "Box", {
   height: pct(100),
   font: core.font.headline_medium,
   position: "relative",
@@ -39,18 +51,20 @@ export function Wordle(inOptions: BV<WordleOptions> = {}): View {
   options.model = model;
   addOptionEvents(options, { keyDown: (evt: KeyboardEvent): void => keyDown(model, evt) });
 
-  return Box(options).append(
-    VStack({ gap: core.space.s3 }).append(
-      WordleGuesses(model),
-      Spacer(core.space.s5),
-      WordleKeyboard(model),
-      Spacer(core.space.s5),
-      NewGameButton(model)
-    ),
-    ToastStack(model.toastItems, {
-      placement: place.center,
-      maxItems: 1,
-      duration: 1500,
-    })
+  return restoreOptions(
+    Box(options).append(
+      VStack({ gap: core.space.s3 }).append(
+        WordleGuesses(model),
+        Spacer(core.space.s5),
+        WordleKeyboard(model),
+        Spacer(core.space.s5),
+        NewGameButton(model)
+      ),
+      ToastStack(model.toastItems, {
+        placement: place.center,
+        maxItems: 1,
+        duration: 1500,
+      })
+    )
   );
 }

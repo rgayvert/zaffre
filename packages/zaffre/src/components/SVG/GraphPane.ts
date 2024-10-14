@@ -1,6 +1,7 @@
-import { zget, zboolean, znumber, atom, Graph, VertexData2D, Vertex, Edge, rect2D, zset, BasicAction } from ":foundation";
-import { css_color, View, SVG, SVGContainerOptions, SVGCircle, SVGLine, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { zget, zboolean, znumber, atom, Graph, VertexData2D } from ":foundation";
+import { Vertex, Edge, rect2D, zset, BasicAction } from ":foundation";
+import { css_color, View, SVG, SVGContainerOptions, SVGCircle, SVGLine, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { ViewList } from "../Layout";
 
 //
@@ -20,9 +21,9 @@ export interface GraphPaneOptions extends SVGContainerOptions {
   vertexFillColor?: css_color;
   edgeStrokeWidth?: number;
   vertexRadius?: (v: Vertex<unknown, unknown>) => number;
-  onVertexDrag?: BasicAction,
+  onVertexDrag?: BasicAction;
 }
-defineBaseOptions<GraphPaneOptions>("GraphPane", "SVG", {
+defineComponentBundle<GraphPaneOptions>("GraphPane", "SVG", {
   bounds: rect2D(0, 0, 100, 100),
   textColor: core.color.primary,
   userSelect: "none",
@@ -37,14 +38,14 @@ export function GraphPane<V extends VertexData2D, E>(graph: Graph<V, E>, inOptio
   function VertexCircle(v: Vertex<V, E>): View {
     const selected = atom(false);
     return SVGCircle({
-      c: v.data.location, 
+      c: v.data.location,
       r: options.vertexRadius ? options.vertexRadius(v) : 1,
       fill: options.vertexFillColor,
       transition: "cx 0.1s, cy: 0.1s",
       selected: selected,
       draggable: options.draggableElements,
       onDrag: (delta) => zset(v.data.location, zget(v.data.location).add(delta)),
-      onDragEnd: options.onVertexDrag, 
+      onDragEnd: options.onVertexDrag,
     });
   }
   function EdgeLine(e: Edge<V, E>): View {
@@ -57,19 +58,21 @@ export function GraphPane<V extends VertexData2D, E>(graph: Graph<V, E>, inOptio
     });
   }
 
-  return SVG(options)
-    .append(
-      ViewList(
-        graph.edges,
-        (e) => `${e.vertex1.id}-${e.vertex2.id}`,
-        (e) => EdgeLine(e)
+  return restoreOptions(
+    SVG(options)
+      .append(
+        ViewList(
+          graph.edges,
+          (e) => `${e.vertex1.id}-${e.vertex2.id}`,
+          (e) => EdgeLine(e)
+        )
       )
-    )
-    .append(
-      ViewList(
-        graph.vertices,
-        (v) => `${v.id}`,
-        (v) => VertexCircle(v)
+      .append(
+        ViewList(
+          graph.vertices,
+          (v) => `${v.id}`,
+          (v) => VertexCircle(v)
+        )
       )
-    );
+  );
 }

@@ -1,5 +1,5 @@
 import { zget, zboolean, Atom, Condition, znumber, Interval } from ":foundation";
-import { BV, View, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, beforeAddedToDOM, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -23,7 +23,7 @@ export interface TextAreaOptions extends BoxOptions {
   selectionInterval?: Atom<Interval>;
   extraLinesWhenEditing?: znumber;
 }
-defineBaseOptions<TextAreaOptions>("TextArea", "Box", {
+defineComponentBundle<TextAreaOptions>("TextArea", "Box", {
   tag: "textarea",
   background: core.color.background,
   spellcheck: true,
@@ -87,5 +87,5 @@ export function TextArea(content: Atom<string>, inOptions: BV<TextAreaOptions> =
     }
   };
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

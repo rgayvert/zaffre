@@ -40,8 +40,12 @@ export interface SharedViewState {
   hovered?: Atom<boolean>;
 }
 
-export interface LocalDefaults {
+
+export interface OptionBundle {
   [key: string]: any;
+} 
+export interface OptionSheet {
+  [key: string]: OptionBundle;
 }
 
 
@@ -54,7 +58,8 @@ export interface ViewOptionsRecord {
   extraVars?: [string, string][];
 
   theme?: ztheme;
-  bundles?: string[];
+  bundles?: BV<ViewOptions>[];
+  sheets?: OptionSheet[];
 
   resources?: Map<string, string>;
   disabled?: Atom<boolean>;
@@ -115,8 +120,8 @@ export interface ViewOptionsRecord {
   view?: View;
   role?: string;
 
-  componentDefaults?: ComponentDefaultsMap;
-  localDefaults?: LocalDefaults;
+  //componentDefaults?: ComponentDefaultsMap;
+  //localDefaults?: LocalDefaults;
 }
 
 export type ViewOptions = Partial<ViewOptionsRecord>;
@@ -827,7 +832,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
    */
 
   addOptionEvents(events: Events): void {
-    this.options.events ??= {};
+    //this.options.events ??= {};
     addOptionEvents(this.options, events);
   }
 

@@ -1,5 +1,5 @@
 import { Atom, DateTimeFormatter } from ":foundation";
-import { View, px, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, px, beforeAddedToDOM, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Button } from "../Controls";
 import { HStack } from "../Layout";
 import { InputType } from "../Content";
@@ -16,7 +16,7 @@ export interface ChronoInputOptions extends TextInputOptions {
   iconName?: string;
   useNativePickerIcon?: boolean;
 }
-defineBaseOptions<ChronoInputOptions>("ChronoInput", "Input", {
+defineComponentBundle<ChronoInputOptions>("ChronoInput", "Input", {
   iconName: "icon.calendar",
   useNativePickerIcon: true,
   paddingLeft: core.space.s4,
@@ -40,19 +40,21 @@ function ChronoInput(date: Atom<Date>, inputType: InputType, inOptions: BV<Chron
     inputElt = <HTMLInputElement>view.elt;
   });
   if (options.useNativePickerIcon) {
-    return GenericTextInput(date, inputType, formatter, parser, options);
+    return restoreOptions(GenericTextInput(date, inputType, formatter, parser, options));
   } else {
     // see ZStyleSheet for webkit rule
     options.extraVars = [["--picker-display", "none"]];
-    return HStack({ font: core.font.title_medium, gap: px(3) }).append(
-      GenericTextInput(date, inputType, formatter, parser, options),
-      Button({
-        leadingIconURI: options.iconName,
-        action: () => inputElt.showPicker(),
-        background: undefined,
-        border: undefined,
-        font: core.font.inherit,
-      })
+    return restoreOptions(
+      HStack({ font: core.font.title_medium, gap: px(3) }).append(
+        GenericTextInput(date, inputType, formatter, parser, options),
+        Button({
+          leadingIconURI: options.iconName,
+          action: () => inputElt.showPicker(),
+          background: undefined,
+          border: undefined,
+          font: core.font.inherit,
+        })
+      )
     );
   }
 }

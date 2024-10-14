@@ -1,5 +1,6 @@
 import { zstring } from ":foundation";
-import { View, SVGConstants, resolveURI, core, defineBaseOptions, mergeComponentOptions, beforeAddedToDOM, BV } from ":core";
+import { View, SVGConstants, resolveURI, core, defineComponentBundle } from ":core";
+import { mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -10,7 +11,7 @@ import { Box, BoxOptions } from "../HTML";
 export interface ImageBoxOptions extends BoxOptions {
   preload?: boolean;
 }
-defineBaseOptions<ImageBoxOptions>("ImageBox", "Box", {
+defineComponentBundle<ImageBoxOptions>("ImageBox", "Box", {
   background: core.color.none,
   draggable: false,
   preload: false,
@@ -41,5 +42,5 @@ export function ImageBox(uri: zstring, inOptions: BV<ImageBoxOptions> = {}): Vie
   options.onGetContent = (): string => resolveURI(uri);
   options.onApplyContent = (view): void => setImageSrc(view, uri);
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

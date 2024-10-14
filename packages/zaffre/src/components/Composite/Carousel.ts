@@ -1,6 +1,6 @@
 import { CarouselAtom, znumber, zstring } from ":foundation";
-import { coreColorEffect, ChildCreator, View, afterAddedToDOM, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { coreColorEffect, ChildCreator, View, afterAddedToDOM, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "../Controls";
 import { Ensemble, HStack, StackOptions } from "../Layout";
 
@@ -24,7 +24,7 @@ export interface CarouselOptions extends StackOptions {
   preloadList?: string[];
   intervalMillis?: znumber;
 }
-defineBaseOptions<CarouselOptions>("Carousel", "HStack", {
+defineComponentBundle<CarouselOptions>("Carousel", "HStack", {
   leftIcon: "icon.chevron-left",
   rightIcon: "icon.chevron-right",
   intervalMillis: 0,
@@ -49,9 +49,11 @@ export function Carousel(
       hovered: coreColorEffect(core.color.primary),
     },
   };
-  return HStack({ gap: core.space.s0 }).append(
-    Button({ ...buttonOptions, leadingIconURI: options.leftIcon, action: () => key.previous() }),
-    Ensemble(key, childCreator, options),
-    Button({ ...buttonOptions, leadingIconURI: options.rightIcon, action: () => key.next() })
+  return restoreOptions(
+    HStack({ gap: core.space.s0 }).append(
+      Button({ ...buttonOptions, leadingIconURI: options.leftIcon, action: () => key.previous() }),
+      Ensemble(key, childCreator, options),
+      Button({ ...buttonOptions, leadingIconURI: options.rightIcon, action: () => key.next() })
+    )
   );
 }

@@ -1,6 +1,6 @@
 import { zboolean, zstring, Atom, atom } from ":foundation";
-import { View, addOptionEvents, px, beforeAddedToDOM, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, addOptionEvents, px, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Input, InputOptions, TextLabel } from "../Content";
 import { ButtonOptions, Button } from "../Controls";
 import { HStack } from "../Layout";
@@ -14,7 +14,7 @@ interface FInputOptions extends InputOptions {
   accept?: zstring;
   multiple?: zboolean;
 }
-defineBaseOptions<FInputOptions>("FInput", "Input", {
+defineComponentBundle<FInputOptions>("FInput", "Input", {
   opacity: 0,
   multiple: false,
   type: "file",
@@ -29,7 +29,7 @@ function FInput(files: Atom<File[]>, inOptions: BV<FInputOptions> = {}): View {
     addOptionEvents(viewOptions, { change: () => files.set(Array.from(inputElt.files || [])) });
   });
 
-  return Input(atom(""), options);
+  return restoreOptions(Input(atom(""), options));
 }
 
 export interface FileInputOptions extends ButtonOptions {
@@ -38,7 +38,7 @@ export interface FileInputOptions extends ButtonOptions {
   showFiles?: boolean;
   noFilesLabel?: string;
 }
-defineBaseOptions<FileInputOptions>("FileInput", "Button", {
+defineComponentBundle<FileInputOptions>("FileInput", "Button", {
   label: "Choose file",
   leadingIconURI: "icon.folder",
   background: core.color.primaryContainer,
@@ -68,11 +68,10 @@ export function FileInput(fileNames: Atom<File[]>, inOptions: BV<FileInputOption
   options.action = (): void => (<HTMLInputElement>fInput.elt).showPicker();
   if (options.showFiles) {
     const fNames = atom(() => formatFileNames());
-    return HStack({ gap: core.space.s2 }).append(
-      Button(options).append(fInput),
-      TextLabel(fNames, { font: options.font })
+    return restoreOptions(
+      HStack({ gap: core.space.s2 }).append(Button(options).append(fInput), TextLabel(fNames, { font: options.font }))
     );
   } else {
-    return Button(options).append(fInput);
+    return restoreOptions(Button(options).append(fInput));
   }
 }

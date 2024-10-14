@@ -1,14 +1,14 @@
 import { zget, Atom, TreeNode, atom, counterAtomForDataSelection, zboolean } from ":foundation";
-import { ChildCreator, ChildDataIDFn, View, LengthToken, ch, counterKeyBindings, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { ChildCreator, ChildDataIDFn, View, LengthToken, ch, counterKeyBindings, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { StackOptions, VStack } from "./Stack";
 import { ViewList } from "./ViewList";
 
 //
 // A Tree is a vertical stack where the item data come from a TreeNode.
 //
-// The key to using a TreeNode with a Tree component is nodeArray(). This is a reactive list 
-// that contains the nodes in the current expansion of the root node. This means that the Tree 
+// The key to using a TreeNode with a Tree component is nodeArray(). This is a reactive list
+// that contains the nodes in the current expansion of the root node. This means that the Tree
 // component does not concern itself with any notions of expansion, other than the level of
 // each node.
 //
@@ -25,7 +25,7 @@ export interface TreeOptions extends StackOptions {
   showRoot?: zboolean;
   alwaysExpanded?: boolean;
 }
-defineBaseOptions<TreeOptions>("Tree", "VStack", {
+defineComponentBundle<TreeOptions>("Tree", "VStack", {
   background: core.color.background,
   font: core.font.title_medium,
   allowMultipleExpanded: true,
@@ -95,12 +95,14 @@ export function Tree<T>(
     }
   }
 
-  return VStack(options).append(
-    ViewList(
-      data,
-      (node, index) => idFn(node, index),
-      (node, index) => TreeNodeLabel(node, index),
-      { afterRender: (view) => afterRenderingList(view) }
+  return restoreOptions(
+    VStack(options).append(
+      ViewList(
+        data,
+        (node, index) => idFn(node, index),
+        (node, index) => TreeNodeLabel(node, index),
+        { afterRender: (view) => afterRenderingList(view) }
+      )
     )
   );
 }

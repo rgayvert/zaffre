@@ -1,5 +1,6 @@
-import { View, VStack, core, StackOptions, pct, em, px, defineBaseOptions, mergeComponentOptions, BV } from "zaffre";
-import { DemoBox } from "./DemoBox"; 
+import { View, VStack, core, StackOptions, pct } from "zaffre";
+import { em, px, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from "zaffre";
+import { DemoBox } from "./DemoBox";
 import { GalleryTopic } from "./GalleryTypes";
 
 /**
@@ -8,7 +9,7 @@ import { GalleryTopic } from "./GalleryTypes";
  */
 interface GalleryDemoOptions extends StackOptions {}
 
-defineBaseOptions<GalleryDemoOptions>("GalleryDemo", "VStack", {
+defineComponentBundle<GalleryDemoOptions>("GalleryDemo", "VStack", {
   gap: em(1),
   width: pct(100),
   alignItems: "center",
@@ -22,5 +23,5 @@ export function GalleryDemo(topic: GalleryTopic, inOptions: BV<GalleryDemoOption
   options.padding = fullPage ? core.space.s0 : core.space.s3;
   options.maxWidth = fullPage ? undefined : px(1440);
 
-  return VStack(options).append(...topic.sections.map((section) => DemoBox(section, topic)));
+  return restoreOptions(VStack(options).append(...topic.sections.map((section) => DemoBox(section, topic))));
 }

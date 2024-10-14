@@ -1,26 +1,45 @@
 import { zget, Atom } from ":foundation";
-import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
 // Input - base component for all input components. Here we mostly just establish some
-// common defaults. 
+// common defaults.
 //
 // TODO:
 //  - add more support for patterns and validation
 //
 
-export type InputType = "button" | "checkbox" | "color" | "date" | "datetime-local" |
-"email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" |
-"range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week";
-
+export type InputType =
+  | "button"
+  | "checkbox"
+  | "color"
+  | "date"
+  | "datetime-local"
+  | "email"
+  | "file"
+  | "hidden"
+  | "image"
+  | "month"
+  | "number"
+  | "password"
+  | "radio"
+  | "range"
+  | "reset"
+  | "search"
+  | "submit"
+  | "tel"
+  | "text"
+  | "time"
+  | "url"
+  | "week";
 
 export interface InputOptions extends BoxOptions {
   type?: InputType;
   maySetContent?: boolean;
   valid?: Atom<boolean>;
 }
-defineBaseOptions<InputOptions>("Input", "Box", {
+defineComponentBundle<InputOptions>("Input", "Box", {
   color: core.color.primary,
   background: core.color.inherit,
   appearance: "none",
@@ -47,5 +66,5 @@ export function Input(content: Atom<string>, inOptions: BV<InputOptions> = {}): 
     }
     setTimeout(() => options.valid?.set(inputElt.validity.valid), 10);
   };
-  return Box(options);
+  return restoreOptions(Box(options));
 }

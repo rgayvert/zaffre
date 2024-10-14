@@ -1,5 +1,5 @@
 import { Atom, ZType, CounterAtom, TAction, counterAtomForDataSelection } from ":foundation";
-import { BV, View, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { StackOptions, VStack } from "./Stack";
 import { ViewList } from "./ViewList";
 
@@ -14,7 +14,7 @@ export interface SelectionListOptions extends StackOptions {
   dblClickAction?: TAction<unknown>;
   currentIndex?: CounterAtom;
 }
-defineBaseOptions<SelectionListOptions>("SelectionList", "VStack", {
+defineComponentBundle<SelectionListOptions>("SelectionList", "VStack", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -32,11 +32,13 @@ export function SelectionList<T>(
   // TODO
   const currentIndex = counterAtomForDataSelection(data, selectedItem);
 
-  return VStack(options).append(
-    ViewList(
-      data,
-      (dataItem) => dataItem,
-      (dataItem, index) => itemCreator(dataItem, index)
+  return restoreOptions(
+    VStack(options).append(
+      ViewList(
+        data,
+        (dataItem) => dataItem,
+        (dataItem, index) => itemCreator(dataItem, index)
+      )
     )
   );
 }

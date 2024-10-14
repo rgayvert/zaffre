@@ -1,5 +1,5 @@
 import { Atom, ZType, atom, counterAtomForDataSelection, toggleAtom } from ":foundation";
-import { counterKeyBindings, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { counterKeyBindings, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { SelectionList, SelectionListOptions } from "./SelectionList";
 import { Disclosure, DisclosureComponent, DisclosureOptions } from "./Disclosure";
 
@@ -8,7 +8,7 @@ import { Disclosure, DisclosureComponent, DisclosureOptions } from "./Disclosure
 // disclosure component which manages the expansion of the summary and detail components.
 
 export interface DisclosureListOptions extends SelectionListOptions {}
-defineBaseOptions<DisclosureListOptions>("DisclosureList", "SelectionList", {
+defineComponentBundle<DisclosureListOptions>("DisclosureList", "SelectionList", {
   background: core.color.surface,
   alignItems: "stretch",
   justifyContent: "start",
@@ -42,5 +42,5 @@ export function DisclosureList<T>(
     };
     return Disclosure(dataItem, summaryCreator, detailCreator, options);
   }
-  return SelectionList(data, selectedItem, DisclosureView, options);
+  return restoreOptions(SelectionList(data, selectedItem, DisclosureView, options));
 }

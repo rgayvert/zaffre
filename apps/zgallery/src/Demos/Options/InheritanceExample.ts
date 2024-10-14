@@ -14,7 +14,7 @@ function LabeledStack(label: string, view: View): View {
 const boxOptions = {
   border: core.border.thin.color(core.color.red),
   padding: core.space.s3,
-};  
+};
 const stackOptions = {
   border: core.border.thin.color(core.color.red),
   padding: core.space.s3,

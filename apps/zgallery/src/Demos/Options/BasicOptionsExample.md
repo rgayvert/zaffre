@@ -29,7 +29,7 @@ If you examine the styles in either the DOM inspector or a web debugger, you wil
 Since no options were specified for the first text label, this represents the options in the base options class for a TextLabel. A base options class for a reusable component should be defined along with its implementation. For a TextLabel, the base options happen to be:
 
 ```js
-  defineBaseOptions<TextLabelOptions>("TextLabel", "Box", {
+  defineComponentBundle<TextLabelOptions>("TextLabel", "Box", {
     font: core.font.body_medium,
     color: core.color.surface.contrast,
     selectionColor: core.color.secondaryContainer,

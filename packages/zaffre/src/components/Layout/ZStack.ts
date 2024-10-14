@@ -1,12 +1,21 @@
 import { Atom, atom, zget, zboolean, zstring } from ":foundation";
-import { CalcToken, calcMult, View, HTMLOptions, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import {
+  CalcToken,
+  calcMult,
+  View,
+  HTMLOptions,
+  defineComponentBundle,
+  mergeComponentOptions,
+  BV,
+  restoreOptions,
+} from ":core";
 import { Grid, GridOptions } from "./Grid";
 
 //
 // A ZStack contains a list of views that are placed on top of each other, with
 // an optional offset (e.g., a pile of playing cards). This is done by added all of
 // the views to a 1x1 grid with the same grid area.
-// 
+//
 // TODO: come up with a clean encapsulation of stacking contexts.
 //
 
@@ -16,7 +25,7 @@ export interface ZStackOptions extends GridOptions {
   offsetY?: zstring;
   hasBaseView?: zboolean;
 }
-defineBaseOptions<ZStackOptions>("ZStack", "Grid", {
+defineComponentBundle<ZStackOptions>("ZStack", "Grid", {
   offsetX: "0",
   offsetY: "0",
 });
@@ -43,5 +52,5 @@ export function ZStack(inOptions: BV<ZStackOptions> = {}): View {
     childOptions.top ??= atom(() => yOffsetOfSubview(child, child.indexInParent()));
   };
 
-  return Grid(options);
+  return restoreOptions(Grid(options));
 }

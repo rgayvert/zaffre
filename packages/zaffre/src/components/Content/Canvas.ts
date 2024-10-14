@@ -1,5 +1,6 @@
 import { zget, znumber, zstring, Atom, atom, zlog } from ":foundation";
-import { View, resolveURI, beforeAddedToDOM, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, resolveURI, beforeAddedToDOM, core } from ":core";
+import { defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -16,7 +17,7 @@ export interface CanvasOptions extends BoxOptions {
   pixelHeight?: znumber;
   imageSrc?: zstring;
 }
-defineBaseOptions<CanvasOptions>("Canvas", "Box", {
+defineComponentBundle<CanvasOptions>("Canvas", "Box", {
   color: core.color.primary,
   background: core.color.background,
   tag: "canvas",
@@ -72,5 +73,5 @@ export function Canvas(inOptions: BV<CanvasOptions> = {}): View {
       }
     }
   }
-  return Box(options);
+  return restoreOptions(Box(options));
 }

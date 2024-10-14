@@ -1,27 +1,23 @@
-import { atom, core, recordEditor, Form, pct, View } from "zaffre";
+import { atom, core, recordEditor, Form, pct, View, FormOptions } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 import { demoUserFields } from "./DemoUserFields";
-import "./FormBundles";
-
 
 export function BasicFormExample(): View {
   const record = atom(new DemoUserRecord(undefined));
   const editor = recordEditor(record.get());
   const validationOn = atom(false);
+  const opts: FormOptions = {
+    width: pct(90),
+    submitAction: () => alert(JSON.stringify(record.get())),
+    validationOn: validationOn,
+    formGridOptions: {
+      labelBoxOptions: {
+        textLabelOptions: {
+          color: core.color.green
+        }
+      }
+    }
+  };
 
-  function BasicForm(): View {
-    return Form(record, editor, demoUserFields(), {
-      containerOptions: {
-        width: pct(90),
-      },
-      submitAction: () => alert(JSON.stringify(record.get())),
-      validationOn: validationOn,
-      localDefaults: {
-        "LabelBox.TextLabel": {
-          color: core.color.purple,
-        },
-      },
-    });
-  }
-  return BasicForm();
+  return Form(record, editor, demoUserFields(), opts);
 }

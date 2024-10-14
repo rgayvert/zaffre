@@ -1,5 +1,5 @@
 import { Atom, zstring } from ":foundation";
-import { View, css_flexDirection, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { View, css_flexDirection, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { SelectionEnsemble, Stack } from "../Layout";
 import { RadioButton, RadioButtonOptions } from "../Controls";
 import { LabelBox, LabelBoxOptions } from "./LabelBox";
@@ -15,7 +15,7 @@ export interface RadioButtonsOptions extends RadioButtonOptions {
   radioButtonOptions?: RadioButtonOptions;
   labelBoxOptions?: LabelBoxOptions;
 }
-defineBaseOptions<RadioButtonsOptions>("RadioButtons", "RadioButton", {
+defineComponentBundle<RadioButtonsOptions>("RadioButtons", "RadioButton", {
   flexDirection: "column",
   background: core.color.none,
   border: core.border.none,
@@ -28,10 +28,12 @@ export function RadioButtons(
   inOptions: BV<RadioButtonsOptions> = {}
 ): View {
   const options = mergeComponentOptions("RadioButtons", inOptions);
-  return Stack({ flexDirection: options.flexDirection, gap: core.space.s4 }).append(
-    SelectionEnsemble(values, groupValue, (value, index) =>
-      LabelBox(labels[index], options.labelBoxOptions).append(
-        RadioButton(groupValue, value, options.radioButtonOptions)
+  return restoreOptions(
+    Stack({ flexDirection: options.flexDirection, gap: core.space.s4 }).append(
+      SelectionEnsemble(values, groupValue, (value, index) =>
+        LabelBox(labels[index], options.labelBoxOptions).append(
+          RadioButton(groupValue, value, options.radioButtonOptions)
+        )
       )
     )
   );

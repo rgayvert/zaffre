@@ -1,5 +1,6 @@
 import { ZType, atom, zboolean, zget } from ":foundation";
-import { ColorToken, ch, css_length, em, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { ColorToken, ch, css_length, em, View } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Stack, StackOptions, ViewList } from "../Layout";
 import { Box, BoxOptions } from "../HTML";
 
@@ -22,7 +23,7 @@ interface DotOptions extends BoxOptions {
   dotSize?: css_length;
   dotColor?: ColorToken;
 }
-defineBaseOptions<DotsOptions>("Dots", "StackOptions", {
+defineComponentBundle<DotsOptions>("Dots", "StackOptions", {
   flexDirection: "row",
   spaceBetweenDots: ch(1),
 });
@@ -43,16 +44,18 @@ export function Dots(values: ZType<boolean[]>, inOptions: BV<DotsOptions> = {}):
   const options = mergeComponentOptions("Dots", inOptions);
   options.gap = options.spaceBetweenDots;
   const dotCreator = options.dotCreator || DefaultDot;
-  return Stack(options).append(
-    ViewList(
-      values,
-      (_val, index) => index,
-      (_val, index) =>
-        dotCreator(
-          index,
-          atom(() => zget(values)[index]),
-          options.dotOptions || {}
-        )
+  return restoreOptions(
+    Stack(options).append(
+      ViewList(
+        values,
+        (_val, index) => index,
+        (_val, index) =>
+          dotCreator(
+            index,
+            atom(() => zget(values)[index]),
+            options.dotOptions || {}
+          )
+      )
     )
   );
 }

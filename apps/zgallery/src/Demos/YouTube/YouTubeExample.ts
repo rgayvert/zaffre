@@ -11,7 +11,7 @@ export function YouTubeExample(): View {
   function ArrowButton(label: string, deltaT: number): View {
     return DownButton({
       rounding: core.rounding.pill,
-      labelOptions: {
+      textLabelOptions: {
         padding: px(0),
       },
       label: label,

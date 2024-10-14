@@ -1,5 +1,5 @@
 import { Atom, TreeNode, atom } from ":foundation";
-import { BV, View, calc, core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, calc, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Tree, TreeOptions } from "../Layout";
 import { TextLabelOptions } from "../Content";
 import { ExpandableItem } from "./ExpandableItem";
@@ -13,10 +13,10 @@ import { ExpandableItem } from "./ExpandableItem";
 //
 
 export interface SimpleTreeOptions extends TreeOptions {
-  labelOptions?: TextLabelOptions;
+  textLabelOptions?: TextLabelOptions;
 }
 
-defineBaseOptions<SimpleTreeOptions>("SimpleTree", "Tree", {
+defineComponentBundle<SimpleTreeOptions>("SimpleTree", "Tree", {
 });
 
 type TreeTitleFn<T> = (node: TreeNode<T>) => string;
@@ -45,7 +45,7 @@ export function SimpleTree<T>(
       font: core.font.inherit,
       alwaysExpanded: options.alwaysExpanded,
       model: node,
-      labelOptions: options.labelOptions
+      textLabelOptions: options.textLabelOptions
     });
     return label;
   }
@@ -53,5 +53,5 @@ export function SimpleTree<T>(
     return node.fullPath().map((n) => titleFn(n)).join("-");
   }
 
-  return Tree<T>(root, selectedItem, idFn, NodeLabel, options);
+  return restoreOptions(Tree<T>(root, selectedItem, idFn, NodeLabel, options));
 }

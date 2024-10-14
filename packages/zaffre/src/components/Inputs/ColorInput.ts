@@ -1,6 +1,6 @@
 import { Atom } from ":foundation";
-import { View, addOptionEvents, Color, beforeAddedToDOM, BV } from ":core";
-import { defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, addOptionEvents, Color, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { InputOptions } from "../Content";
 import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 
@@ -12,7 +12,7 @@ import { GenericTextInput, TextInputOptions } from "./GenericTextInput";
 export interface ColorInputOptions extends InputOptions {
   pickTrigger?: Atom<boolean>;
 }
-defineBaseOptions<ColorInputOptions>("ColorInput", "Input", {});
+defineComponentBundle<ColorInputOptions>("ColorInput", "Input", {});
 
 export function ColorInput(value: Atom<Color>, inOptions: BV<ColorInputOptions> = {}): View {
   const options = mergeComponentOptions("ColorInput", inOptions);
@@ -26,11 +26,13 @@ export function ColorInput(value: Atom<Color>, inOptions: BV<ColorInputOptions> 
     });
   });
 
-  return GenericTextInput(
-    value,
-    "color",
-    (color: Color) => color.asHex(),
-    (text: string) => Color.fromHex(text),
-    <TextInputOptions>options
+  return restoreOptions(
+    GenericTextInput(
+      value,
+      "color",
+      (color: Color) => color.asHex(),
+      (text: string) => Color.fromHex(text),
+      <TextInputOptions>options
+    )
   );
 }

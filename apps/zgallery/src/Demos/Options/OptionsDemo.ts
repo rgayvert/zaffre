@@ -4,6 +4,7 @@ import { BasicOptionsExample } from "./BasicOptionsExample";
 import { OptionBundlesExample } from "./OptionBundlesExample";
 import { InheritanceExample } from "./InheritanceExample";
 import { ReactiveOptionsExample } from "./ReactiveOptionsExample";
+import { OptionChainingExample } from "./OptionChainingExample";
 
 export function OptionsDemo(): View {
   return GalleryDemo(topic);
@@ -33,9 +34,16 @@ const topic: GalleryTopic = {
     {
       title: "Option Bundles",
       componentFn: OptionBundlesExample, 
-      sources: ["OptionBundlesExample.ts", "OptionBundles.ts"],
+      sources: ["OptionBundlesExample.ts"],
       markdown: "OptionBundlesExample.md",
     },
+    {
+      title: "Option Chaining",
+      componentFn: OptionChainingExample, 
+      sources: ["OptionChainingExample.ts"],
+      markdown: "OptionChainingExample.md",
+    },
+    
   ],
 };
 

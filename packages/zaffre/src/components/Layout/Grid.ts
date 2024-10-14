@@ -1,5 +1,5 @@
 import { znumber, zstring, zget, atom } from ":foundation";
-import { BV, View, defineBaseOptions, mergeComponentOptions } from ":core";
+import { BV, View, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 
 //
@@ -18,7 +18,7 @@ export interface GridOptions extends BoxOptions {
   areas?: zstring;
   templateAreas?: zstring;
 }
-defineBaseOptions<GridOptions>("Grid", "Box", {
+defineComponentBundle<GridOptions>("Grid", "Box", {
   display: "grid",
 });
 
@@ -35,5 +35,5 @@ export function Grid(inOptions: BV<GridOptions> = {}): View {
     options.gridTemplateColumns ??= atom(() => `repeat(${zget(options.ncolumns)}, 1fr)`);
   }
 
-  return Box(options);
+  return restoreOptions(Box(options));
 }

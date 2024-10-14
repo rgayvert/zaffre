@@ -1,6 +1,6 @@
 import { zboolean, zget, Atom, atom, zstring, zset } from ":foundation";
-import { View, addOptionEvents, handleEvents, beforeAddedToDOM, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { View, addOptionEvents, handleEvents, beforeAddedToDOM, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Input, InputOptions, InputType } from "../Content";
 
 //
@@ -22,7 +22,7 @@ export interface TextInputOptions extends InputOptions {
   step?: string;
   autocomplete?: zstring;
 }
-defineBaseOptions<TextInputOptions>("TextInput", "Input", {
+defineComponentBundle<TextInputOptions>("TextInput", "Input", {
   font: core.font.body_medium,
   setOnInput: true,
   preserveCursorLocation: true,
@@ -108,5 +108,5 @@ export function GenericTextInput<T>(
       setAndFire();
     }
   }
-  return Input(text, options);
+  return restoreOptions(Input(text, options));
 }

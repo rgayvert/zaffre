@@ -1,6 +1,6 @@
 import { zget, zboolean, znumber, zstring, atom, rect2D } from ":foundation";
-import { beforeAddedToDOM, standardSVGInteractionEffects, css_color, px, View, BV } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { beforeAddedToDOM, standardSVGInteractionEffects, css_color, px, View, BV, restoreOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { SVG, SVGContainerOptions, SVGRectangle, SVGText } from ":core";
 
 //
@@ -17,7 +17,7 @@ export interface SVGTextLabelOptions extends SVGContainerOptions {
   textColor?: css_color;
   vOffset?: znumber;
 }
-defineBaseOptions<SVGTextLabelOptions>("SVGTextLabel", "", {
+defineComponentBundle<SVGTextLabelOptions>("SVGTextLabel", "", {
   bounds: rect2D(0, 0, 100, 100),
   textColor: core.color.primary,
   userSelect: "none",
@@ -37,30 +37,32 @@ export function SVGTextLabel(content: zstring, inOptions: BV<SVGTextLabelOptions
     }
   });
 
-  return SVG(options).append(
-    SVGRectangle({
-      id: "rect",
-      x: 5,
-      y: 5,
-      width: 90,
-      height: 90,
-      strokeWidth: 1,
-      stroke: core.color.secondary,
-      fill: core.color.secondaryContainer,
-      rx: options.rounded ? 20 : 0,
-      ry: options.rounded ? 20 : 0,
-    }),
-    SVGText(content, {
-      id: "text",
-      stroke: core.color.primary,
-      fill: options.textColor,
-      fontSize: px(70),
-      dominantBaseline: "middle",
-      baselineShift: zget(options.vOffset) || 0,
-      textAnchor: "middle",
-      x: 50,
-      y: 50,
-      userSelect: "none",
-    })
+  return restoreOptions(
+    SVG(options).append(
+      SVGRectangle({
+        id: "rect",
+        x: 5,
+        y: 5,
+        width: 90,
+        height: 90,
+        strokeWidth: 1,
+        stroke: core.color.secondary,
+        fill: core.color.secondaryContainer,
+        rx: options.rounded ? 20 : 0,
+        ry: options.rounded ? 20 : 0,
+      }),
+      SVGText(content, {
+        id: "text",
+        stroke: core.color.primary,
+        fill: options.textColor,
+        fontSize: px(70),
+        dominantBaseline: "middle",
+        baselineShift: zget(options.vOffset) || 0,
+        textAnchor: "middle",
+        x: 50,
+        y: 50,
+        userSelect: "none",
+      })
+    )
   );
 }

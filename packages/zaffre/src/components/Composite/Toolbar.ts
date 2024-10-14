@@ -1,5 +1,5 @@
 import { atom, zget, Rect2D, ArrayAtom, arrayAtom } from ":foundation";
-import { place, View, em, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { place, View, em, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Floating } from "../HTML";
 import { Stack, StackOptions } from "../Layout";
 import { SimpleMenu } from "../Floating";
@@ -12,9 +12,9 @@ import { Button } from "../Controls";
 // The toolbar itself is created with only a hidden menu button. The other buttons are expected
 // to be appended to this view. We capture the children as they are appended here, and add a
 // hidden option to each one that we can control from here. From this list of buttons, we construct
-// a menu using the tooltips and actions of the buttons. When the combined widths of the buttons exceeds 
+// a menu using the tooltips and actions of the buttons. When the combined widths of the buttons exceeds
 // the width of the view, the menu is shown and the buttons are hidden.
-// 
+//
 // TODO: only works for horizontal toolbars currently (threshold is based on width)
 // Q: could we use a resizeAction instead of onResize?
 //
@@ -22,7 +22,7 @@ import { Button } from "../Controls";
 export interface ToolbarOptions extends StackOptions {
   menuIconName?: string;
 }
-defineBaseOptions<ToolbarOptions>("Toolbar", "Stack", {
+defineComponentBundle<ToolbarOptions>("Toolbar", "Stack", {
   flexDirection: "row",
   justifyContent: "start",
   height: em(1.5),
@@ -30,7 +30,7 @@ defineBaseOptions<ToolbarOptions>("Toolbar", "Stack", {
   borderBottom: core.border.thin,
   padding: core.space.s2,
   menuIconName: "icon.show-menu",
-  overflow: "hidden"
+  overflow: "hidden",
 });
 
 export function Toolbar(inOptions: BV<ToolbarOptions> = {}): View {
@@ -70,7 +70,12 @@ export function Toolbar(inOptions: BV<ToolbarOptions> = {}): View {
     leadingIconURI: "icon.show-menu",
     hidden: atom(() => !collapsed.get()),
   });
-  menuButton.append(Floating(SimpleMenu(menuChoice, buttons, (button) => zget(button?.options.tooltip) || ""), { placement: place.bottom }));
+  menuButton.append(
+    Floating(
+      SimpleMenu(menuChoice, buttons, (button) => zget(button?.options.tooltip) || ""),
+      { placement: place.bottom }
+    )
+  );
 
-  return Stack(options).append(menuButton);
+  return restoreOptions(Stack(options).append(menuButton));
 }

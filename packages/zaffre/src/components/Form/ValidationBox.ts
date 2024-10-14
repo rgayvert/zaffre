@@ -1,5 +1,5 @@
 import { atom } from ":foundation";
-import { BV, core, defineBaseOptions, mergeComponentOptions, pct, View } from ":core";
+import { BV, core, defineComponentBundle, mergeComponentOptions, pct, restoreOptions, View } from ":core";
 import { StackOptions, VStack } from "../Layout";
 import { FormField, formFieldValidationMessage } from "./FormField";
 import { TextLabel } from "../Content";
@@ -13,7 +13,7 @@ import { TextLabel } from "../Content";
 //
 
 export interface ValidationBoxOptions extends StackOptions {}
-defineBaseOptions<ValidationBoxOptions>("ValidationBox", "Stack", {
+defineComponentBundle<ValidationBoxOptions>("ValidationBox", "Stack", {
   alignItems: "start",
   width: pct(100),
 });
@@ -21,15 +21,17 @@ defineBaseOptions<ValidationBoxOptions>("ValidationBox", "Stack", {
 export function ValidationBox<T>(field: FormField<T>, inputView: View, inOptions: BV<ValidationBoxOptions> = {}): View {
   const options = mergeComponentOptions("ValidationBox", inOptions);
 
-  return VStack(options).append(
-    inputView,
-    TextLabel(
-      atom(() => formFieldValidationMessage(field)),
-      {
-        font: core.font.label_small,
-        color: core.color.error,
-        hidden: atom(() => field.isValid.get()),
-      }
+  return restoreOptions(
+    VStack(options).append(
+      inputView,
+      TextLabel(
+        atom(() => formFieldValidationMessage(field)),
+        {
+          font: core.font.label_small,
+          color: core.color.error,
+          hidden: atom(() => field.isValid.get()),
+        }
+      )
     )
   );
 }

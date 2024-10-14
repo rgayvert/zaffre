@@ -1,5 +1,5 @@
 import { znumber } from ":foundation";
-import { BV, View, defineBaseOptions, mergeComponentOptions } from ":view";
+import { BV, View, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":view";
 import { SVGViewCSSKeys, SVGViewSVGKeys } from "./SVG";
 import { SVGOptions } from "./SVGOptions";
 import { CreateSVGView } from "./SVGDelegate";
@@ -13,7 +13,7 @@ export interface SVGGroupOptions extends SVGOptions {
   x?: znumber;
   y?: znumber;
 }
-defineBaseOptions<SVGGroupOptions>("SVGGroup", "SVGView", {
+defineComponentBundle<SVGGroupOptions>("SVGGroup", "SVGView", {
   x: 0,
   y: 0,
 });
@@ -25,7 +25,7 @@ export function SVGGroup(inOptions: BV<SVGGroupOptions> = {}): View {
     options.transform = `translate(${options.x}, ${options.y})`;
   }
   options.componentName = "SVGGroup";
-  return CreateSVGView("g", SVGGroup.svgKeys, SVGGroup.cssKeys, options);
+  return restoreOptions(CreateSVGView("g", SVGGroup.svgKeys, SVGGroup.cssKeys, options));
 }
 
 SVGGroup.cssKeys = [...SVGViewCSSKeys];

@@ -1,68 +1,103 @@
 import { zutil } from ":foundation";
-import { BV, ViewOptions } from "./View";
+import { BV, OptionSheet, View, ViewCreator, ViewOptions, VList } from "./View";
 
 //
-// Option bundle: a named collection of non-reactive component options, analogous to a CSS class.
+// Option bundle: an index type of non-reactive component options, analogous to a CSS class.
+// OptionSheet: an index type where the keys are bundle/component names and the values
+//  are option bundles.
 //
-// Each reusable component has an option bundle whose name is derived from the component name;
-// e.g., "TextLabel" => "_text_label". These are created by defineBaseOptions().
-//
-// TODO:
-//  - should these be organized into sheets? Not clear if this is needed, so we'll start simple.
-//  - should list of bundles be reactive?
-//  - the notion of wrapping the creation of a component to set local options might make more
-//    sense at a higher level (e.g., panel)
-//  - or maybe we have a wrapper like Scoped<creator, sheets> that translates to 
-//          evalWithSheets(sheets, () => creator())
-//
-//  
 
-export const allOptionBundles: Map<string, any> = new Map();
-
-export function getOptionBundle<T extends ViewOptions>(bundleName: string): T {
-  return allOptionBundles.get(bundleName) || {};
+export const allSheets: OptionSheet[] = [];
+export function createOptionSheet(sheet: OptionSheet): OptionSheet {
+  allSheets.push(sheet);
+  return sheet;
 }
 
-export function defineOptionBundles(rules: [string, any][]): void {
-  rules.forEach(([bundleName, options]) => allOptionBundles.set(bundleName, options));
+export const baseSheet = createOptionSheet({});
+export const sheetStack: OptionSheet[] = [baseSheet];
+export const sheetRestoreStack: number[] = [];
+
+export function defineBundle<T extends ViewOptions>(optionName: string, value: T, sheet = baseSheet): void {
+  sheet[optionName] = value;
 }
 
-export function componentOptionBundleName(componentName: string): string {
-  return `_${zutil.camelToSnakeCase(componentName)}`;
-}
-function optionsForComponent<T extends ViewOptions>(componentName: string): T {
-  return getOptionBundle(componentOptionBundleName(componentName)) || {};
-}
 
-// Each component should have a base option bundle. These are merged here with the parent component bundle.
+// Each component should have a base bundle. These are merged here with the parent component bundle.
 
-export function defineBaseOptions<T extends ViewOptions>(
+export function defineComponentBundle<T extends ViewOptions>(
   componentName: string,
   parentComponent: string,
   options: T
 ): void {
   options.componentName = componentName;
-  const bundleName = componentOptionBundleName(componentName);
-  const opts = mergeOptions(optionsForComponent(parentComponent), options);
-  allOptionBundles.set(bundleName, opts);
+  baseSheet[componentName] = mergeOptions(baseSheet[parentComponent], options);
 }
 
 // simple merge
 function mergeOptions<T extends ViewOptions>(options1: T, options2: T): T {
   return Object.assign({ ...options1 }, options2);
 }
+
+export function pushSheets(sheets: OptionSheet[]): void {
+  sheetStack.push(...sheets);
+  sheetRestoreStack.push(sheets.length);
+  sheets.length > 0 && console.log("pushSheets: sheetStack=" + sheetStack.length);
+}
 //
 // Merge the base options for the given componentName with the incoming options. If the options include
 // bundles, merge these as well (just after the base options).
 //
+//  1. Normalize inOptions.bundles to [<ComponentName>, ...other bundles ]
+//  2. Push inOptions.sheets onto the sheet stack
+//  3. Merge: for each bundle, descend sheet stack and merge sheet values for that bundle
+//
 export function mergeComponentOptions<T extends ViewOptions>(componentName: string, inOptions: BV<T>): T {
-  let options = { ...optionsForComponent(componentName) };
   const opts: ViewOptions =
     typeof inOptions === "string"
       ? { bundles: [inOptions] }
       : Array.isArray(inOptions)
       ? { bundles: inOptions }
       : inOptions;
-  (opts.bundles || []).forEach((bundleName) => (options = zutil.mergeOptions(options, getOptionBundle(bundleName))));
-  return <T>zutil.mergeOptions(options, opts);
+  if (!opts.bundles?.includes(componentName)) {
+    opts.bundles = [componentName, ...(opts.bundles || [])];
+  }
+  // note: these are popped in restoreOptions()
+  pushSheets(opts.sheets || []);
+
+  let result = {};
+  (opts.bundles || []).forEach((bv) => {
+    sheetStack.forEach((sheet) => {
+      const vals = typeof bv === "string" ? sheet[bv] : bv;
+      if (vals) {
+        result = zutil.mergeOptions(result, vals);
+      }
+    });
+  });
+  opts.bundles = [];
+  return <T>zutil.mergeOptions(result, opts);
 }
+
+export function restoreOptions(view: View): View {
+  const n = sheetRestoreStack.pop() || 0;
+  for (let i = 0; i < n; i++) {
+    sheetStack.pop();
+  }
+  n > 0 && console.log("restore: sheetStack=" + sheetStack.length);
+  return view;
+}
+
+export function restoreVListOptions<T>(vList: VList<T>): VList<T> {
+  const n = sheetRestoreStack.pop() || 0;
+  for (let i = 0; i < n; i++) {
+    sheetStack.pop();
+  }
+  n > 0 && console.log("restore: sheetStack=" + sheetStack.length);
+  return vList;
+}
+
+export function createWithOptionSheets(sheets: OptionSheet[], creator: ViewCreator): View {
+  pushSheets(sheets);
+  return restoreOptions(creator());
+}
+
+

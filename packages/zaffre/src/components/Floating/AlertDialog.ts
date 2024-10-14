@@ -1,5 +1,5 @@
 import { zstring, BasicAction, Atom } from ":foundation";
-import { place, transitions, View, core, defineBaseOptions, mergeComponentOptions, BV } from ":core";
+import { place, transitions, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { TextLabel } from "../Content";
 import { BoxOptions, Floating } from "../HTML";
 import { HStack, VStack } from "../Layout";
@@ -18,7 +18,7 @@ export interface AlertDialogOptions extends BoxOptions {
   rejectAction?: BasicAction;
   cancelAction?: BasicAction;
 }
-defineBaseOptions<AlertDialogOptions>("AlertDialog", "VStack", {
+defineComponentBundle<AlertDialogOptions>("AlertDialog", "VStack", {
   acceptLabel: "OK",
   rejectLabel: "No",
   cancelLabel: "Cancel",
@@ -79,11 +79,14 @@ export function AlertDialog(
       padding: core.space.s5,
     });
   }
-  return Floating(
-    VStack(options).append(
-      titleLabel,
-      subtitleLabel,
-      HStack({ gap: core.space.s5, background: core.color.background }).append(...buttons)
+
+  return restoreOptions(
+    Floating(
+      VStack(options).append(
+        titleLabel,
+        subtitleLabel,
+        HStack({ gap: core.space.s5, background: core.color.background }).append(...buttons)
+      )
     )
   );
 }

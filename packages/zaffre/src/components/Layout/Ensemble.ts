@@ -1,6 +1,18 @@
 import { zget, atom, Atom, ZType, setAtom, RouteAtom, SetAtom } from ":foundation";
-import { App, routeChanged, afterAddedToDOM, pct, ChildCreator, ChildModifier, View, VList, BV } from ":core";
-import { defineBaseOptions, mergeComponentOptions } from ":core";
+import {
+  App,
+  routeChanged,
+  afterAddedToDOM,
+  pct,
+  ChildCreator,
+  ChildModifier,
+  View,
+  VList,
+  BV,
+  restoreOptions,
+  restoreVListOptions,
+} from ":core";
+import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 import { ViewList } from "./ViewList";
 
@@ -26,7 +38,7 @@ export interface EnsembleOptions extends BoxOptions {
   preloadList?: string[];
   //noCache?: boolean;
 }
-defineBaseOptions<EnsembleOptions>("Ensemble", "Box", {
+defineComponentBundle<EnsembleOptions>("Ensemble", "Box", {
   mode: "lazy",
   width: pct(100),
 });
@@ -54,10 +66,9 @@ export function Ensemble(
   options.childModifier = (child: View): void => {
     child.options.hidden = atom(() => child.options.id !== currentKey.get());
   };
-  const answer = Box(options).append(
-    ViewEnsemble(options.preloadList || [currentKey.get()], currentKey, childCreator, options)
+  return restoreOptions(
+    Box(options).append(ViewEnsemble(options.preloadList || [currentKey.get()], currentKey, childCreator, options))
   );
-  return answer;
 }
 //
 // A selection ensemble ensures that only one of a set of components is selected. See RadioButtons for
@@ -71,7 +82,7 @@ export function SelectionEnsemble(
 ): VList<string> {
   const options = mergeComponentOptions("Ensemble", inOptions);
 
-  return ViewEnsemble(keys, currentKey, childCreator, options);
+  return restoreVListOptions(ViewEnsemble(keys, currentKey, childCreator, options));
 }
 function addToPool(pool: SetAtom<string>, key: string): void {
   pool.add(key);
@@ -96,10 +107,12 @@ function ViewEnsemble(
     currentKey.addAction((key) => addToPool(pool, key));
   }
 
-  return ViewList(
-    pool,
-    (key) => key,
-    (key, index) => childCreator(key, index),
-    { childModifiers: options.childModifier ? [options.childModifier] : undefined }
+  return restoreVListOptions(
+    ViewList(
+      pool,
+      (key) => key,
+      (key, index) => childCreator(key, index),
+      { childModifiers: options.childModifier ? [options.childModifier] : undefined }
+    )
   );
 }

@@ -1,7 +1,7 @@
 import { atom, zget, zstring } from ":foundation";
-import { View, ColorToken, css_background, css_color, AttributeEffect, BV } from ":core";
+import { View, ColorToken, css_background, css_color, AttributeEffect, BV, restoreOptions } from ":core";
 import { EffectsBundle, dropShadowForElevation } from ":core";
-import { core, defineBaseOptions, mergeComponentOptions } from ":core";
+import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Button, ButtonOptions } from "./Button";
 
 //
@@ -35,7 +35,7 @@ export function defaultTextButtonInteractionEffects(): EffectsBundle {
 export interface TextButtonOptions extends ButtonOptions {
   textColor?: css_color;
 }
-defineBaseOptions<TextButtonOptions>("TextButton", "Button", {
+defineComponentBundle<TextButtonOptions>("TextButton", "Button", {
   background: core.color.transparent,
   textColor: core.color.primary,
   border: core.border.none,
@@ -55,5 +55,5 @@ export function TextButton(text: zstring, inOptions: BV<TextButtonOptions> = {})
 
   options.label = text;
   options.color ??= fgContrast(options.background);
-  return Button(options);
+  return restoreOptions(Button(options));
 }
