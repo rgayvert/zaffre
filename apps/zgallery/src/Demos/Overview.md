@@ -1,6 +1,6 @@
 Creating a web application using current development tools can be complicated. The process typically involves multiple technologies (HTML/CSS/JS/SVG), a myriad of APIs and dependencies, and a complex workflow. Zaffre is an experimental webapp framework which attempts to reduce this complexity by using a single language (Typescript) together with a reactive mechanism that encourages building higher-level abstractions via declarative composition. There are no required runtime dependencies, and the build process is simplified with vite and rollup. The result is that you effectively get reactive CSS, HTML, and SVG without having to code in those languages.
 
-In Zaffre you use Typescript to create a model containing reactive values, together with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
+In Zaffre, you use Typescript to create a model containing reactive values, together with a view hierarchy defined declaratively. The views then create a parallel hierarchy in the DOM (HTML/SVG elements). Reactive values in the model are tied to attributes in the views, which are passed along to the DOM in the form of HTML/CSS/SVG attributes. When a reactive value changes, it triggers actions (closures) which produces changes to view attributes, which in turn yield changes in the DOM.
 
 <p align="center"><img src='./assets/DOM<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
@@ -36,12 +36,7 @@ Here's a basic example of a Zaffre component that uses reactive content and styl
 This produces the following result:
 <p align="center"><img src='./assets/HelloWorld1<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
-<details>
-  <summary>
-See this in action
-</summary>
-<p align="center"><video src='./assets/HelloWorld1.mp4' controls width="40%" ></p>
-</details>
+[View on StackBlitz](https://stackblitz.com/edit/vitejs-vite-zznfgi?file=src%2FHelloWorld1.ts)
 
 <br/>
 <br/>
@@ -51,6 +46,7 @@ A Zaffre *component* is just a function which returns an opaque View object. In 
 #### Some notes:
 
   - Composition is done with the *append()* method.
+  - Reactive values are expressed as instances of atoms.
   - Each component typically takes a list of *options* which result in CSS/HTML/SVG attributes being set on the underlying DOM element.
   - CSS styles are generated automatically from component options. Reactive CSS values are translated into element-level CSS variables.
   - This example uses inline options. Non-reactive options may be grouped into *option bundles*, which are analogous to CSS classes. Using option bundles, this example could be reduced to:
@@ -67,6 +63,9 @@ A Zaffre *component* is just a function which returns an opaque View object. In 
       );
     }
   ```
+
+  [View on StackBlitz](https://stackblitz.com/edit/vitejs-vite-mguq1u?file=src%2FHelloWorld1a.ts)
+
 
   - A component may have one or more required arguments if they are always needed; for example, a TextLabel requires a label (a literal or reactive string).
   - Attributes are often specified using *tokens*. A token is an object that combines with the current *theme* to construct HTML/CSS attributes. 
@@ -116,12 +115,8 @@ This produces the following result:
 
 <p align="center"><img src='./assets/HelloWorld4<<DARK_MODE_SUFFIX>>.png' width="40%"></p>
 
-<details>
-  <summary>
-See this in action
-</summary>
-<p align="center"><video src='./assets/HelloWorld4.mp4' controls width="40%" ></p>
-</details>
+[View on StackBlitz](https://stackblitz.com/edit/vitejs-vite-utzjbw?file=src%2FHelloWorld4.ts)
+
 
 <br/>
 <br/>
@@ -171,13 +166,8 @@ when the form is visible. Switching between the two views is a simple matter of 
 
 Both the table and the form are expressed in a declarative manner, making it easy to modify and maintain.
 
-<details>
-  <summary>
-See this in action
-</summary>
+[View on StackBlitz](https://stackblitz.com/edit/vitejs-vite-m6pggv?file=src%2FTableFormExample.ts)
 
-<p align="center"><video src='./assets/TFDemo.mp4' controls width="80%" ></p>
-</details>
 
 <br/>
 The Zaffre library is organized into three layered subpackages: Foundation, Core and Components. The layering helps with managing dependencies and understanding levels of abstraction. Foundation deals with strictly non-UI concepts, including atoms, geometry, and data. Core deals with lower-level UI building blocks and the internal mechanics of the UI, is primarily class-based, and depends on Foundation. The Components subpackage depends on Core, and is primarily functional in nature. 
@@ -206,5 +196,5 @@ The Zaffre [gallery](https://zaffre-io.github.io/zgallery) demonstrates that thi
 
  - Full source for version 0.7 is available in a monorepo at https://github.com/rgayvert/zaffre.
 
- - A gallery of examples can be viewed at https://zaffre-io.github.io/zgallery.
+ - A gallery of examples can be viewed at https://rgayvert.github.io/zgallery.
 
