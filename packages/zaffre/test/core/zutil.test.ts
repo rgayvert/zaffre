@@ -1,5 +1,6 @@
 import { expect, test, describe } from "vitest";
 import { zutil } from ":foundation";
+//import { zutil } from "../../src/foundation";
 
 
 describe("withoutUndefinedValues", () => {
@@ -11,6 +12,16 @@ describe("withoutUndefinedValues", () => {
   };
   test("one undefined value", () => {
     expect(zutil.withoutUndefinedValues(dummy1)).toEqual({ a: 2, b: 0, d: "abc" });
+  });
+});
+
+describe("formatSeconds", () => {
+
+  test("2", () => {
+    expect(zutil.formatSeconds(404.963, 1)).toBe("00:06:45.0");
+  });
+  test("1", () => {
+    expect(zutil.formatSeconds(404.141, 1)).toBe("00:06:44.1");
   });
 });
 

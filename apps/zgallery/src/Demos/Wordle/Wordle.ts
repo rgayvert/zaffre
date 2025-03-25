@@ -1,16 +1,5 @@
-import {
-  Box,
-  Button,
-  BoxOptions,
-  Spacer,
-  ToastStack,
-  VStack,
-  View,
-  place,
-  mergeComponentOptions,
-  BV,
-  restoreOptions,
-} from "zaffre";
+import { Box, Button, BoxOptions, Spacer, VStack, View, place } from "zaffre";
+import { ToastStack, mergeComponentOptions, BV, restoreOptions } from "zaffre";
 import { pct, addOptionEvents, core } from "zaffre";
 import { defineComponentBundle } from "zaffre";
 import { WordleModel } from "./WordleModel";

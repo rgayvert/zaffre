@@ -1,3 +1,4 @@
+import { TableRecord } from ":foundation";
 import { AnyFormField, FormFieldValidator } from "./FormField";
 
 //
@@ -8,6 +9,14 @@ export const defaultFormValidator = {
   notBlank: (field: AnyFormField): string => {
     const val = field.value.get();
     return val && val !== "&nbsp;" ? "" : "Must not be blank";
+  },
+  hasValidRecordID: (field: AnyFormField): string => {
+    const val = field.value.get();
+    if (val instanceof TableRecord) {
+      return val.recordID < 0 ? "Must not be blank" : "";
+    } else {
+      return "";
+    } 
   },
   lettersOnly: (field: AnyFormField): string => {
     const val = field.value.get();

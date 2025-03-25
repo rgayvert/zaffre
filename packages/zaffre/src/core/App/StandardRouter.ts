@@ -1,3 +1,4 @@
+import { zutil } from ":foundation";
 import { Router } from "./Router";
 
 //
@@ -5,15 +6,15 @@ import { Router } from "./Router";
 //
 
 export class StandardRouter extends Router {
-  constructor(public baseURL: string, public rootTitle: string) {
-    super(baseURL, rootTitle);
+  constructor(baseURL: string, rootTitle: string, errorPath = "error") {
+    super(baseURL, rootTitle, errorPath);
   }
   usesHash(): boolean {
     return false;
   }
   
-  async routeToInitialPath(): Promise<void> {
-    this.routeToPath(window.location.pathname);
+  getInitialPath(): string {
+    return zutil.windowPathNameWithParams();
   }
 
   createFullPath(path: string): string {

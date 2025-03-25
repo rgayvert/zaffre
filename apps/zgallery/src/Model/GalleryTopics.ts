@@ -1,4 +1,4 @@
-import { ImportAtom, Loading, View, ViewCreator, ch, importAtom } from "zaffre";
+import { ImportAtom, ImportLoader, View, ViewCreator, ch, importAtom } from "zaffre";
 import { Markdown } from "../Demos/Common";
 
 // 
@@ -54,7 +54,8 @@ export const galleryTopics = new Map([
 ]);
 
 export function DemoTopicComponent(topic: ImportAtom<ViewCreator>): View {
-  const viewCreator: ViewCreator = () => Loading(topic);
+  const viewCreator: ViewCreator = () => ImportLoader(topic);
+  topic.getValue();
   return viewCreator();
 }
 

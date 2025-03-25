@@ -11,6 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/youtube": "^0.0.50",
-    "dayjs": "^1.11.12"
+    "dayjs": "^1.11.12",
+    "jszip": "^3.10.1"
   }
 }

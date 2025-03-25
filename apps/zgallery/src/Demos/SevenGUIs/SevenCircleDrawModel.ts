@@ -1,4 +1,4 @@
-import { ArrayAtom, Atom, arrayAtom, atom, UndoManager } from "zaffre";
+import { ArrayAtom, Atom, arrayAtom, atom, UndoManager, emptyArrayAtom } from "zaffre";
 
 export interface GCircle {
   id: string;
@@ -12,7 +12,7 @@ export class SevenCircleDrawModel {
     return (SevenCircleDrawModel._nextID++).toString();
   }
   undoManager = new UndoManager();
-  circles: ArrayAtom<GCircle> = arrayAtom([]);
+  circles = emptyArrayAtom<GCircle>();
   initialRadius = 25;
   selectedID: Atom<string> = atom("", { action: () => this.selectedRadius.set(this.selectedCircle?.r.get() || this.initialRadius) });
   get selectedCircle(): GCircle | undefined {

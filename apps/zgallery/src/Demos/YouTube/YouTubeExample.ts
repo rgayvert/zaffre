@@ -12,7 +12,7 @@ export function YouTubeExample(): View {
     return DownButton({
       rounding: core.rounding.pill,
       textLabelOptions: {
-        padding: px(0),
+        padding: px(0), 
       },
       label: label,
       downAction: () => player.seek(deltaT),

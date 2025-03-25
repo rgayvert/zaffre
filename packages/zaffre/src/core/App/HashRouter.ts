@@ -1,3 +1,4 @@
+import { zutil } from ":foundation";
 import { Router } from "./Router";
 
 //
@@ -7,27 +8,26 @@ import { Router } from "./Router";
 //
 
 export class HashRouter extends Router {
-  constructor(public baseURL: string, public rootTitle: string) {
-    super(baseURL, rootTitle);
+  constructor(baseURL: string, rootTitle: string, errorPath: string) {
+    super(baseURL, rootTitle, errorPath);
   }
   usesHash(): boolean {
     return true;
   }
 
-  async routeToInitialPath(): Promise<void> { 
+  getInitialPath(): string { 
     const href = window.location.href;
     if (href.includes("/#")) {
-      this.routeToPath(href.substring(href.indexOf("/#") + 2));
+      return href.substring(href.indexOf("/#") + 2);
     } else {
-      this.routeToPath(window.location.pathname);
+      return zutil.windowPathNameWithParams();
     }
   }
 
   historyChanged(event: PopStateEvent): void {
     // handle back/forward buttons
-    this.restoring = true;
+    this.inBackForward = true;
     this.routeToPath(window.location.href);
-    this.restoring = false; 
   }
 
   createFullPath(path: string): string {

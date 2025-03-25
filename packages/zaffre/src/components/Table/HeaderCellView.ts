@@ -1,4 +1,4 @@
-import { zboolean, TableModel, TableHeaderCell } from ":foundation";
+import { zboolean, atom, TableModel, TableHeaderCell, AnyTableHeaderCell } from ":foundation";
 import { px, View, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { CenteredTextLabel, TextLabelOptions } from "../Content";
 
@@ -11,12 +11,13 @@ export interface TableHeaderCellViewOptions extends TextLabelOptions {
   sortable?: zboolean;
 }
 defineComponentBundle<TableHeaderCellViewOptions>("HeaderCellView", "TextLabel", {
-  padding: core.space.s2,
+  padding: core.space.s3,
+  font: core.font.label_medium,
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
   color: core.color.primary,
-  background: core.color.tertiaryContainer,
+  background: core.color.primaryContainer,
   position: "sticky",
   top: px(0),
   zIndex: 1,
@@ -31,12 +32,17 @@ export function HeaderCellView<R>(
   const options = mergeComponentOptions("HeaderCellView", inOptions);
   if (tableModel.maySelectColumns || options.sortable) {
     options.clickAction = () => handleClick();
+  } else if (tableModel.options.headerSelectionColor) {
+    options.clickAction = () => tableModel.options.headerClickAction?.(<AnyTableHeaderCell>cell);
   }
   options.model = cell;
+  options.hidden = cell.column.hidden;
+  options.selectionColor ??= tableModel.options.headerSelectionColor;
+  options.selected ??= atom(() => tableModel.selectedHeaderColumn.get() == cell.column);
 
   function handleClick(): void {
     if (options.sortable) {
-      tableModel.sortOnColumn(cell.column);
+      tableModel.sortOnColumn(cell.column, true);
     }
     if (tableModel.maySelectColumns) {
       tableModel.selectedColumn.set(cell.column);

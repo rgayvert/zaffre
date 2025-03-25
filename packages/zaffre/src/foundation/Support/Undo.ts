@@ -1,4 +1,4 @@
-import { ArrayAtom, arrayAtom } from "../Atom";
+import { ArrayAtom, arrayAtom, emptyArrayAtom } from "../Atom";
 
 //
 // UndoManager
@@ -17,8 +17,8 @@ type UndoGroup = UndoableAction[];
 type Undoable = UndoableAction | UndoGroup;
 
 export class UndoManager {
-  undoStack: ArrayAtom<Undoable> = arrayAtom([]);
-  redoStack: ArrayAtom<Undoable> = arrayAtom([]);
+  undoStack = emptyArrayAtom<Undoable>();
+  redoStack = emptyArrayAtom<Undoable>();
   group?: UndoGroup;
 
   describe(undoable: Undoable): string {

@@ -48,6 +48,7 @@ defineComponentBundle<FileInputOptions>("FileInput", "Button", {
 
 export function FileInput(fileNames: Atom<File[]>, inOptions: BV<FileInputOptions> = {}): View {
   const options = mergeComponentOptions("FileInput", inOptions);
+  options.model = fileNames;
 
   function formatFileNames(): string {
     const fNames = fileNames.get();

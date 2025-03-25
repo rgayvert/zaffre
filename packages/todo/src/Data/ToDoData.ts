@@ -1,4 +1,4 @@
-import { TableRecord, TableRecordList, TableStore } from "zaffre";
+import { TableRecord, TableRecordList, TableStore, uniqueRecordID } from "zaffre";
 
 export enum RecordFilter { 
   All = "All",
@@ -7,7 +7,11 @@ export enum RecordFilter {
 }
 
 export class ToDoRecord extends TableRecord {
-  recordID = -1;
+  recordID = uniqueRecordID();
+  persistentFields(): string[] {
+    return ["content", "completed"];
+  }
+
   constructor(store: TableStore<ToDoRecord>, public content = "", public completed = false) {
     super(store);
   }

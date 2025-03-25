@@ -1,26 +1,35 @@
-import { Atom, atom, ClassConstructor, tableRecordEditor } from ":foundation";
-import { TableRecord, TableStore, TableModel, RecordEditor, updateEditorFromRecord } from ":foundation";
+import { FormFieldSpecFn } from ":components";
+import { Atom, atom, ClassConstructor } from ":foundation";
+import { TableRecord, TableStore, TableModel } from ":foundation";
 
 //
-// A TFModel is the model for a TableFormView. It controls the switching between the two views (currentView). It also
+// A TFModel is the model for a TableFormEnsemble. It controls the switching between the two views (currentView). It also
 // contains the table model used by the table, and handles editing of the current record.
 //
 
 export class TFModel<R extends TableRecord> {
-  editor: RecordEditor<R>;
   currentView = atom("table");
   validationOn = atom(false);
   editedRecord: Atom<R>;
+  editedRecordID: Atom<string>;
 
-  constructor(public recordClass: ClassConstructor<R>, public store: TableStore<R>, public tableModel: TableModel<R>) {
+  constructor(
+    public recordClass: ClassConstructor<R>,
+    public store: TableStore<R>,
+    public tableModel: TableModel<R>,
+    public fields: FormFieldSpecFn<R>,
+    public title: string
+  ) {
     this.editedRecord = atom(new recordClass(this.store));
-    this.editor = tableRecordEditor(this.editedRecord.get());
+    this.editedRecordID = atom(() => this.editedRecord.get().recordID.toString());
   }
   get selectedRecord(): R | undefined {
     return this.tableModel.selectedRow.get();
   }
   newRecord(): void {
-    this.editRecord(new this.recordClass(this.store), false);
+    const record = new this.recordClass(this.store);
+    //this.options.afterCreateRecord?.(record);
+    this.editRecord(record, false);
   }
   editSelectedRecord(): void {
     const record = this.selectedRecord;
@@ -30,7 +39,6 @@ export class TFModel<R extends TableRecord> {
   }
   editRecord(record: R, validationOn: boolean): void {
     this.editedRecord.set(record);
-    updateEditorFromRecord(this.editor, record);
     this.validationOn.set(validationOn);
     this.currentView.set("form");
   }
@@ -59,12 +67,12 @@ export class TFModel<R extends TableRecord> {
   submitRecord(): void {
     const record = this.editedRecord.get();
     if (record) {
-      if (this.selectionIsPersisted()) {
+      if (record.isPersisted()) {
         record.update();
         this.tableModel.updateRowWithRecord(record);
       } else {
         record.create();
-        this.tableModel.addRowAtEnd(record);
+        this.tableModel.addRowAndSort(record);
       }
       this.setMode("table");
     }

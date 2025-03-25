@@ -1,5 +1,5 @@
-import { Atom, atom, BasicAction, zboolean, TableDataCell, TableModel } from ":foundation";
-import { BV, Lazy, View, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
+import { Atom, atom, BasicAction, zboolean, TableDataCell, TableModel, TableCell, point2D, Point2D, condition } from ":foundation";
+import { BV, Lazy, View, afterAddedToDOM, ch, core, defineComponentBundle, mergeComponentOptions, restoreOptions } from ":core";
 import { CenterBox, CenterBoxOptions } from "../Layout";
 import { TextLabelOptions, FormattedLabel } from "../Content";
 import { StringCellEditor } from "./StringCellEditor";
@@ -17,6 +17,7 @@ export interface StringDataCellViewOptions extends TextLabelOptions {
   sortable?: zboolean;
   doubleClickAction?: BasicAction;
   editable?: boolean;
+  onCellClicked?: (cell: TableCell, location: Point2D) => void;
 }
 // TODO: figure out why changing the font here can cause extra space at the bottom
 // of each data cell
@@ -26,6 +27,7 @@ defineComponentBundle<StringDataCellViewOptions>("StringDataCellView", "TextLabe
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
   userSelect: "auto",
+  //userSelect: "all",
   background: core.color.background,
   color: core.color.primary,
   emptyValue: "&nbsp;",
@@ -40,16 +42,28 @@ export function StringDataCellView<R>(
   const options = mergeComponentOptions("StringDataCellView", inOptions);
 
   options.textAlign = dataCell.column.alignment;
+  options.hidden = dataCell.column.hidden;
+  if (dataCell.column.minWidth) {
+    options.minWidth = ch(dataCell.column.minWidth);
+  }
   options.selected = atom(() => tableModel.cellIsSelected(dataCell));
   options.events = {
-    dblClick: () => options.doubleClickAction?.(),
-    click: () => cellClicked(dataCell),
+    dblClick: () => options.doubleClickAction?.(), 
+    click: (evt) => cellClicked(dataCell, point2D(evt.offsetX, evt.offsetY)),
   };
   options.opacity = atom(() => (editedCell.get() === dataCell ? 0.0 : 1.0));
   options.model = dataCell;
 
-  function cellClicked(cell: TableDataCell<R, string>): void {
+  options.scrollIntoViewWhen = condition(() => dataCell.row === tableModel.selectedRow.get());
+  // afterAddedToDOM(options, (view: View) => tableModel.selectedRow.addAction((row) => {
+  //   if (dataCell.row === row) {
+  //     view.elt.scrollIntoView()
+  //   }
+  // })); 
+
+  function cellClicked(cell: TableDataCell<R, string>, location: Point2D): void {
     tableModel.selectedRow.set(cell.row);
+    options.onCellClicked?.(cell, location);
   }
   // If the table is editable, each cell has an editor that is created when needed.
 

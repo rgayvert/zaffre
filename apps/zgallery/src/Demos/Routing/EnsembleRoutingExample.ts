@@ -4,7 +4,7 @@ import { core, View, ch, colorToken, CenteredTextLabel, SegmentedTextButton, VSt
 
 export function EnsembleRoutingExample(): View {
   const colors = ["red", "green", "blue"];
-  const selectedColor = routeAtom("color", "red");
+  const selectedColor = routeAtom("color", "");
 
   function ColorBox(colorName: string): View {
     const color = colorToken({ cssName: colorName });

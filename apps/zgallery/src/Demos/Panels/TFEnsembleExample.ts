@@ -1,9 +1,11 @@
-import { TableFormEnsemble, View } from "zaffre";
+import { TableFormEnsemble, TFModel, View } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 import { demoUserFields } from "./DemoUserFields";
 import { DemoUserModel } from "./DemoUserModel";
 
 export function TFEnsembleExample(): View {
-  const model = new DemoUserModel();
-  return TableFormEnsemble(DemoUserRecord, model.store, model.userTableModel, demoUserFields());
+  const userModel = new DemoUserModel();
+  const tfModel = new TFModel(DemoUserRecord, userModel.db.user, userModel.userTableModel, demoUserFields, "Users");
+
+  return TableFormEnsemble(tfModel);
 }

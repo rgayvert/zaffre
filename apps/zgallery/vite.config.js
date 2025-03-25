@@ -8,6 +8,9 @@ export default defineConfig({
     port: 8081,
     open: true
   },
+  server: {
+    host: "0.0.0.0",
+  },
   plugins: [
     tsconfigPaths(),
     viteStaticCopy({

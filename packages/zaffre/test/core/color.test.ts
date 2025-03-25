@@ -29,7 +29,7 @@ describe("colors", () => {
 describe("color conversions", () => {
   const hex1 = "#326496";
   const rgba1 = hexToRGBA(hex1);
-  const color1 = colorFromHex(hex1, "rgb");
+  const color1 = colorFromHex(hex1);
   const color2 = convertColor(color1, "lab");
   const color3 = convertColorToRGB(color2);
 

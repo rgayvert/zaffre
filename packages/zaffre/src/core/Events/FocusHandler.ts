@@ -28,8 +28,8 @@ export class FocusHandler extends EventHandler<FocusEventType, FocusEvent> {
     this.target?.setInteractionState("focused");
     handleEvents(this.options.focus, evt);
   }
-  // TODO: handle interaction state
   blur(evt: FocusEvent): void {
+    this.target?.setInteractionState("enabled");
     handleEvents(this.options.blur, evt);
   }
 }

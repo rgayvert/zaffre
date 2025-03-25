@@ -1,3 +1,4 @@
+import { zutil } from "../Util";
 import { Atom, AtomOptions } from "./Atom";
 
 //
@@ -22,7 +23,8 @@ export class RouteAtom extends Atom<string> {
     super(initialValue, options);
   }
   pathComponent(): string {
-    return `${this.name}/${this.get()}/`;
+    return zutil.joinPathComponents(this.name, this.get());
+    //return `${this.name}/${this.get()}`;
   }
   matches(s: string): boolean {
     return Boolean(this.options.values?.includes(s) || this.options.matches?.(s));

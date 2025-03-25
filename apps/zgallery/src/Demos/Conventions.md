@@ -16,6 +16,7 @@ To follow the source code, it's helpful to know some of the naming conventions t
   - ex: znumber, zboolean, zstring
 - Lowercase verb starting with 'z' = function on a ZType
   - ex: zget
+- SimpleXXX = string version of generic
 
 **Terminology:**
 

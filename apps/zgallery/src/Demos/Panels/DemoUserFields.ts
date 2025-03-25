@@ -1,7 +1,8 @@
 import { FormFieldSpecs, defaultFormValidator } from ":components";
 import { DemoUserRecord } from "./DemoUserRecord";
 
-export function demoUserFields(): FormFieldSpecs<DemoUserRecord> {
+// Note: validators might need to access the record being edited, so a record is passed in
+export function demoUserFields(record: DemoUserRecord): FormFieldSpecs<DemoUserRecord> {
   return {
     title: {
       label: "Title",

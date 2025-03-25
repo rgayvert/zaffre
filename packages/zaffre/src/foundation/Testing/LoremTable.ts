@@ -2,7 +2,7 @@ import { arrayAtom } from "../Atom";
 import { DateTimeFormatter } from "../Services";
 import { BooleanFormatter, NumericFormatter } from "../Support";
 import { zutil } from "../Util";
-import { booleanColumn, dateColumn, numericColumn, stringColumn } from "../Data";
+import { booleanColumn, dateColumn, numericColumn, stringColumn, TableColumnList, TableModelOptions } from "../Data";
 import { TableModel, TableColumn, TableColumns } from "../Data";
 import { lorem } from "./Lorem";
 
@@ -93,7 +93,7 @@ export const loremTable = {
       return makeColumn(index, zutil.camelCaseToWords(title), type);
     });
   },
-  tableRow: (columns: TableColumns<TRow>): TRow => {
+  tableRow: (columns: TableColumnList<TRow>): TRow => {
     return zutil.sequence(0, columns.length).map((i) => {
       const type = columns.at(i)?.subtype;
       if (type === "boolean") {
@@ -112,9 +112,9 @@ export const loremTable = {
       }
     });
   },
-  tableModel: (nrows: number, ncolumns: number): TableModel<TRow> => {
+  tableModel: (nrows: number, ncolumns: number, options: TableModelOptions = {}): TableModel<TRow> => {
     const columns = loremTable.tableColumns(ncolumns);
     const rows = zutil.sequence(0, nrows).map((_index) => loremTable.tableRow(columns));
-    return new TableModel(arrayAtom(rows), columns);
+    return new TableModel(arrayAtom(rows), columns, options);
   },
 };

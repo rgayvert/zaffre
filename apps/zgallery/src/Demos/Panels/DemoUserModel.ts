@@ -1,8 +1,31 @@
-import { stringColumn, LocalTableStore, TableRecordList, TableColumns, TableModel } from "zaffre";
+import { stringColumn, LocalTableStore, TableRecordList, TableColumns, TableModel, TableStore, TableColumnList } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 
+class UserDB {
+  user: TableStore<DemoUserRecord>;
+  constructor() {
+    this.user = new LocalTableStore("demo_user", DemoUserRecord);
+    this.addInitialRecord();
+  }
+  get allUsers(): TableRecordList<DemoUserRecord> {
+    const list = this.user.createRecordList();
+    this.user.getAll(list);
+    return list;
+  }
+  addInitialRecord(): void {
+    const list = this.user.createRecordList();
+    list.addAction((records) => {
+      if (records.length === 0) {
+        const record = new DemoUserRecord(this.user, "Mr", "John", "Smith", "john@smith.com", "123456", "Admin");
+        this.user.create(record);
+      }
+    });
+    this.user.getAll(list);
+  }
+}
+
 export class DemoUserModel {
-  store = new LocalTableStore("demo_user", DemoUserRecord);
+  db = new UserDB();
   columns = [
     stringColumn({
       title: "Name",
@@ -19,27 +42,12 @@ export class DemoUserModel {
       value: (r) => r.role,
       alignment: "left", 
     }),
-  ] as TableColumns<DemoUserRecord>;
-
-  get allUsers(): TableRecordList<DemoUserRecord> {
-    return this.store.getAllRecords();
-  }
-  addInitialRecord(): void {
-    const list = this.store.createRecordList();
-    list.addAction((records) => {
-      if (records.length === 0) {
-        const record = new DemoUserRecord(this.store, "Mr", "John", "Smith", "john@smith.com", "123456", "Admin");
-        this.store.create(record);
-      }
-    });
-    this.store.getAll(list);
-  }
+  ] as TableColumnList<DemoUserRecord>;
 
   userTableModel: TableModel<DemoUserRecord>;
 
   constructor() {
-    this.addInitialRecord();
-    this.userTableModel = new TableModel(this.allUsers, this.columns);
+    this.userTableModel = new TableModel(this.db.allUsers, this.columns);
   }
 
 }

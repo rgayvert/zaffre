@@ -1,10 +1,10 @@
-import { Atom, BasicAction, RecordEditor, atom, updateRecordFromEditor } from ":foundation";
+import { Atom, BasicAction, TabularRecord, atom, updateRecordFromEditor } from ":foundation";
 import { zget, zstring } from ":foundation";
 import { View, core, em, pct, defineComponentBundle } from ":core";
 import { mergeComponentOptions, BV, restoreOptions } from ":core";
 import { HStack, VStack, GridOptions, } from "../Layout";
 import { Button } from "../Controls";
-import { FormField, FormFieldCreators, FormFieldSpec, FormFieldSpecs } from "./FormField";
+import { FormField, FormFieldCreators, FormFields, FormFieldSpec, FormFieldSpecs } from "./FormField";
 import { DefaultFormFieldFns } from "./FormInputs";
 import { FormGrid, FormGridOptions } from "./FormGrid";
 
@@ -42,48 +42,52 @@ defineComponentBundle<FormOptions>("Form", "VStack", {
   width: pct(100),
 });
 
-export function Form<R>(
-  record: Atom<R>,
-  editor: RecordEditor<R>,
+export function Form<R extends TabularRecord>(
+  record: R,
   fields: FormFieldSpecs<R>,
   inOptions: BV<FormOptions> = {}
 ): View {
   const options = mergeComponentOptions("Form", inOptions);
-  options.model = [record, editor, fields];
+  options.tag = "form";
+
+  options.model = { 
+    record: record, 
+    fields: fields
+  };
 
   function reset(): void {
-    Object.values(fields).forEach((field) => (<FormField<unknown>>field).value?.resetToInitialValue());
+    Object.values(fields).forEach((field) => (<FormField<R>>field).value?.resetToInitialValue());
     options.validationOn?.set(false);
   }
   function cancel(): void {
-    reset();
+    //reset();
     options.cancelAction?.();
   }
   function allFieldsAreValid(): boolean {
-    return Object.values(fields).every((field) => (<FormFieldSpec<R>>field).isValid?.get());
+    return Object.values(fields).every((field) => (<FormField<R>>field).isValid?.get());
   }
   function submit(): void {
     options.validationOn?.set(true);
     if (allFieldsAreValid()) {
-      updateRecordFromEditor(editor, record.get());
+      updateRecordFromEditor(record);
       options.submitAction?.();
     }
   }
 
-  function ActionButton(label?: zstring, action?: BasicAction, disabled?: Atom<boolean>): View {
-    return Button({
+  function ActionButton(label?: zstring, action?: BasicAction, disabled?: Atom<boolean>): View | undefined {
+    return action ? Button({
       label: label,
       controlSize: "sm",
       rounding: core.rounding.pill,
       action: action,
       hidden: atom(() => !zget(label)),
       disabled: disabled,
-    });
+    }) : undefined;
   }
 
   return restoreOptions(
     VStack(options).append(
-      FormGrid(editor, fields, {
+      FormGrid(record, fields, {
         ...options.formGridOptions,
         validationOn: options.validationOn,
       }),

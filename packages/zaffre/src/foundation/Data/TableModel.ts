@@ -1,15 +1,17 @@
-import { ArrayAtom, Atom, atom, arrayAtom, zboolean, zget } from "../Atom";
-import { TableColumn, TableColumns } from "./TableColumn";
+import { css_color } from ":attributes";
+import { ArrayAtom, Atom, atom, arrayAtom, zboolean, zget, ZType, BasicAction } from "../Atom";
+import { reactiveAction, performAction } from "../Atom";
+import { ColumnSortDirection, TableColumn, TableColumnList } from "./TableColumn";
 
 //
 // A TableModel manages the rows and columns for a Table display. The rows are maintained as
 // a reactive list of records of type R, and the columns as a reactive list of TableColumns.
 // Each [row, column] cell of a table is modeled as a TableCell, and the list of all cells is
-// made available for the Table to feed to into a Grid. 
+// made available for the Table to feed to into a Grid.
 //
 
 export type SimpleTableModel<R> = TableModel<R>;
-export function simpleTableModel<R>(rows: R[], columns: TableColumns<R>): SimpleTableModel<R> {
+export function simpleTableModel<R>(rows: R[], columns: TableColumnList<R>): SimpleTableModel<R> {
   return new TableModel(arrayAtom(rows), columns);
 }
 
@@ -23,9 +25,18 @@ export class TableDataCell<R, S> extends TableCell {
   value: Atom<S>;
   constructor(public row: R, public column: TableColumn<R, S>) {
     super("data");
+
     this.value = atom(column.value(row));
+
+    // set up a reaction in case the value is an atom
+    const action = reactiveAction(() => this.value.set(this.column.value(this.row)));
+    performAction(action);
   }
 }
+
+export type AnyTableDataCell = TableDataCell<unknown, unknown>;
+export type AnyTableHeaderCell = TableHeaderCell<unknown, unknown>;
+
 export class TableHeaderCell<R, S> extends TableCell {
   constructor(public column: TableColumn<R, S>) {
     super("header");
@@ -41,6 +52,13 @@ export function isHeaderCell<R>(cell: TableCell): cell is TableHeaderCell<R, unk
 
 export interface TableModelOptions {
   selectableColumns?: zboolean;
+  includeHeader?: zboolean;
+  defaultSortColumn?: string;
+  defaultSortOrder?: ColumnSortDirection;
+  colorOfDataCell?: (cell: AnyTableDataCell) => css_color;
+  selectionTextColorOfDataCell?: (cell: AnyTableDataCell) => css_color;
+  headerSelectionColor?: css_color;
+  headerClickAction?: (cell: AnyTableHeaderCell) => void;
 }
 
 export class TableModel<R> {
@@ -51,16 +69,35 @@ export class TableModel<R> {
   updateAllOnChange = false;
   numRows = atom(0);
   numColumns = atom(0);
+  sortColumn?: TableColumn<R, unknown>;
+  columns: ArrayAtom<TableColumn<R, unknown>>;
+  selectedHeaderColumn: Atom<TableColumn<R, unknown> | undefined> = atom(undefined);
 
-  constructor(public rows: ArrayAtom<R>, public columns: TableColumns<R>, public options: TableModelOptions = {}) {
+  constructor(public rows: ArrayAtom<R>, public inColumns: TableColumnList<R>, public options: TableModelOptions = {}) {
+    this.options.includeHeader ??= true;
     this.cells = arrayAtom([]);
-    this.updateCells();
     this.rows.addAction(() => this.updateCells());
     this.selectedRow.addAction(() => this.rowSelectionChanged());
     this.selectedColumn.addAction(() => this.columnSelectionChanged());
-    if (!(this.columns instanceof ArrayAtom)) {
-      this.columns = arrayAtom(this.columns);
+    this.columns = inColumns instanceof ArrayAtom ? inColumns : arrayAtom(inColumns);
+    this.updateCells();
+
+    if (options.defaultSortColumn) {
+      this.sortColumn = this.columns.find((col) => col.title === options.defaultSortColumn);
+      if (this.sortColumn) {
+        this.sortColumn.sortDirection = options.defaultSortOrder || "asc";
+      }
     }
+  }
+
+  get numVisibleColumns(): number {
+    return this.columns.filter((column) => column.hidden?.get() !== true).length;
+  }
+  columnWithTitle(title: string): TableColumn<R, unknown> | undefined {
+    return this.columns.find((col) => col.title === title);
+  }
+  selectHeaderWithTitle(title: string): void {
+    this.selectedHeaderColumn.set(this.columnWithTitle(title));
   }
 
   // row & column selections are exclusive
@@ -78,7 +115,9 @@ export class TableModel<R> {
   }
 
   allCells(): TableCell[] {
-    return [...this.createHeaderCells(), ...this.createAllDataCells()];
+    return this.includeHeader 
+      ? [...this.createHeaderCells(), ...this.createAllDataCells()]
+      : this.createAllDataCells();
   }
   updateCells(): void {
     this.numRows.set(this.rows.length);
@@ -105,9 +144,12 @@ export class TableModel<R> {
   dataCells(): TableDataCell<R, unknown>[] {
     return <TableDataCell<R, unknown>[]>this.cells.filterWithGuard(isDataCell);
   }
-  sortOnColumn(column: TableColumn<R, unknown>): void {
+  sortOnColumn(column: TableColumn<R, unknown>, toggle = false): void {
     const compareFn = column.compareFn;
     if (compareFn) {
+      if (toggle) {
+        column.sortDirection = column.sortDirection === "asc" ? "desc" : "asc";
+      }
       const sortFactor = column.sortDirection === "desc" ? -1 : 1;
       this.rows.sort((r1, r2) => sortFactor * compareFn(column.value(r1), column.value(r2)));
       column.sortDirection = column.sortDirection === "desc" ? "asc" : "desc";
@@ -124,8 +166,16 @@ export class TableModel<R> {
   get maySelectColumns(): boolean {
     return Boolean(zget(this.options.selectableColumns));
   }
+  get includeHeader(): boolean {
+    return Boolean(zget(this.options.includeHeader));
+  }
 
   // Adding & deleting rows. When a row is added or removed, the data cells are updated.
+
+  addRowAndSort(newRow: R): void {
+    this.addRowAtEnd(newRow);
+    this.sortColumn && this.sortOnColumn(this.sortColumn);
+  }
   addRow(newRow: R, index: number): void {
     this.rows.insert(index, newRow);
   }

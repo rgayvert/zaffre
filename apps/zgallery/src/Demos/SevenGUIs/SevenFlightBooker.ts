@@ -1,5 +1,5 @@
 import { core, atom, Atom, em, ch } from "zaffre";
-import { Button, VStack, DropDownButton, TextInput, HStack, TextBox, View } from "zaffre";
+import { Button, VStack, SimpleDropDownButton, TextInput, HStack, TextBox, View } from "zaffre";
 import { FlightBookerModel } from "./SevenFlightBookerModel";
 
 const flightDirections = ["one-way flight", "return flight"];
@@ -37,7 +37,7 @@ export function SevenFlightBooker(): View {
 
   return HStack({ gap: core.space.s6 }).append(
     VStack(stackOptions).append(
-      DropDownButton(model.direction, flightDirections),
+      SimpleDropDownButton(model.direction, flightDirections),
       DateTextInput(model.startDate, atom(false)),
       DateTextInput(
         model.returnDate,

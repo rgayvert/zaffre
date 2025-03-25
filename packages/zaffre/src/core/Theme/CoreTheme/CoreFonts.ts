@@ -9,15 +9,15 @@ type CoreFontUse = "display" | "headline" | "title" | "label" | "body";
 
 type CoreFontSizes = [lineHeight: number, size: number, tracking: number, weight: number];
 
-function createFontFromMaterialSizes(family: string, sizes: CoreFontSizes): Font {
+function fontFromMaterialSizes(family: string, sizes: CoreFontSizes): Font {
   const [lineHeight, size, tracking, weight] = sizes;
   return new Font(family, size, "normal", weight, zutil.roundTo(lineHeight / size, 2), tracking);
 }
 
 function addCoreFonts(map: Map<string, Font>, use: CoreFontUse, family: string, large: CoreFontSizes, medium: CoreFontSizes, small: CoreFontSizes): void {
-  map.set(`${use}_large`, createFontFromMaterialSizes(family, large));
-  map.set(`${use}_medium`, createFontFromMaterialSizes(family, medium));
-  map.set(`${use}_small`, createFontFromMaterialSizes(family, small));
+  map.set(`${use}_large`, fontFromMaterialSizes(family, large));
+  map.set(`${use}_medium`, fontFromMaterialSizes(family, medium));
+  map.set(`${use}_small`, fontFromMaterialSizes(family, small));
 }
 
 

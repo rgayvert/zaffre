@@ -1,4 +1,4 @@
-import { Atom, GridArea } from ":foundation";
+import { Atom, GridArea, ZType } from ":foundation";
 import { View } from ":core";
 
 //
@@ -19,18 +19,24 @@ export type FormFieldValidator<T> = (field: FormField<T>) => string;
 export type FormFieldSpec<T> = {
   type: string;
   label: string;
-  gridArea: GridArea;
+  firstFocus?: boolean;
+  gridArea?: GridArea;
   view?: View;
   value?: Atom<T>;
   isValid?: Atom<boolean>;
   initialValue?: T;
   validators?: FormFieldValidator<T>[];
   validationOn?: Atom<boolean>;
+  openAction?: (s: string) => void;
   choices?: string[];
+  objects?: ZType<Iterable<T>>;
+  objectTitleFn?: (t: T) => string;
 };
 export type FormFieldSpecs<R> = Omit<Partial<{
   [P in keyof R]: FormFieldSpec<unknown>;
 }>, "recordID">;
+
+export type FormFieldSpecFn<R> = (record: R) => FormFieldSpecs<R>;
 
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 

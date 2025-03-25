@@ -43,7 +43,7 @@ export class ToDoModel {
     this.setStore(
       storeName === "Local"
         ? new LocalTableStore("todo", ToDoRecord)
-        : new FetchTableStore(this.remoteStore(), ToDoRecord, this.ex)
+        : new FetchTableStore(this.remoteStore(), ToDoRecord, { ex: this.ex })
     );
   }
   itemMatchesCurrentFilter(record: ToDoRecord): boolean {

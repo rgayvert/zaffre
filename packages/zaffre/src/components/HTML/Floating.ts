@@ -1,5 +1,5 @@
-import { atom, Atom, incrementAtom, decrementAtom, zutil, zboolean } from ":foundation";
-import { HTMLOptions, css, View, beforeAddedToDOM, core, windowWidth, ZWindow, BV, restoreOptions } from ":core";
+import { atom, Atom, incrementAtom, decrementAtom, zutil, zboolean, Point2D, point2D } from ":foundation";
+import { HTMLOptions, css, View, beforeAddedToDOM, core, ZWindow, BV, restoreOptions } from ":core";
 import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
@@ -22,7 +22,8 @@ export interface FloatingOptions extends BoxOptions {
   clickThrough?: boolean; // should outside click be propagated?
   showOnReferenceClick?: boolean;
   showOnReferenceHover?: boolean;
-  showOn?: zboolean;
+  toggleOnReferenceEnter?: boolean;
+  showAt?: Atom<Point2D | undefined>;
   hideOnWindowResize?: zboolean;
 }
 defineComponentBundle<FloatingOptions>("Floating", "Box", {
@@ -32,7 +33,7 @@ defineComponentBundle<FloatingOptions>("Floating", "Box", {
   dismissOnEscape: true,
   clickThrough: false,
   showOnReferenceClick: true, // TODO: turn this into a Handler on the reference
-  width: "fit-content",
+  //width: "fit-content",
   position: "absolute",
   content: css("_"),
   floating: true,
@@ -55,7 +56,8 @@ export function Floating(enclosedView: View, inOptions: BV<FloatingOptions> = {}
 
   options.name = enclosedOptions.componentName;
 
-  options.elevation = 3;
+  // TODO: unclear whether elevation option is properly passed down
+  options.elevation = 1;
   options = {
     ...options,
     ...zutil.extractOptions(enclosedOptions, ["place", "placement", "effects", "elevation"]),
@@ -63,7 +65,8 @@ export function Floating(enclosedView: View, inOptions: BV<FloatingOptions> = {}
   options.hidden = enclosedOptions.hidden || atom(true);
   enclosedOptions.hidden = options.hidden;
   enclosedOptions.pointerEvents = "auto";
-  enclosedOptions.elevation = 3;
+  enclosedOptions.elevation = options.elevation;
+  //enclosedOptions.elevation = 3;
 
   beforeAddedToDOM(options, (view: View): void => {
     view.addIntersectionAction((visible) => visibilityChanged(visible));
@@ -83,8 +86,38 @@ export function Floating(enclosedView: View, inOptions: BV<FloatingOptions> = {}
     } else if (options.showOnReferenceClick) {
       view.referenceView.addOptionEvents({ click: () => options.hidden?.set(false) });
     }
+    if (options.toggleOnReferenceEnter) {
+      view.addOptionEvents({
+        keyDown: (evt) => {
+          if (evt.key === "Enter" || evt.key === "Escape") {
+            view.referenceView.focus();
+          }
+        }
+      })
+      view.referenceView.addOptionEvents({ keyDown: (evt) => {
+        if (evt.key === "Enter") {
+          options.hidden?.set(!options.hidden.get());
+        }
+      }});
+    }
     if (options.hideOnWindowResize) {
       ZWindow.instance.addWindowResizeAction(() => options.hidden?.set(true));
+    }
+    if (options.showAt) {
+      //options.placement = { referencePt: point2D(0, 0) }, 
+      options.hidden?.addAction((b) => {
+        b && options.showAt?.set(undefined);
+      });
+      options.showAt.addAction((pt) => {
+        console.log("showing menu at "+pt!.toString());
+        if (pt) {
+          options.hidden?.set(false);
+          //view.options.placement = { referencePt: pt };
+          //view.place();
+        } else {
+          options.hidden?.set(true);
+        }
+      });
     }
   });
 

@@ -1,4 +1,4 @@
-import { zget, App, AppContext, ZStyleSheet, zstring, AppOptions } from "zaffre";
+import { zget, App, AppContext, ZStyleSheet, zstring, AppOptions, pollAtom } from "zaffre";
 import { DayJS, DomPurify, HighlightJS, MarkdownIt } from ":services";
 import { Gallery } from "../Views";
 
@@ -10,6 +10,7 @@ import { Gallery } from "../Views";
 const galleryOptions: AppOptions = {
   googleFonts: ["Roboto Mono", "Sofia", "Material+Symbols+Outlined", "Material+Icons", "PT Sans Narrow"],
   codicons: true,
+  errorPath: "demos/errorpage",
 };
 
 export class GalleryApp extends App {
@@ -51,3 +52,5 @@ export class GalleryApp extends App {
     );
   }
 }
+
+

@@ -1,21 +1,23 @@
-import { Atom, zstring, zget, BasicAction, AtomOptions } from "./Atom";
+import { Atom, zstring, zget, AtomOptions } from "./Atom";
 import { zlog, ContentSecurity } from "../Util";
+import { ResponseAtom, responseAtom, ResponseStatus } from "./ResponseAtom";
 
 //
-// A FetchAtom encapsulates the interactions involved in retrieving a value through the Fetch API. 
+// A FetchAtom encapsulates the interactions involved in retrieving a value through the Fetch API.
 //
-// TODO: 
+// TODO:
 //  - improve error handling
 //
 
 export interface FetchOptions<T> extends AtomOptions {
-  action?: BasicAction, 
-  //errorValue?: ZType<T>,
-  getInitialValue?: boolean,
+  getInitialValue?: boolean;
+  timeout?: number;
+  valid?: (val: T) => boolean;
 }
 
-
 export abstract class FetchAtom<T> extends Atom<T> {
+
+  response = responseAtom();
 
   constructor(public url: zstring, initialValue: T, public options: FetchOptions<T>) {
     options = { getInitialValue: true, ...options };
@@ -30,22 +32,37 @@ export abstract class FetchAtom<T> extends Atom<T> {
   }
   abstract extractValue(response: Response): Promise<T>;
 
+  logBadStatus(status: ResponseStatus, msg: string): void {
+    this.response.errorMessage = msg;
+    zlog.info(msg);
+    this.response.set(status);
+  }
+
+  resolve(): ResponseAtom {
+    this.getValue();
+    return this.response;
+  }
+
   async getValue(): Promise<void> {
+    let response;
     try {
       const path = zget(this.url);
       if (path) {
-        const response = await ContentSecurity.fetch(path);
+        response = await ContentSecurity.fetch(path);
         if (response.ok) {
-          this.set(await this.extractValue(response));
-          this.options.action?.();
+          const val = await this.extractValue(response);
+          this.set(val);
+          if (this.options.valid && !this.options.valid(val)) {
+            this.logBadStatus("invalid", "invalid data");
+          } else {
+            this.response.set("ok");
+          }
         } else {
-          zlog.warn("failed to fetch " + zget(this.url));
-          //this.options.errorValue && this.set(zget(this.options.errorValue));
+          this.logBadStatus("failed", response.statusText);
         }
       }
     } catch (e) {
-      zlog.warn("failed to fetch " + zget(this.url));
-      //this.options.errorValue && this.set(zget(this.options.errorValue));
+      this.logBadStatus("failed", `failed to fetch ${zget(this.url)}`);
     }
   }
 }
@@ -76,4 +93,3 @@ export class FetchBlobAtom extends FetchAtom<Blob> {
     return response.blob();
   }
 }
-

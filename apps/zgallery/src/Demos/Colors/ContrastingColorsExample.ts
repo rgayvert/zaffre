@@ -1,4 +1,4 @@
-import { atom, core, TextLabel, VStack, View, Button, DropDownButton, ch, Spacer } from "zaffre";
+import { atom, core, TextLabel, VStack, View, Button, DropDownButton, ch, Spacer, SimpleDropDownButton } from "zaffre";
 import { relativeLuminance, zutil, HStack, Atom, Color, zstring, ColorToken, FontToken } from "zaffre";
 import { ColorSelector } from "./ColorSelector";
 import { ContrastingColorsModel } from "./ContrastingColorsModel";
@@ -44,7 +44,7 @@ export function ContrastingColorsExample(): View {
     // constrols to automatically adjust the fg/bs to attempt to achieve the target contrast level
     HStack({ gap: core.space.s5 }).append(
       TextLabel("Target Contrast:", { font: core.font.title_medium }),
-      DropDownButton(model.targetContrast, model.targetChoices, { width: ch(10) }),
+      SimpleDropDownButton(model.targetContrast, model.targetChoices, { width: ch(10) }),
       Button({ label: "Adjust BG", action: () => model.adjustBackground(), rounding: core.rounding.pill }), 
       Button({ label: "Adjust FG", action: () => model.adjustForeground(), rounding: core.rounding.pill })  
     )

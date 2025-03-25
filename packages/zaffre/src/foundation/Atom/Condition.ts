@@ -17,6 +17,7 @@ export class Condition extends DerivedAtom<boolean> {
   performActionsAndDerivations(): void {
     if (this.val) {
       super.performActionsAndDerivations();
+      this.val = false;
     }
   }
 }

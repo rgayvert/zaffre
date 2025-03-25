@@ -9,6 +9,8 @@ import { Input, InputOptions, InputType } from "../Content";
 // between the native string value and the desired value type.
 //
 
+// TODO: use autofocus instead of firstFocus
+
 export interface TextInputOptions extends InputOptions {
   firstFocus?: zboolean;
   setOnInput?: zboolean;

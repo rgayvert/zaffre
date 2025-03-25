@@ -1,23 +1,26 @@
-import { atom, core, recordEditor, Form, pct, View, FormOptions } from "zaffre";
+import { atom, core, Form, pct, View, FormOptions, FormField, zlog } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 import { demoUserFields } from "./DemoUserFields";
 
 export function BasicFormExample(): View {
-  const record = atom(new DemoUserRecord(undefined));
-  const editor = recordEditor(record.get());
+  const record = new DemoUserRecord(undefined);
   const validationOn = atom(false);
+  function fieldChanged(field: FormField<unknown>): void {
+    zlog.info("fieldValueChanged: "+field.label+" = "+field.value.get());
+  }
   const opts: FormOptions = {
     width: pct(90),
-    submitAction: () => alert(JSON.stringify(record.get())),
+    submitAction: () => alert(JSON.stringify(record.editableEntries())),
     validationOn: validationOn,
     formGridOptions: {
       labelBoxOptions: {
         textLabelOptions: {
-          color: core.color.green
-        }
-      }
-    }
+          color: core.color.green,
+        },
+      },
+      onChange: (field) => fieldChanged(field),
+    },
   };
 
-  return Form(record, editor, demoUserFields(), opts);
+  return Form(record, demoUserFields(), opts);
 }

@@ -1,4 +1,4 @@
-import { Box, View, Ensemble, RouteAtom, EnsembleOptions } from "zaffre";
+import { Box, View, Ensemble, RouteAtom, EnsembleOptions, zlog } from "zaffre";
 import { core, pct } from "zaffre";
 import { DOMInspector, DOMInspectorOptions } from "../DOMInspector";
 import { DemoSourceView } from "../DemoSourceView";
@@ -13,6 +13,7 @@ export function DemoBoxEnsemble(
   fullPage: boolean
 ): View {
   function DemoComponent(key: string): View {
+    //zlog.info("DemoComponent: "+key);
     if (key === "dom") {
       const domOptions: DOMInspectorOptions = fullPage
         ? { height: pct(100), maxHeight: undefined, borderBottom: core.border.thin }

@@ -1,4 +1,4 @@
-import { atom, zget, ToggleAtom } from ":foundation";
+import { atom, zget, ToggleAtom, Atom } from ":foundation";
 import { css_color, calcDiv, calcSub, css_background, px, em, View, addOptionEvents, BV, restoreOptions } from ":core";
 import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
@@ -27,10 +27,10 @@ defineComponentBundle<SwitchOptions>("Switch", "Box", {
   circleColor: core.color.white,
 });
 
-export function Switch(value: ToggleAtom, inOptions: BV<SwitchOptions> = {}): View {
+export function Switch(value: Atom<boolean>, inOptions: BV<SwitchOptions> = {}): View {
   const options = mergeComponentOptions("Switch", inOptions);
 
-  addOptionEvents(options, { click: (): void => value.toggle() });
+  addOptionEvents(options, { click: (): void => value.set(!value.get()) });
   options.background = atom(() => (zget(value) ? zget(options.backgroundOn)! : zget(options.backgroundOff)!));
   options.width = em(options.widthInEm!);
   const diameter = calcDiv(options.width, 2);

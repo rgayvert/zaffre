@@ -1,4 +1,4 @@
-import { core, View, VStack, pct, px, em, DropDownButton, Spacer, ch, zutil } from "zaffre";
+import { core, View, VStack, pct, px, em, Spacer, ch, zutil, SimpleDropDownButton } from "zaffre";
 import { transitions, TextLabelOptions, HStack } from "zaffre";
 import { Button, TextLabel, Switch, App } from "zaffre";
 import { GalleryModel, galleryThemeNames } from "../Model";
@@ -45,19 +45,19 @@ export function GallerySettings(model: GalleryModel): View {
     HStack({ background: core.color.inherit }).append(
       TextLabel("Theme: ", textLabelOptions),
       Spacer(1),
-      DropDownButton(model.currentThemeName, galleryThemeNames)
+      SimpleDropDownButton(model.currentThemeName, galleryThemeNames)
     ),
     HStack({ alignItems: "center", background: core.color.inherit }).append(
       TextLabel("Contrast: ", textLabelOptions),
       Spacer(1),
-      DropDownButton(model.contrast, zutil.sequence(2, 16, 0.5).map((c) => zutil.printRoundedTo(c, 1)))
+      SimpleDropDownButton(model.contrast, zutil.sequence(2, 16, 0.5).map((c) => zutil.printRoundedTo(c, 1)))
     ),
 
     HStack({ background: core.color.inherit }).append(TextLabel("Fluid Fonts:", textLabelOptions), Spacer(1), Switch(App.fluidFonts)),
     HStack({ background: core.color.inherit }).append(
       TextLabel("Log level:", textLabelOptions),
       Spacer(1),
-      DropDownButton(model.logLevel, model.logLevels)
+      SimpleDropDownButton(model.logLevel, model.logLevels)
     ),
     Spacer(em(2)),
     Button({

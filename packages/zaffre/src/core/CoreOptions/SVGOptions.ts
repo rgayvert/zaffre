@@ -1,4 +1,4 @@
-import { zstring } from ":foundation";
+import { zstring, ZType } from ":foundation";
 import { css_cursor, css_display, css_clipPath, css_color } from "../Attributes";
 import { View } from ":view";
 
@@ -21,7 +21,7 @@ export type SVGSpreadMethod = "pad" | "reflect" | "repeat";
 
 type url_string = string;
 
-export type SVGPaint = css_color | "context-fill" | "context-stroke" | "none" | url_string | View;
+export type SVGPaint = ZType<css_color | "context-fill" | "context-stroke" | "none" | url_string | View>;
 
 export type SVGMarkerRef = zstring | View; // "url(#[def id])"
 

@@ -1,12 +1,12 @@
 import { zutil } from "../Util";
-import { Atom, AtomOptions } from "./Atom";
+import { Atom, AtomOptions, DerivedAtom } from "./Atom";
 
 //
 // An ArrayAtom is a generic reactive array that provides most of the functionality of an
 // array without having to use get(). For example, if val is an ArrayAtom<T>, then val.length
 // returns the length of the internal array, and val.at(0) returns first value.
 //
-// TODO: 
+// TODO:
 //  - try to generalize array handling to use something like ZArrayLike
 //  - maybe interface ZArrayLike<T> { length: number; at(n: number): T }
 //  - this would work for ArrayAtom<T> and T[], but not ZType<T[]>
@@ -18,9 +18,13 @@ export type ZArray<T> = T[] | ArrayAtom<T>;
 export function arrayAtom<T>(initialContents: T[], options: ArrayAtomOptions = {}): ArrayAtom<T> {
   return new ArrayAtom(initialContents, options);
 }
+export function emptyArrayAtom<T>(): ArrayAtom<T> {
+  return arrayAtom<T>([]);
+}
 
 export interface ArrayAtomOptions extends AtomOptions {
   maxLength?: number;
+  sortFn?: (a: any, b: any) => number;
 }
 
 export class ArrayAtom<T> extends Atom<T[]> {
@@ -32,6 +36,9 @@ export class ArrayAtom<T> extends Atom<T[]> {
 
   get length(): number {
     return this.get().length;
+  }
+  set(newVals: T[]): void {
+    super.set(this.options.sortFn ? newVals.sort(this.options.sortFn) : newVals);
   }
   clear(): void {
     this.set([]);
@@ -49,13 +56,13 @@ export class ArrayAtom<T> extends Atom<T[]> {
     this.set(newVal);
   }
   pushNew(...values: T[]): void {
-    const newValues = [...this.get()];
+    let newValues = [...this.get()];
     values.forEach((val) => !newValues.includes(val) && newValues.push(val));
     if (newValues.length > this.length) {
       this.set(newValues);
     }
   }
-  
+
   delete(value: T): void {
     this.set(this.get().filter((v) => v !== value));
   }
@@ -65,7 +72,7 @@ export class ArrayAtom<T> extends Atom<T[]> {
     this.set(newContents);
   }
   insert(index: number, val: T): void {
-    const newContents = [...this.get()];
+    let newContents = [...this.get()];
     newContents.splice(index, 0, val);
     this.set(newContents);
   }
@@ -78,7 +85,6 @@ export class ArrayAtom<T> extends Atom<T[]> {
   filterWithGuard<U extends T>(pred: (a: T) => a is U): U[] {
     return this.get().filter(pred);
   }
-
 
   sort(compareFn?: (a: T, b: T) => number): void {
     this.set([...this.get().sort(compareFn)]);
@@ -109,6 +115,9 @@ export class ArrayAtom<T> extends Atom<T[]> {
   findIndex(predicate: (value: T, index: number, obj: T[]) => unknown): number {
     return this.get().findIndex(predicate);
   }
+  findLast(predicate: (value: T, index: number, obj: T[]) => unknown): T | undefined {
+    return this.get().findLast(predicate);
+  }
   includes(obj: T): boolean {
     return this.get().includes(obj);
   }
@@ -127,9 +136,6 @@ export class ArrayAtom<T> extends Atom<T[]> {
 
   spliceOne(index: number, value: T): void {
     this.splice(index, 1, value);
-    // const newContents = [...this.get()];
-    // newContents.splice(index, 1, value);
-    // this.set(newContents);
   }
   replace(oldValue: T, newValue: T): void {
     const index = this.indexOf(oldValue);
@@ -138,7 +144,7 @@ export class ArrayAtom<T> extends Atom<T[]> {
     }
   }
 
-  slice(start = 0, end = 0): ArrayAtom<T> {
+  slice(start = 0, end = this.length): ArrayAtom<T> {
     return new ArrayAtom(this.get().slice(start, end));
   }
   min(fn: (val: T) => number): number {
@@ -156,8 +162,7 @@ export class ArrayAtom<T> extends Atom<T[]> {
     let index = 0;
     const r = this.get();
     while (index < r.length) {
-        yield r[index++];
+      yield r[index++];
     }
-}
-
+  }
 }

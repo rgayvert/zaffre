@@ -1,17 +1,6 @@
 import { zget, atom, Atom, ZType, setAtom, RouteAtom, SetAtom } from ":foundation";
-import {
-  App,
-  routeChanged,
-  afterAddedToDOM,
-  pct,
-  ChildCreator,
-  ChildModifier,
-  View,
-  VList,
-  BV,
-  restoreOptions,
-  restoreVListOptions,
-} from ":core";
+import { routeChanged, afterAddedToDOM, pct, ChildCreator, ChildModifier } from ":core";
+import { View, VList, BV, restoreOptions, restoreVListOptions } from ":core";
 import { defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "../HTML";
 import { ViewList } from "./ViewList";
@@ -36,7 +25,7 @@ export interface EnsembleOptions extends BoxOptions {
   mode?: ZType<EnsembleMode>;
   childModifier?: ChildModifier<string>;
   preloadList?: string[];
-  //noCache?: boolean;
+  reloadList?: string[];
 }
 defineComponentBundle<EnsembleOptions>("Ensemble", "Box", {
   mode: "lazy",
@@ -54,12 +43,11 @@ export function Ensemble(
   inOptions: BV<EnsembleOptions> = {}
 ): View {
   const options = mergeComponentOptions("Ensemble", inOptions);
-  options.model = currentKey;
+  options.model ??= currentKey;
   if (currentKey instanceof RouteAtom) {
     afterAddedToDOM(options, (view: View): void => {
       view.routePoint = currentKey;
-      currentKey.addAction(() => routeChanged(view.findRoutePath()));
-      App.instance.router.checkEnsemble(view);
+      currentKey.addAction(() => routeChanged(view.fullRoutePath()));
     });
   }
 
@@ -84,8 +72,11 @@ export function SelectionEnsemble(
 
   return restoreVListOptions(ViewEnsemble(keys, currentKey, childCreator, options));
 }
-function addToPool(pool: SetAtom<string>, key: string): void {
-  pool.add(key);
+function addToPool(pool: SetAtom<string>, newKey: string, previousKey: string, reloadList: string[]): void {
+  if (reloadList.includes(previousKey)) {
+    pool.delete(previousKey);
+  }
+  pool.add(newKey);
 }
 function ViewEnsemble(
   keys: ZType<string[]>,
@@ -97,14 +88,15 @@ function ViewEnsemble(
   // Allow the view list data to be extended by making it a set to which gets each key is added when requested. So it typically starts
   // with a single value, then grows.
   const pool = setAtom(zget(keys) || []);
+  const reloadList = options.reloadList || [];
+
   if (options.mode === "single") {
     currentKey.addAction((key) => {
       pool.clear();
       pool.add(key);
     });
   } else {
-    //currentKey.addAction((key) => pool.add(key));
-    currentKey.addAction((key) => addToPool(pool, key));
+    currentKey.addAction((key) => addToPool(pool, key, currentKey.previousVal || "", reloadList));
   }
 
   return restoreVListOptions(

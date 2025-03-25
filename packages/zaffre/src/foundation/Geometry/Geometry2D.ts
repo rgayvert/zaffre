@@ -82,7 +82,9 @@ export class Point2D {
     return point2D(zutil.roundTo(this.x, places), zutil.roundTo(this.y, places));
   }
   clampToRect(rect?: Rect2D): Point2D {
-    return rect ? point2D(zutil.clamp(this.x, rect.left, rect.right), zutil.clamp(this.y, rect.top, rect.bottom)) : this;
+    return rect
+      ? point2D(zutil.clamp(this.x, rect.left, rect.right), zutil.clamp(this.y, rect.top, rect.bottom))
+      : this;
   }
   dotProduct(v: Point2D): number {
     return this.x * v.x + this.y * v.y;
@@ -94,7 +96,19 @@ export class Point2D {
     return this.dotProduct(this);
   }
   rotatedBy(theta: number): Point2D {
-    return point2D(this.x * Math.cos(theta) - this.y * Math.sin(theta), this.y * Math.cos(theta) + this.x * Math.sin(theta));
+    return point2D(
+      this.x * Math.cos(theta) - this.y * Math.sin(theta),
+      this.y * Math.cos(theta) + this.x * Math.sin(theta)
+    );
+  }
+  reflectX(): Point2D {
+    return point2D(-this.x, this.y);
+  }
+  reflectY(): Point2D {
+    return point2D(this.x, -this.y);
+  }
+  reflected(): Point2D {
+    return point2D(-this.x, -this.y);
   }
   extent(extent: Size2D): Rect2D {
     return rect2D(this.x, this.y, extent.width, extent.height);
@@ -102,7 +116,6 @@ export class Point2D {
   corner(extent: Size2D): Rect2D {
     return rect2D(this.x, this.y, this.x + extent.width, this.y + extent.height);
   }
-
   angle(): number {
     return Math.atan2(-this.y, this.x);
   }
@@ -295,7 +308,27 @@ export class Rect2D {
     return Rect2D.fromArray(this.toArray().map((u) => zutil.roundTo(u, places)));
   }
   intersects(rect: Rect2D): boolean {
-    return this.origin.x <= rect.corner.x && this.corner.x >= rect.origin.x && this.origin.y <= rect.corner.y && this.corner.y >= rect.origin.y;
+    return (
+      this.origin.x <= rect.corner.x &&
+      this.corner.x >= rect.origin.x &&
+      this.origin.y <= rect.corner.y &&
+      this.corner.y >= rect.origin.y
+    );
+  }
+  extendBottom(delta: number): Rect2D {
+    return rect2D(this.x, this.y, this.width, this.height + delta);
+  }
+  extendTop(delta: number): Rect2D {
+    return rect2D(this.x, this.y - delta, this.width, this.height + delta);
+  }
+  extendLeft(delta: number): Rect2D {
+    return rect2D(this.x - delta, this.y, this.width + delta, this.height);
+  }
+  extendRight(delta: number): Rect2D {
+    return rect2D(this.x, this.y, this.width + delta, this.height);
+  }
+  expandBy(delta: number): Rect2D {
+    return rect2D(this.x - delta, this.y - delta, this.width + delta * 2, this.height + delta * 2);
   }
 }
 
@@ -304,9 +337,11 @@ export class Polygon2D {
     return new Polygon2D([]);
   }
   static fromRotatedRect(width: number, height: number, theta: number): Polygon2D {
-    return new Polygon2D([point2D(0, 0), point2D(width, 0), point2D(width, height), point2D(0, height)].map((pt) => pt.rotatedBy(theta)));
+    return new Polygon2D(
+      [point2D(0, 0), point2D(width, 0), point2D(width, height), point2D(0, height)].map((pt) => pt.rotatedBy(theta))
+    );
   }
-  
+
   constructor(public points: Point2D[]) {}
   toString(): string {
     return `<${this.points.map((pt) => pt.toString()).join(",")}>`;
@@ -360,9 +395,7 @@ export function createLineFromSlopeAndIntercept(m: number, b: number): Line2D {
 // Line2D is a linear expression of the form ax + by + c = 0
 
 export class Line2D {
-  constructor(public a: number, public b: number, public c: number) {
-
-  }
+  constructor(public a: number, public b: number, public c: number) {}
   get slope(): number {
     return -this.a / this.b;
   }
@@ -373,20 +406,33 @@ export class Line2D {
     return -this.c / this.a;
   }
 }
-export function Segment2D(startPt: Point2D, endPt: Point2D): LineSegment2D {
+export function lineSegment2D(startPt: Point2D, endPt: Point2D): LineSegment2D {
   return new LineSegment2D(startPt.x, startPt.y, endPt.x, endPt.y);
 }
 export class LineSegment2D {
   @lazyinit public static get emptySegment(): LineSegment2D {
     return new LineSegment2D(0, 0, 0, 0);
   }
-  constructor(public x1: number, public y1: number, public x2: number, public y2: number) {
-  }
+  constructor(public x1: number, public y1: number, public x2: number, public y2: number) {}
   get startPt(): Point2D {
     return point2D(this.x1, this.y1);
   }
+  at(position: number): Point2D {
+    const v = vector2D(this.endPt.x - this.startPt.x, this.endPt.y - this.startPt.y);
+    return v.scalarMultiply(position).add(this.startPt);
+  }
+  toString(): string {
+    return `[${this.startPt.toString()}, ${this.endPt.toString()}]`;
+  }
+  get midPt(): Point2D {
+    return this.at(0.5);
+  }
+
   get endPt(): Point2D {
     return point2D(this.x2, this.y2);
+  }
+  length(): number {
+    return Math.sqrt((this.x2 - this.x1) ** 2 + (this.y2 - this.y1) ** 2);
   }
   angle(): number {
     return vector2D(this.x2 - this.x1, this.y2 - this.y1).angle();
@@ -394,36 +440,57 @@ export class LineSegment2D {
   extendToY(y: number): LineSegment2D {
     const q1 = this.startPt;
     const q2 = this.endPt;
+    if (q1.x === q2.x) {
+      // vertical line
+      return lineSegment2D(q1, point2D(q1.x, y));
+    }
     const m = (q2.y - q1.y) / (q2.x - q1.x);
     const b = q1.y - m * q1.x;
     const x = (y - b) / m;
-    return Segment2D(this.startPt, point2D(x, y));
+    return lineSegment2D(q1, point2D(x, y));
+  }
+
+  extendBy(delta: number): LineSegment2D {
+    const q1 = this.startPt;
+    const q2 = this.endPt;
+    if (q1.x === q2.x) {
+      // vertical line
+      const d = q1.y < q2.y ? delta : -delta;
+      return lineSegment2D(q1, point2D(q1.x, q2.y + d));
+    }
+    const dx = q2.x - q1.x;
+    const dy = q2.y - q1.y;
+    const theta = Math.atan2(dy, dx);
+    const d = Math.sqrt(dx * dx + dy * dy) + delta;
+    const pt2 = point2D(d * Math.cos(theta), d * Math.sin(theta)).add(q1);
+    return lineSegment2D(q1, pt2);
+  }
+
+  offsetEndPt(dx = 0, dy = 0): LineSegment2D {
+    return lineSegment2D(this.startPt, this.endPt.add(point2D(dx, dy)));
+  }
+  offsetStartPt(dx = 0, dy = 0): LineSegment2D {
+    return lineSegment2D(this.startPt.add(point2D(dx, dy)), this.endPt);
   }
 }
-
 
 export class Path2D {
   @lazyinit public static get emptyPath(): Path2D {
     return new Path2D([]);
   }
-  constructor(public points: Point2D[]) {
-
-  }
-
+  constructor(public points: Point2D[]) {}
 }
 
 export class Circle2D {
   @lazyinit public static get emptyCircle(): Circle2D {
     return new Circle2D(point2D(0, 0), 0);
   }
-  constructor(public center: Point2D, public radius: number) {
-  }
+  constructor(public center: Point2D, public radius: number) {}
 }
 
 export class Ellipse2D {
   @lazyinit public static get emptyEllipse(): Ellipse2D {
     return new Ellipse2D(point2D(0, 0), 0, 0);
   }
-  constructor(public center: Point2D, public radiusX: number, public radiusY: number) {
-  }
+  constructor(public center: Point2D, public radiusX: number, public radiusY: number) {}
 }

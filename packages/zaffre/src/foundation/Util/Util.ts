@@ -3,6 +3,29 @@
 // zutil - a collection of utility functions
 //
 
+
+// export async function waitWithTimeout<R>(fn: () => R | undefined, timeout: number, interval: number): Promise<unknown> {
+//   function doTaskOnce(): R | undefined {
+//     const val = fn();
+//     if (val) {
+//       return val;
+//     } else {
+//       setTimeout(() => doTaskOnce(), interval);
+//     }
+//   }
+//   function doTask(): Promise<R | undefined> {
+//     return new Promise((resolve, reject) => {
+//       setTimeout(() => resolve(doTaskOnce()), interval)
+//     });
+//   }
+//   const timeoutPromise = new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       resolve(undefined);
+//     }, timeout);
+//   });
+//   return await Promise.race([doTask(), timeoutPromise]);
+// }
+
 export const zutil = {
   // return an object containing all of the entries in a given object with values that are not undefined
   withoutUndefinedValues: (obj: any): any => {
@@ -69,6 +92,11 @@ export const zutil = {
       .randomSequence(0, a.length)
       .slice(0, N)
       .map((i) => a[i]);
+  },
+  // create a random base-64 encoded string; length should be < 16
+  randomBase64Identifier(length = 11): string {
+    const len = zutil.clamp(length, 1, 15);
+    return btoa(Math.random().toString(36).slice(2)).slice(0, len - 16);
   },
   // break up an array into chunks of a given size (the last chunk may be smaller)
   chunk<T>(a: T[], chunkSize: number): T[][] {
@@ -146,6 +174,9 @@ export const zutil = {
       [array[i], array[j]] = [array[j], array[i]];
     }
   },
+  difference: <T>(array1: T[], array2: T[]): T[] => {
+    return array1.filter((val) => !array2.includes(val));
+  },
 
   mergeOptions: (oldOpts: any, newOpts: any): any => {
     const answer = { ...oldOpts };
@@ -195,6 +226,13 @@ export const zutil = {
   },
 
   /*
+   * Set
+   */
+  addAllToSet<T>(set: Set<T>, values: T[]): void {
+    values.forEach((val) => set.add(val));
+  },
+
+  /*
    * String
    */
   firstLine: (text: string): string => {
@@ -226,6 +264,14 @@ export const zutil = {
   isWhitespace: (ch: string): boolean => {
     return /\s/.test(ch);
   },
+  isLowerCase(ch: string) {
+    return ch === ch.toLowerCase() && ch !== ch.toUpperCase();
+  },
+  isUpperCase(ch: string) {
+    return ch === ch.toUpperCase() && ch !== ch.toLowerCase();
+  },
+
+
   isBracketedBy: (str: string, twoCharString: string): boolean => {
     return str.startsWith(twoCharString[0]) && str.endsWith(twoCharString[1]);
   },
@@ -315,16 +361,20 @@ export const zutil = {
     console.log(`[error]`, ...msg);
   },
 
-  formatSeconds: (seconds: number, includeMillis = false): string => {
+  formatSeconds: (seconds: number, milliDigits = 0): string => {
+    // in the boundary case where rounding the fractional part is greater than 1, round seconds up
+    if (seconds % 1 + 5 / 10 ** (milliDigits + 1) > 1) {
+      seconds = Math.floor(seconds + 1); 
+    }
     const day = Math.floor(seconds / 86400);
     const hour = Math.floor((seconds - day * 86400) / 3600);
     const minute = Math.floor((seconds - day * 86400 - hour * 3600) / 60);
     const second = Math.floor(seconds % 60);
     let answer = [hour, minute, second].map((v) => v.toString().padStart(2, "0")).join(":");
-    if (includeMillis) {
+    if (milliDigits) {
       const millis = zutil
-        .printRoundedTo(seconds % 1, 3)
-        .padStart(3, "0")
+        .printRoundedTo(seconds % 1, milliDigits)
+        .padStart(milliDigits, "0")
         .substring(2);
       answer = `${answer}.${millis}`;
     }
@@ -380,4 +430,20 @@ export const zutil = {
   uuid(): string {
     return crypto.randomUUID();
   },
+
+  windowPathNameWithParams: (): string => {
+    const pathname = window.location.pathname;
+    const searchParams = (new URLSearchParams(window.location.search)).toString();
+    return `${pathname}${searchParams ? "?" : ""}${searchParams}`;
+  },
+  joinPathComponents: (...parts: string[]): string => {
+    if (parts.length <= 1) {
+      return parts[0] || "";
+    } else {
+      const base = zutil.joinPathComponents(...parts.slice(0, -1));
+      const part = parts.at(-1);
+      return part ? `${base}/${part}` : base;
+    }
+  }
+
 };

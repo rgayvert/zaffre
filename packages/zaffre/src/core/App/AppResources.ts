@@ -15,8 +15,9 @@ export type ResourceMap = Map<string, string>;
 export class AppResources {
   assetBase: string;
 
-  constructor(public assetDir = "assets") {
-    this.assetBase = import.meta.env.MODE === "development" ? `/${assetDir}` : `${import.meta.env.BASE_URL}/${assetDir}`;
+  constructor(public baseURL: string, public assetDir = "assets") {
+    this.assetBase = `${baseURL}/${assetDir}`;
+    //this.assetBase = import.meta.env.MODE === "development" ? `/${assetDir}` : `${import.meta.env.BASE_URL}/${assetDir}`;
   }
   resourceCache = new Map<string, string>();
 
@@ -60,7 +61,8 @@ export class AppResources {
     const atom = apiAtom(
       url,
       (response: Response) => this.extractResourceMap(response),
-      new Map<string, string>()
+      new Map<string, string>(), 
+      { getInitialValue: false }
     );
     await atom.getValue();
   }

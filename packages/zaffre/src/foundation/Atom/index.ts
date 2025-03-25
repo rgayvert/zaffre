@@ -11,6 +11,8 @@ export * from "./FetchAtom";
 export * from "./ImportAtom";
 export * from "./IndexedArrayAtom";
 export * from "./LazyAtom";
+export * from "./PollAtom";
+export * from "./ResponseAtom";
 export * from "./RouteAtom";
 export * from "./SetAtom";
 export * from "./TimerAtom";

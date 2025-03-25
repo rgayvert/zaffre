@@ -24,15 +24,15 @@
     "rootDir": ".",
     "importHelpers": false,
     "experimentalDecorators": true,
-    
+
     "baseUrl": ".",
     "paths": {
       "zaffre": ["./packages/zaffre"],
       ":demos/*": ["./apps/zgallery/src/Demos/*"],
 
       ":cards": ["./packages/cards"],
-      ":services": ["./packages/services"],
       ":todo": ["./packages/todo"],
+      ":services": ["./packages/services"],
 
       ":components": ["./packages/zaffre/src/components"],
       ":core": ["./packages/zaffre/src/core"],
@@ -50,13 +50,8 @@
       ":routing": ["./packages/zaffre/src/core/Routing"],
       ":svg": ["./packages/zaffre/src/core/SVG"],
       ":theme": ["./packages/zaffre/src/core/Theme"],
-      ":view": ["./packages/zaffre/src/core/View"],
-
+      ":view": ["./packages/zaffre/src/core/View"]
     }
   },
-  "exclude": [
-    "*.temp",
-    "**/dist/**",
-    "**/public/**"
-  ]
+  "exclude": ["*.temp", "**/dist/**", "**/public/**"]
 }

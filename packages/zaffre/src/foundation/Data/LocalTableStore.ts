@@ -1,6 +1,6 @@
-import { arrayAtom, ArrayAtom, atom, Atom } from "../Atom";
-import { lazyinit, ExHandler } from "../Support";
-import { ClassConstructor, TQueryOptions, TableRecord, TableRecordList, TableStore } from "./TableStore";
+import { arrayAtom, ArrayAtom, atom, Atom, responseAtom, ResponseAtom } from "../Atom";
+import { lazyinit } from "../Support";
+import { ClassConstructor, TQueryOptions, TableRecord, TableRecordList, TableStore, TableStoreOptions } from "./TableStore";
 
 //
 // A LocalTableStore is a TableStore uses local storage.
@@ -13,8 +13,8 @@ import { ClassConstructor, TQueryOptions, TableRecord, TableRecordList, TableSto
 
 
 export class LocalTableStore<R extends TableRecord> extends TableStore<R> {
-  constructor(public tableName: string, cls: ClassConstructor<R>, public ex?: ExHandler) {
-    super(cls, ex);
+  constructor(public tableName: string, cls: ClassConstructor<R>, public options: TableStoreOptions = {}) {
+    super(cls, options);
   }
   toString(): string {
     return `LocalTableStore<${this.tableName}>`;
@@ -32,32 +32,41 @@ export class LocalTableStore<R extends TableRecord> extends TableStore<R> {
   fullKeyFor(recordID: number): string {
     return `${this.tableName}-${recordID}`;
   }
-  async create(record: R): Promise<void> {
+  create(record: R): ResponseAtom {
     record.prepareToSave();
     record.recordID = this.nextRecordID();
     this.recordIDs.push(record.recordID);
     this.update(record);
+    return responseAtom();
   }
-  async get(result: Atom<R | undefined>, recordID: number): Promise<void> {
+  get(result: Atom<R | undefined>, recordID: number, restoreFn?: (record: R) => void): ResponseAtom {
     const recordKey = `${this.tableName}-${recordID}`;
     const item = localStorage.getItem(recordKey);
     const record = item ? this.plainToInstance(JSON.parse(item)) : undefined;
-    record && result.set(record);
+    if (record) {
+      restoreFn?.(record);
+      result.set(record);
+    }
+    return responseAtom();
   }
-  async update(record: R): Promise<void> {
+  update(record: R): ResponseAtom {
     record.prepareToSave();
     localStorage.setItem(this.fullKeyFor(record.recordID), JSON.stringify(this.instanceToPlain(record)));
+    return responseAtom();
   }
-  async delete(record: R): Promise<void> {
+
+  delete(record: R): ResponseAtom {
     localStorage.removeItem(this.fullKeyFor(record.recordID));
     this.recordIDs.delete(record.recordID);
     this.removeRecord(record);
+    return responseAtom();
   }
-  async getAll(targetList: TableRecordList<R>, where?: TQueryOptions<R>): Promise<void> {
+  getAll(targetList: TableRecordList<R>, where?: TQueryOptions<R>): ResponseAtom {
     const list: R[] = [];
     const result: Atom<R | undefined> = atom(undefined, { action: (r) => r && list.push(r) });
     this.recordIDs.map((recordID) => this.get(result, recordID));
     targetList.set(list);
+    return responseAtom();
   }
   getAllRecords(where?: TQueryOptions<R>): TableRecordList<R> {
     const list = this.createRecordList();

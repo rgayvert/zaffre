@@ -1,22 +1,23 @@
-import {
-  atom,
-  Box,
-  View,
-  Atom,
-  IFrameOptions,
-  mergeComponentOptions,
-  afterAddedToDOM,
-  BV,
-  restoreOptions,
-} from "zaffre";
+import { atom, Box, View, Atom } from "zaffre";
+import { IFrameOptions, mergeComponentOptions, afterAddedToDOM, BV, restoreOptions } from "zaffre";
 import { core, defineComponentBundle } from "zaffre";
 import { createYouTubePlayer, YouTubePlayerConfig, YTPlayer } from "./YouTubePlayer";
+
+const watchingForBlur = false;
+function watchForBlur(): void {
+  setInterval(() => {
+    if (document.activeElement instanceof HTMLIFrameElement) {
+      document.activeElement.blur();
+    }
+  }, 1000);
+}
 
 export interface YouTubeIFrameOptions extends IFrameOptions {
   seekTime?: Atom<number>;
   controls?: boolean;
   disableKeyboard?: boolean;
   allowFullscreen?: boolean;
+  blurOnFocus?: boolean;
 }
 defineComponentBundle<YouTubeIFrameOptions>("YouTubeIFrame", "Box", {
   controls: true,
@@ -30,6 +31,10 @@ export function YouTubeIFrame(videoID: string, player: YTPlayer, inOptions: BV<Y
 
   const ready = atom(false);
   options.background = atom(() => (ready.get() ? core.color.transparent : core.color.gray));
+
+  if (options.blurOnFocus && !watchingForBlur) {
+    watchForBlur();
+  }
 
   let boxElement: HTMLElement;
   afterAddedToDOM(options, (view: View): void => {

@@ -1,4 +1,4 @@
-import { ArrayAtom, simpleTableModel, TableModel, zutil } from "zaffre";
+import { ArrayAtom, simpleTableModel, TableColumn, TableColumnList, TableModel, zutil } from "zaffre";
 import { stringColumn, SimpleTableModel, TableColumns } from "zaffre";
 
 export function tableModel(cols: string[]): SimpleTableModel<string[]> {
@@ -15,8 +15,7 @@ export function tableModel(cols: string[]): SimpleTableModel<string[]> {
       title: col,
       value: (r) => r[index],
       setter: (r, v) => (r[index] = v),
-    })
-  ) as TableColumns<string[]>;
+    })) as TableColumnList<string[]>;
   const model = simpleTableModel(rows, columns);
   model.updateAllOnChange = true;
   return model;
@@ -26,7 +25,7 @@ export class SevenCellsModel {
   cols = [..."ABCDEF"];
   tableModel7: TableModel<string[]>;
   rows: ArrayAtom<string[]>;
-  columns: TableColumns<string[]>;
+  columns: ArrayAtom<TableColumn<string[], unknown>>;
 
   constructor() {
     this.tableModel7 = tableModel(this.cols);

@@ -8,6 +8,7 @@ export interface HTMLAttributeOptions {
     accept?: zstring;
     autoCapitalize?: ZType<"none" | "off" | "sentences" | "on" | "words" | "chracters">;
     autocomplete?: zstring;
+    autofocus?: zboolean;
     autoCorrect?: zboolean;
     cols?: znumber;
     controls?: zboolean;
@@ -43,6 +44,7 @@ export interface HTMLAttributeOptions {
     "accept",
     "autoCapitalize",
     "autocomplete",
+    "autofocus",
     "autoCorrect",
     "cols",
     "contentEditable",

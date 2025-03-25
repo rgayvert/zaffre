@@ -5,6 +5,6 @@ export function IconExample(): View {
     LabelBox("Plain:").append(Icon("icon.shopping-cart")),
     LabelBox("Colored:").append(Icon("icon.shopping-cart", { color: core.color.red })),
     LabelBox("Outlined:").append(Icon("icon.shopping-cart", { border: core.border.thin })),
-    LabelBox("File:").append(Icon("icon.home"))
+    LabelBox("File:").append(Icon("icon.home", { border: core.border.thin, verticalAlign: "bottom" }))
   );
 }

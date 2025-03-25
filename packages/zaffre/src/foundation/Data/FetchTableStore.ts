@@ -1,24 +1,41 @@
-import { Atom } from "../Atom";
-import { ExHandler } from "../Support";
-import { ClassConstructor, TQueryOptions, TableRecord, TableRecordList, TableStore } from "./TableStore";
+import { Atom, responseAtom, ResponseAtom, ResponseStatus } from "../Atom";
+import { zlog } from "../Util";
+import { ClassConstructor, TQueryOptions, TableRecord } from "./TableStore";
+import { TableRecordList, TableStore, TableStoreOptions } from "./TableStore";
 
 //
 // A FetchTableStore is a TableStore that uses the Fetch API to perform CRUD operations.
 //
 // Note that this should work in parallel with a server API that implements the
 // corresponding calls on the actual database. See apps/todo-server for an example.
-// 
+//
 
 export class FetchTableStore<R extends TableRecord> extends TableStore<R> {
-  constructor(public baseURL: string, cls: ClassConstructor<R>, public ex?: ExHandler) {
-    super(cls, ex);
+  constructor(
+    public baseURL: string,
+    cls: ClassConstructor<R>,
+    public options: TableStoreOptions = {}
+  ) {
+    super(cls, options);
   }
   toString(): string {
     return `FetchTableStore[${this.baseURL}]`;
   }
 
-  async create(record: R): Promise<void> {
-    record.prepareToSave();
+  logBadStatus(response: ResponseAtom, status: ResponseStatus, msg: string): void {
+    zlog.info(msg);
+    this.options.ex?.push(msg);
+    response.errorMessage = msg;
+    response.set(status);
+  }
+
+  create(record: R): ResponseAtom {
+    const response = responseAtom();
+    this.createWithResponse(response, record);
+    return response;
+  }
+
+  async createWithResponse(response: ResponseAtom, record: R): Promise<void> {
     const { recordID, ...rest } = this.instanceToPlain(record);
     const options: RequestInit = {
       method: "POST",
@@ -26,62 +43,110 @@ export class FetchTableStore<R extends TableRecord> extends TableStore<R> {
       headers: { "Content-Type": "application/json" },
     };
     try {
-      const response = await fetch(this.baseURL, options);
-      if (response.ok) {
-        const json = await response.json();
+      const result = await fetch(this.baseURL, options);
+      if (result.ok) {
+        const json = await result.json();
         record.recordID = json.recordID;
+        record._persisted.set(true);
+        record.afterCreate();
+        response.set("ok");
       } else {
-        this.ex?.push(`${this.toString()}/create: ${response.status}`);
+        this.logBadStatus(response, "failed", `${this.toString()}/create: ${result.status}`);
       }
     } catch (e) {
-      this.ex?.push(`${this.toString()}/create: fetch failed`, e);
+      this.logBadStatus(response, "failed", `${this.toString()}/create: fetch failed`);
     }
   }
-  async get(result: Atom<R | undefined>, recordID: number): Promise<void> {
+
+  get(record: Atom<R | undefined>, recordID: number, restoreFn?: (record: R) => void): ResponseAtom {
+    const response = responseAtom();
+    this.getWithResponse(response, record, recordID, restoreFn);
+    return response;
+  }
+
+  async getWithResponse(
+    response: ResponseAtom,
+    record: Atom<R | undefined>,
+    recordID: number,
+    restoreFn?: (record: R) => void
+  ): Promise<void> {
     const options: RequestInit = {
       method: "GET",
     };
     const url = `${this.baseURL}/${recordID}`;
     try {
-      const response = await fetch(url, options);
-      if (response.ok) {
-        const json = await response.json();
-        const record = this.plainToInstance(json);
-        record && result.set(record);
+      const result = await fetch(url, options);
+      if (result.ok) {
+        const json = await result.json();
+        const newRecord = this.plainToInstance(json);
+        if (newRecord) {
+          const existingRecord = this.findCachedRecord(recordID);
+          if (existingRecord) {
+            record.set(existingRecord);
+          } else {
+            restoreFn?.(newRecord);
+            record.set(newRecord);
+          }
+          response.set("ok");
+        } else {
+          this.logBadStatus(response, "missing", `${this.toString()}/get: ${result.status}`);
+        }
       } else {
-        this.ex?.push(`${this.toString()}/get: ${response.status}`);
+        this.logBadStatus(response, "failed", `${this.toString()}/get: ${result.status}`);
       }
     } catch (e) {
-      this.ex?.push(`${this.toString()}/get: fetch failed`, e);
+      this.logBadStatus(response, "failed", `${this.toString()}/get: fetch failed`);
     }
   }
 
-  async getAll(targetList: TableRecordList<R>, where?: TQueryOptions<R>, restoreFn?: (records: R[]) => void): Promise<void> {
+  getAll(targetList: TableRecordList<R>, where?: TQueryOptions<R>, restoreFn?: (record: R) => void): ResponseAtom {
+    const response = responseAtom();
+    this.getAllWithResponse(response, targetList, where, restoreFn);
+    return response;
+  }
+
+  async getAllWithResponse(
+    response: ResponseAtom,
+    targetList: TableRecordList<R>,
+    where?: TQueryOptions<R>,
+    restoreFn?: (record: R) => void
+  ): Promise<void> {
     const options: RequestInit = {
       method: "POST",
       body: JSON.stringify(where),
       headers: { "Content-Type": "application/json" },
     };
     try {
-      const response = await fetch(`${this.baseURL}/all`, options);
-      if (response.ok) {
-        const json = (await response.json()) as [];
-        const records = json.map((val) => this.plainToInstance(val));
-        if (restoreFn) {
-          restoreFn?.(records);
-        } else {
-          records.forEach((record) => record.restore());
-        }
-        targetList.set(records);
+      const result = await fetch(`${this.baseURL}/all`, options);
+      if (result.ok) {
+        const json = (await result.json()) as [];
+        const newRecords = json.map((val) => this.plainToInstance(val));
+        const finalRecords = newRecords.map((record) => {
+          const existingRecord = this.findCachedRecord(record.recordID);
+          if (existingRecord) {
+            return existingRecord;
+          } else {
+            restoreFn?.(record);
+            return record;
+          }
+        });
+        targetList.set(finalRecords);
+        response.set("ok");
       } else {
-        this.ex?.push(`${this.toString()}/getAll: ${response.status}`);
+        this.logBadStatus(response, "failed", `${this.toString()}/getAll: ${result.status}`);
       }
     } catch (e) {
-      this.ex?.push(`${this.toString()}/getAll: fetch failed`, e);
+      this.logBadStatus(response, "failed", `${this.toString()}/getAll: fetch failed`);
     }
   }
 
-  async update(record: R): Promise<void> {
+  update(record: R): ResponseAtom {
+    const response = responseAtom();
+    this.updateWithResponse(response, record);
+    return response;
+  }
+
+  async updateWithResponse(response: ResponseAtom, record: R): Promise<void> {
     record.prepareToSave();
     const options: RequestInit = {
       method: "PUT",
@@ -90,29 +155,38 @@ export class FetchTableStore<R extends TableRecord> extends TableStore<R> {
     };
     const url = `${this.baseURL}/${record.recordID}`;
     try {
-      const response = await fetch(url, options);
-      if (!response.ok) {
-        this.ex?.push(`${this.toString()}/update: ${response.status}`);
+      const result = await fetch(url, options);
+      if (!result.ok) {
+        this.logBadStatus(response, "failed", `${this.toString()}/update: ${result.status}`);
+      } else {
+        response.set("ok");
       }
     } catch (e) {
-      this.ex?.push(`${this.toString()}/update: fetch failed`, e);
+      this.logBadStatus(response, "failed", `${this.toString()}/update: fetch failed`);
     }
   }
 
-  async delete(record: R): Promise<void> {
+  delete(record: R): ResponseAtom {
+    const response = responseAtom();
+    this.deleteWithResponse(response, record);
+    return response;
+  }
+
+  async deleteWithResponse(response: ResponseAtom, record: R): Promise<void> {
     const options: RequestInit = {
       method: "DELETE",
     };
     const url = `${this.baseURL}/${record.recordID}`;
     try {
-      const response = await fetch(url, options);
-      if (response.ok) {
+      const result = await fetch(url, options);
+      if (result.ok) {
         this.removeRecord(record);
+        response.set("ok");
       } else {
-        this.ex?.push(`${this.toString()}/getAll: ${response.status}`);
+        this.logBadStatus(response, "failed", `${this.toString()}/delete: ${result.status}`);
       }
     } catch (e) {
-      this.ex?.push(`${this.toString()}/getAll: fetch failed`, e);
+      this.logBadStatus(response, "failed", `${this.toString()}/delete: fetch failed`);
     }
   }
 }

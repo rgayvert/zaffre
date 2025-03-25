@@ -8,7 +8,6 @@ import { View, ViewDelegate, ViewOptions, beforeAddedToDOM } from ":view";
 import { dropShadowForElevation, EffectsBundle, standardHTMLInteractionEffects } from ":effect";
 import { DragHandler } from ":events";
 import { CSSAttributeOptions, cssOptionKeys, htmlAttributeKeys, HTMLAttributeOptions } from "../CoreOptions";
-import { StatusBarAlignment } from "vscode";
 
 //
 // Base support for HTML views. This includes the HTMLDelegate class, the low-level HTML component,

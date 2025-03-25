@@ -2,7 +2,7 @@ import { View } from "zaffre";
 import { GalleryTopic, GalleryDemo } from "../Common";
 import { TFEnsembleExample } from "./TFEnsembleExample";
 
-export function PendulumWavesDemo(): View {
+export function TFEnsembleDemo(): View {
   return GalleryDemo(topic);
 }
 
@@ -18,4 +18,4 @@ const topic: GalleryTopic = {
   ],
 };
 
-export default PendulumWavesDemo;
+export default TFEnsembleDemo;

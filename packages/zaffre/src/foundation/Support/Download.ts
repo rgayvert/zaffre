@@ -12,3 +12,15 @@ export function downloadText(text: string, fileName: string): void {
   element.click();
   document.body.removeChild(element);
 }
+
+export function downloadBlob(blob: Blob, fileName: string): void {
+  const blobURL = URL.createObjectURL(blob);
+  var element = document.createElement("a");
+  element.href = blobURL;
+  element.setAttribute("download", fileName);
+  element.style.display = "none";
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+  window.URL.revokeObjectURL(blobURL);
+}

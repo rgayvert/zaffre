@@ -1,4 +1,4 @@
-import { LineSegment2D, Point2D, Polygon2D, point2D, Segment2D, Vector2D } from "./Geometry2D";
+import { LineSegment2D, Point2D, Polygon2D, point2D, lineSegment2D, Vector2D } from "./Geometry2D";
 
 //
 // Included here are some basic algorithms involving points, rects, and polygons.
@@ -36,12 +36,12 @@ export function isPointInsidePolygon(pt: Point2D, polygon: Polygon2D): boolean {
 export function shortenLineSegment(segment: LineSegment2D, distance: number): LineSegment2D {
   const v = <Vector2D>(segment.endPt.subtract(segment.startPt));
   const newEndPt = segment.startPt.add(v.normalized().scalarMultiply(v.magnitude() - distance));
-  return Segment2D(segment.startPt, newEndPt);
+  return lineSegment2D(segment.startPt, newEndPt);
 }
 export function changeSegmentLength(segment: LineSegment2D, distance: number, where: "head" | "tail" | "both"): LineSegment2D {
   const v = <Vector2D>(segment.endPt.subtract(segment.startPt)).normalized();
   const dv = v.scalarMultiply(v.magnitude() + distance);
   const newStartPt = segment.startPt.add(dv.scalarMultiply(where === "head" || where === "both" ? -1 : 0)); 
   const newEndPt = segment.endPt.add(dv.scalarMultiply(where === "tail" || where === "both" ? 1 : 0)); 
-  return Segment2D(newStartPt, newEndPt);
+  return lineSegment2D(newStartPt, newEndPt);
 }

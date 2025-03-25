@@ -1,4 +1,4 @@
-import { Atom, atom, toggleAtom } from ":foundation";
+import { Atom, atom, BasicAction, toggleAtom } from ":foundation";
 import { AnimationItem } from "./AnimationItem";
 
 //
@@ -11,6 +11,9 @@ import { AnimationItem } from "./AnimationItem";
 
 export interface AnimatorOptions {
   duration?: number;
+  onStep?: (deltaT: number, elapsedT: number) => void;
+  onStart?: () => void;
+  onStop?: () => void;
 }
 export type AnimatorState = "running" | "stopped" | "paused";
 
@@ -24,7 +27,7 @@ export class BasicAnimator {
   state: Atom<AnimatorState> = atom("stopped");
   running = toggleAtom(false, { action: (b) => b ? this.start(): this.stop() });
 
-  constructor(options: AnimatorOptions = {}) {
+  constructor(public options: AnimatorOptions = {}) {
     this.duration = options.duration || Number.MAX_VALUE;
   }
   setItems(items: Iterable<AnimationItem>): void {
@@ -51,6 +54,7 @@ export class BasicAnimator {
       this.running.set(true);
       this.items.forEach((item) => item.begin?.());
       this.requestFrame();
+      this.options.onStart?.();
     }
   }
   stop(): void {
@@ -58,6 +62,7 @@ export class BasicAnimator {
     this.running.set(false);
     this.startTimestamp = 0;
     this.items.forEach((item) => item.end?.());
+    this.options.onStop?.();
   }
   pause(): void {
     this.state.set("paused");
@@ -77,7 +82,10 @@ export class BasicAnimator {
     }
     this.elapsed = timestamp - this.startTimestamp;
     const deltaT = timestamp - this.previousTimestamp;
+
     if (deltaT !== 0) {
+      this.options.onStep?.(deltaT, this.elapsed);
+
       this.items.forEach((item) => item.step(deltaT, this.elapsed));
       if (this.elapsed >= this.duration) {
         this.stop();

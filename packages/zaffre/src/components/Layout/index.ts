@@ -4,6 +4,7 @@ export * from "./DisclosureList";
 export * from "./Ensemble";
 export * from "./Grid";
 export * from "./GridLayout";
+export * from "./GridSidebar";
 export * from "./HDivider";
 export * from "./Page";
 export * from "./Resettable";

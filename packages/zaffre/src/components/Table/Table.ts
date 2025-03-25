@@ -4,7 +4,7 @@ import { Grid, GridOptions, ViewList } from "../Layout";
 import { TextLabelOptions } from "../Content";
 import { Box } from "../HTML";
 import { HeaderCellView } from "./HeaderCellView";
-import { StringDataCellView } from "./StringDataCellView";
+import { StringDataCellView, StringDataCellViewOptions } from "./StringDataCellView";
 
 //
 // A Table is a grid-based component backed by a table model with reactive rows and columns.
@@ -22,11 +22,10 @@ export type DataCellComponent<R> = (cell: TableDataCell<R, unknown>) => View | u
 export const DataCellComponentMap: Map<string, DataCellComponent<unknown>> = new Map();
 
 export interface TableOptions extends GridOptions {
-  showHeader?: zboolean;
   gridLines?: TableGridLines;
   showRowNumbers?: zboolean;
   headerCellViewOptions?: TextLabelOptions;
-  dataCellViewOptions?: TextLabelOptions;
+  dataCellViewOptions?: StringDataCellViewOptions;
   dataCellComponent?: DataCellComponent<unknown>;
   editable?: boolean;
   sortable?: boolean;
@@ -34,7 +33,6 @@ export interface TableOptions extends GridOptions {
   selectableColumns?: zboolean;
 }
 defineComponentBundle<TableOptions>("Table", "Grid", {
-  showHeader: true,
   gridLines: "both",
   background: core.color.primary,
 });
@@ -44,7 +42,7 @@ export function Table<R>(tableModel: TableModel<R>, inOptions: BV<TableOptions> 
   options.model = tableModel;
   options.alignItems = "start";
   options.nrows = atom(() => tableModel.numRows.get());
-  options.templateColumns = atom(() => `repeat(${tableModel.columns.length}, minmax(3ch, auto))`);
+  options.templateColumns ??= atom(() => `repeat(${tableModel.numVisibleColumns}, minmax(3ch, auto))`);
   options.columnGap = options.gridLines === "column" || options.gridLines === "both" ? px(1) : undefined;
   options.rowGap = options.gridLines === "row" || options.gridLines === "both" ? px(1) : undefined;
   tableModel.options.selectableColumns = options.selectableColumns;
@@ -55,7 +53,7 @@ export function Table<R>(tableModel: TableModel<R>, inOptions: BV<TableOptions> 
     ...options.headerCellViewOptions,
     sortable: options.sortable,
   };
-  const dataCellViewOptions = {
+  const dataCellViewOptions: StringDataCellViewOptions = {
     ...options.dataCellViewOptions,
     doubleClickAction: options.doubleClickAction,
     editable: options.editable,
@@ -68,6 +66,13 @@ export function Table<R>(tableModel: TableModel<R>, inOptions: BV<TableOptions> 
   //
   function TableCellView(cell: TableCell): View {
     if (cell instanceof TableDataCell) {
+      if (tableModel.options.colorOfDataCell) {
+        dataCellViewOptions.color = tableModel.options.colorOfDataCell(cell);
+      }
+      if (tableModel.options.selectionTextColorOfDataCell) {
+        dataCellViewOptions.selectionTextColor = tableModel.options.selectionTextColorOfDataCell(cell);
+      }
+      
       const fn = options.dataCellComponent;
       return (
         fn?.(cell) ||

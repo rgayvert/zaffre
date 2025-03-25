@@ -1,4 +1,4 @@
-import { zlog, zutil } from ":foundation";
+import { pollAtom, PollAtom, zlog, zutil } from ":foundation";
 import { View } from ":view";
 
 //
@@ -23,15 +23,15 @@ export abstract class Router {
   newPath = "";
   pathHistory: string[] = [];
   components: string[] = [];
-  restoring = false;
+  inBackForward = false;
 
-  abstract routeToInitialPath(): void;
+  abstract getInitialPath(): string;
   abstract createFullPath(path: string): string;
   abstract adjustPath(path: string): string;
   abstract usesHash(): boolean;
 
-  constructor(public baseURL: string, public rootTitle: string) {
-    // handle back/forward buttons
+  constructor(public baseURL: string, public rootTitle: string, public errorPath: string) {
+    // listen for back/forward buttons
     window.addEventListener("popstate", (event) => this.historyChanged(event));
 
     this.currentPath = window.location.pathname;
@@ -41,74 +41,94 @@ export abstract class Router {
   }
 
   redirectToErrorPage(): void {
-    this.routeToPath("demos/errorpage");
+    this.routeToPath(this.errorPath, false);
   }
 
+  routeToInitialPath(): void {
+    this.routeToPath(this.getInitialPath(), false);
+  }
 
-  // note: this is called from Ensemble.afterAddedToDOM when we're routing to initial path
+  routePointView?: PollAtom<View>;
 
-  // TODO: this doesn't scrollIntoView when coming in with initial path (looks like view isn't created yet)
+  async routeToPathFromView(path: string, view: View): Promise<void> {
+    this.routePointView = pollAtom(() => view.findDescendant(
+      (v) => v.routePath() === path
+    ), 1000, 100);
+    await this.routePointView.wait();
+  }
 
-  async routeToPath(inPath: string): Promise<void> {
-    //zlog.info(`routeToPath: href=${inPath}`);
+  routerNodePoller(path: string, view: View): PollAtom<View> {
+    return pollAtom(() => view.findDescendant(
+      (v) => v.routePath() === path
+    ), 2000, 100);
+  }
 
-    let routePointView: View | undefined = View.rootView;
+  async routeToPath(inPath: string, addToHistory = true): Promise<void> {
     const path = this.adjustPath(inPath);
-
-    this.components = zutil.withoutAll(path.split("/"), [""]);
-    if (this.components.length % 2 === 1) {
+    if (path === "/") {
+      return this.routeToHome();
+    }
+    const components = zutil.withoutAll(path.split("/"), [""]);
+    if (components.length % 2 === 1) {
       this.redirectToErrorPage();
       return;
     }
-    while (routePointView && this.components.length > 1) {
-      const routePointName = this.components[0];
-      routePointView = routePointView.findDescendant(
-        (v) => v.routePoint?.name === routePointName
-      );
+    //zlog.info("routeToPath: "+path);
+    let partialPath = "";
+    let routePointView: View | undefined = View.rootView;
+    while (routePointView && components.length > 1) {
+      const routePointName = components.shift()!;
+      const routePointValue = components.shift()!;
+      partialPath = zutil.joinPathComponents(partialPath, routePointName);
+      const poller = this.routerNodePoller(partialPath, routePointView);
+      await poller.wait();
+      routePointView = poller.get();
       if (routePointView) {
-        routePointView = this.checkEnsemble(routePointView);
-        !routePointView && this.redirectToErrorPage();
-      } 
+        routePointView.routePoint?.set(routePointValue);
+
+        //zlog.info("routePoint="+routePointView.routePoint+", routePointValue: "+routePointValue);
+
+        partialPath = zutil.joinPathComponents(partialPath, routePointValue);
+      } else {
+        this.redirectToErrorPage();
+      }
     }
-    if (routePointView) {
-      routePointView.scrollIntoViewIfNeeded();
-    }
+    addToHistory && this.addToHistory(inPath);
+    this.inBackForward = false; 
+
   }
-  
-  checkEnsemble(view: View): View | undefined {
-    const routePointName = this.components[0];
-    if (
-      this.components.length > 1 &&
-      view.routePoint?.name === routePointName
-    ) {
-      const routePointValue = this.components[1];
-      view.routePoint?.setAndFire(routePointValue);
-      this.components.shift();
-      this.components.shift();
-      // TODO: shouldn't this be a new view?
-      return view;
-    } else {
-      return undefined;
-    }
+
+
+  // Handling a back/forward is a bit tricky. We don't want to pushState() in
+  // this case, but we will still get a delayed routeChanged() message, so we 
+  // reset inBackForward after we get that message.
+
+  historyChanged(event: PopStateEvent): void {
+    this.inBackForward = true;
+    const path = event.state || "/";
+    //zlog.info("historyChanged: "+path);
+    this.routeToPath(path, false);
   }
 
   routeChanged(path: string): void {
-    if (!this.restoring) {
+    //zlog.info("routeChanged: "+path+", inBF="+this.inBackForward);
+
+    if (!this.inBackForward) {
       this.addToHistory(path);
     }
   }
 
-  historyChanged(event: PopStateEvent): void {
-    // handle back/forward buttons
-    this.restoring = true;
-    const path = event.state || "/";
-    this.routeToPath(path);
-    this.restoring = false; 
+  // A route to "" or "/" has no component pair, so we need to manually get the
+  // first route point and clear it.
+  routeToHome(): void {
+    const firstRoutePointView = View.bodyView.findDescendant(
+      (v) => v.routePath() !== ""
+    );
+    firstRoutePointView && firstRoutePointView.routePoint?.set("");
   }
 
 
-
-
+  // Call pushState() to add a history item
   addToHistory(path: string): void {
     if (!path.startsWith("/")) {
       path = "/" + path;
@@ -122,6 +142,7 @@ export abstract class Router {
     const last = fullPath.split("/").at(-1);
     document.title = last ? `${this.rootTitle}: ${last}` : this.rootTitle;
 
+    //zlog.info("pushState: "+fullPath + "  "+ document.title);
   }
 }
 

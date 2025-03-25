@@ -25,11 +25,13 @@ export function TextInput(text: Atom<string>, options: BV<TextInputOptions> = {}
 }
 
 export function PasswordInput(text: Atom<string>, options: TextInputOptions = {}): View {
-  return SimpleTextInput(text, "password", options);
+  const opts = {  autocomplete: "current-password", ...options };
+  return SimpleTextInput(text, "password", opts);
 }
 
 export function EmailInput(text: Atom<string>, options: TextInputOptions = {}): View {
-  return SimpleTextInput(text, "email", options);
+  const opts = { autocomplete: "username", ...options };
+  return SimpleTextInput(text, "email", opts);
 }
 
 export function TelephoneInput(text: Atom<string>, options: TextInputOptions = {}): View {

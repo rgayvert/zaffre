@@ -1,6 +1,6 @@
 import { TableRecord, atom } from ":foundation";
-import { View, core, em, pct } from ":core";
-import { Form, FormFieldSpecs, FormOptions } from ":components";
+import { View, pct } from ":core";
+import { Form, FormOptions } from ":components";
 import { TFModel } from "./TFModel";
 
 //
@@ -8,8 +8,8 @@ import { TFModel } from "./TFModel";
 //
 // TODO: make this a full reusable component
 
-export function TFForm<R extends TableRecord>(model: TFModel<R>, fields: FormFieldSpecs<R>): View {
-  const maxGridCol = Math.max(...Object.values(fields).map((field) => field?.gridArea.c2 || 2)) - 1;
+export function TFForm<R extends TableRecord>(model: TFModel<R>, inOptions: FormOptions = {}): View {
+  const maxGridCol = Math.max(...Object.values(model.fields).map((field) => field?.gridArea?.c2 || 2)) - 1;
   const formOptions: FormOptions = {
     templateColumns: `repeat(${maxGridCol}, 1fr)`,
     resetLabel: atom(() => (model.selectionIsPersisted() ? "" : "Clear")),
@@ -18,7 +18,11 @@ export function TFForm<R extends TableRecord>(model: TFModel<R>, fields: FormFie
     submitAction: () => model.submitRecord(),
     validationOn: model.validationOn,
     width: pct(90),
+    ...inOptions
   };
+  const record = model.editedRecord.get();
 
-  return Form(model.editedRecord, model.editor, fields, formOptions);
+  //console.log("TFForm: "+record.recordID);
+
+  return Form(record, model.fields(record), formOptions);
 }

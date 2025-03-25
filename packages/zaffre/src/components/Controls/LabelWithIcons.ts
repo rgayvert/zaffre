@@ -24,6 +24,8 @@ export interface LabelWithIconsOptions extends StackOptions {
   leadingIconOptions?: IconOptions;
   /** options for the trailing icon */
   trailingIconOptions?: IconOptions;
+
+  trailingText?: zstring;  // TODO
 }
 const defaultIconOptions: IconOptions = {
   color: core.color.inherit,

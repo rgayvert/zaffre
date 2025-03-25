@@ -9,6 +9,9 @@ import { BasicAction, BreakpointAtom, Atom, breakpointAtom } from ":foundation";
 export function windowWidth(): number {
   return ZWindow.instance.windowWidth;
 }
+export function windowHeight(): number {
+  return ZWindow.instance.windowHeight;
+}
  
 export class ZWindow { 
   @lazyinit public static get instance(): ZWindow {
@@ -19,6 +22,9 @@ export class ZWindow {
   }
   @lazyinit static get windowWidth(): Atom<number> {
     return atom(() => this.instance.windowWidth);
+  }
+  @lazyinit static get windowHeight(): Atom<number> {
+    return atom(() => this.instance.windowHeight);
   }
   static fractionOfSize(fraction: number): string {
     const sz = this.windowSize.get();

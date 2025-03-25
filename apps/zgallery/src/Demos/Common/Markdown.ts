@@ -14,9 +14,9 @@ import { View, TextBox, TextBoxOptions, MarkdownService } from "zaffre";
 export interface MarkdownOptions extends TextBoxOptions {
   markdown?: zstring;
   uri?: zstring;
-  markdownStyle?: string;
   expandRelativeAssets?: boolean;
   darkModeSuffix?: string;
+  markdownStyle?: string;              // ???
 }
 defineComponentBundle("Markdown", "Box", {
   extraClasses: "markdown-body",

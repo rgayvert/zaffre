@@ -1,4 +1,4 @@
-import { numericColumn, simpleTableModel, stringColumn } from "zaffre";
+import { numericColumn, simpleTableModel, stringColumn, TableColumnList } from "zaffre";
 import { NumericFormatter, TableColumns, TableModel } from "zaffre";
 
 interface DummyRecord {
@@ -22,7 +22,7 @@ export class ExampleTableModel2 {
       title: "Location",
       value: (r) => [r.city, r.state].join(",")
     }),
-  ] as TableColumns<DummyRecord>;
+  ] as TableColumnList<DummyRecord>;
 
   rows: DummyRecord[] = [
     { name: "Joe", age: 23, city: "Toledo", state: "OH" },

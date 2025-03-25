@@ -1,4 +1,4 @@
-import { Atom, zget, zboolean, zstring, atom } from ":foundation";
+import { Atom, zget, zboolean, zstring, atom, ZArray } from ":foundation";
 import { css_background, px, View, pct } from ":core";
 import { core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Stack, StackOptions, ViewList } from "../Layout";
@@ -49,6 +49,7 @@ export function SegmentedButton(
   inOptions: BV<SegmentedOptions> = {}
 ): View {
   const options = mergeComponentOptions("SegmentedButton", inOptions);
+  options.model = { selectedValue, values };
   const labels = options.labels || values;
 
   const segmentedOptions = {

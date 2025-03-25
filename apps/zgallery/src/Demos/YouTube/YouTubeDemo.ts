@@ -7,7 +7,7 @@ export function YouTubeDemo(): View {
 }
 
 const topic: GalleryTopic = {
-  sourceDir: "/source/Demos/YouTube",
+  sourceDir: "/source/Demos/YouTube", 
   sections: [
     {
       title: "YouTube",

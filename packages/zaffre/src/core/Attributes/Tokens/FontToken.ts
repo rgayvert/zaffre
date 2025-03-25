@@ -17,11 +17,11 @@ interface FontTokenOptions extends TokenOptions {
   size?: number;
 }
 
-export function createFontToken(options: FontTokenOptions): FontToken {
+export function fontToken(options: FontTokenOptions): FontToken {
   return new FontToken(options);
 }
 export function customFont(options: FontTokenOptions): FontToken {
-  return createFontToken({ ...options, key: "custom" });
+  return fontToken({ ...options, key: "custom" });
 }
 export class FontToken extends Token {
   constructor(public options: FontTokenOptions) {
@@ -38,19 +38,19 @@ export class FontToken extends Token {
     return this.weight(100);
   }
   public weight(w: number): FontToken {
-    return createFontToken({
+    return fontToken({
       ...this.options,
       weight: w,
     });
   }
   public scale(scale: number): FontToken {
-    return createFontToken({
+    return fontToken({
       ...this.options,
       scale: scale,
     });
   }
   public style(style: FontStyle): FontToken {
-    return createFontToken({
+    return fontToken({
       ...this.options,
       style: style,
     });

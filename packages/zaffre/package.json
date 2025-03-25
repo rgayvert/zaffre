@@ -6,7 +6,13 @@
   "type": "module",
   "types": "dist/zaffre.d.ts",
   "main": "dist/zaffre.js",
+  "scripts": {
+    "build": "vite build; pnpm exec rm dist/zaffre.umd.cjs",
+    "build4shots": "vite build; pnpm exec rm dist/zaffre.umd.cjs; pnpm exec mv dist/zaffre* ../../../shots/apps/shots/src/zaffre"
+  },
   "devDependencies": {
+    "@types/youtube": "^0.0.50",
+    "dayjs": "^1.11.12",
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.5.2"
   }

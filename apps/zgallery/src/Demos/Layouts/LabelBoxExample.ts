@@ -1,4 +1,4 @@
-import { View, core, atom, DropDownButton, LabelBox, EdgePoint } from "zaffre";
+import { View, core, atom, SimpleDropDownButton, LabelBox, EdgePoint } from "zaffre";
 import { HStack, zlog, VStack, Checkbox } from "zaffre";
 import { Box, ch, em, edgePointNames, TextLabelOptions } from "zaffre";
 
@@ -14,7 +14,7 @@ export function LabelBoxExample(): View {
 
   return VStack("gap-5").append(
     HStack(["gap-8", "b1", "pad-3"]).append(
-      LabelBox("Placement:").append(DropDownButton(refPt, edgePointNames())),
+      LabelBox("Placement:").append(SimpleDropDownButton(refPt, edgePointNames())),
       LabelBox("Label", { placementPt: refPt, textLabelOptions: labelOptions }).append(content)
     ),
     HStack("s3").append(LabelBox("Click me:").append(Checkbox(checkboxValue)))

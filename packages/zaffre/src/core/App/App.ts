@@ -36,6 +36,7 @@ export interface AppOptions {
   useFluidFonts?: boolean;
   rootTitle?: string;
   appTitle?: string;
+  errorPath?: string;
 }
 
 const defaultAppOptions: AppOptions = {
@@ -55,7 +56,7 @@ export class App {
   constructor(public appContext = AppContext.Web, inOptions: BV<AppOptions> = {}) {
     this.options = zutil.mergeOptions(defaultAppOptions, inOptions);
     App.instance = this;
-    this.resources = new AppResources();
+    this.resources = new AppResources(this.baseURL());
     this.router = this.createRouter();
     this.initializeTheme();
     this.initializeWindow();
@@ -78,9 +79,11 @@ export class App {
   }
   createRouter(): Router {
     const baseURL = this.baseURL();
+    const rootTitle = this.options.rootTitle || "";
+    const errorPath = this.options.errorPath || "errorpage";
     return this.useHashRouting() 
-      ? new HashRouter(baseURL, this.options.rootTitle || "")
-      : new StandardRouter(baseURL, this.options.rootTitle || "");
+      ? new HashRouter(baseURL, rootTitle, errorPath)
+      : new StandardRouter(baseURL, rootTitle, errorPath);
   }
   initializeWindow(): void {
     ZWindow.instance.setWindowWidthBreakpoints(this.options.windowBreakpoints!);
@@ -110,6 +113,7 @@ export class App {
   async baseInitialize(): Promise<void> {
     await I18n.initialize(resolveURI("locales"));
     await this.resources.load();
+    //zlog.info("resourceMap="+this.resources.resourceMap);
     this.options.googleFonts?.forEach((fontName) => this.useGoogleFont(fontName));
     this.options.codicons && this.useCodicons();
   }

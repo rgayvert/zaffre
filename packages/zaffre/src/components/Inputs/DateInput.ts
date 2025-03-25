@@ -20,6 +20,7 @@ defineComponentBundle<ChronoInputOptions>("ChronoInput", "Input", {
   iconName: "icon.calendar",
   useNativePickerIcon: true,
   paddingLeft: core.space.s4,
+  setOnInput: false,
 });
 
 function ChronoInput(date: Atom<Date>, inputType: InputType, inOptions: BV<ChronoInputOptions> = {}): View {

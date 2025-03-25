@@ -1,11 +1,11 @@
-import { Atom, RecordEditor, atom } from ":foundation";
+import { Atom, RecordEditor, TabularRecord, atom } from ":foundation";
 import { gridAreaToString } from ":foundation";
 import { View, em, pct, defineComponentBundle, mergeComponentOptions } from ":core";
 import { BV, restoreOptions } from ":core";
 import { Grid, GridOptions } from "../Layout";
 import { LabelBox, LabelBoxOptions } from "../ControlGroups";
 import { ValidationBox } from "./ValidationBox";
-import { FormField, FormFieldCreators, formFieldIsValid, FormFieldSpecs } from "./FormField";
+import { FormField, FormFieldCreators, formFieldIsValid, FormFields, FormFieldSpec, FormFieldSpecs } from "./FormField";
 import { DefaultFormFieldFns } from "./FormInputs";
 
 //
@@ -22,11 +22,11 @@ import { DefaultFormFieldFns } from "./FormInputs";
 // There are default sets of validators and input mappings, but these can be extended or replaced.
 //
 
-
 export interface FormGridOptions extends GridOptions {
   fieldFns?: FormFieldCreators;
   validationOn?: Atom<boolean>;
   labelBoxOptions?: LabelBoxOptions;
+  onChange?: (field: FormField<unknown>, fields: FormFields<unknown>) => void;
 }
 defineComponentBundle<FormGridOptions>("FormGrid", "Grid", {
   fieldFns: DefaultFormFieldFns,
@@ -34,26 +34,44 @@ defineComponentBundle<FormGridOptions>("FormGrid", "Grid", {
   width: pct(100),
   labelBoxOptions: {
     placementPt: "xstart-ystart",
-  }
+  },
 });
 
-export function FormGrid<R>(
-  editor: RecordEditor<R>,
+function checkGridAreas<R>(fields: FormFieldSpecs<R>): void {
+  // supply gridAreas if necessary
+  const ga = { r1: 1, c1: 1, r2: 2, c2: 2 };
+  Object.entries(fields).forEach(([key, f]) => {
+    const field = f as FormFieldSpec<R>;
+    if (!field.gridArea) {
+      field.gridArea = { ...ga };
+      ga.r1++;
+      ga.r2++;
+    }
+  });
+}
+
+export function FormGrid<R extends TabularRecord>(
+  record: R,
   fields: FormFieldSpecs<R>,
   inOptions: BV<FormGridOptions> = {}
 ): View {
   const options = mergeComponentOptions("FormGrid", inOptions);
-  options.model = [editor, fields];
+  options.model = [record, fields];
+  checkGridAreas(fields);
+  const editor = <RecordEditor<R>>record.editor;
 
   function FormFieldView(property: keyof R, field: FormField<unknown>): View | undefined {
     const fieldFn = options.fieldFns!.get(field.type);
     field.value = editor[property];
     field.isValid = atom(() => formFieldIsValid(field));
     field.validationOn = options.validationOn;
+    if (options.onChange) {
+      field.value.addAction(() => options.onChange?.(field, fields));
+    }
     if (fieldFn) {
       field.view = LabelBox(field.label, {
         ...options.labelBoxOptions,
-        gridArea: gridAreaToString(field.gridArea),
+        gridArea: gridAreaToString(field.gridArea!),
       }).append(ValidationBox(field, fieldFn(field), { width: pct(100) }));
     } else {
       throw `no form field creator for type ${field.type}`;

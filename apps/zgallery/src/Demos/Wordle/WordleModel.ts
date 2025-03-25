@@ -22,7 +22,7 @@ export class WordleModel {
   status = atom("Enter guess #1");
   gameInProgress = atom(false, { name: "gameInProgress" });
   newGameButtonLabel = atom("Loading...");
-  loadAtom = fetchTextAtom(resolveURI("wordle/2of12inf.txt"), { action: () => this.load() });
+  loadAtom = fetchTextAtom(resolveURI("wordle/2of12inf.txt"), { action: (text) => this.load(text) });
   toastItems = indexedArrayAtom<string>([], { maxLength: 1 });
   
   constructor() {
@@ -115,8 +115,8 @@ export class WordleModel {
     this.toastItems.addValue("Guess the word");
   }
 
-  load(): void {
-    this.allWords = this.loadAtom.get().split(/\r\n?|\n/).filter((w) => !w.endsWith("%"));
+  load(text: string): void {
+    this.allWords = text.split(/\r\n?|\n/).filter((w) => !w.endsWith("%"));
     zlog.info(`Loaded ${this.allWords.length} words`);
     this.newGameButtonLabel.set("New Game");
     this.allWords.forEach((word) => {

@@ -9,5 +9,6 @@ export * from "./SimpleDisclosureList";
 export * from "./SimpleTree";
 export * from "./Sprite";
 export * from "./Toolbar";
+export * from "./URLInputBox";
 export * from "./URLText";
 

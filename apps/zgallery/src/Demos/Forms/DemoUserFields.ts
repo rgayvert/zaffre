@@ -6,6 +6,7 @@ export function demoUserFields(): FormFieldSpecs<DemoUserRecord> {
     title: {
       label: "Title",
       type: "select",
+      firstFocus: true,
       choices: ["", "Mr", "Mrs", "Miss", "Ms"],
       gridArea: { r1: 1, c1: 1, r2: 2, c2: 2 },
       validators: [defaultFormValidator.notBlank],

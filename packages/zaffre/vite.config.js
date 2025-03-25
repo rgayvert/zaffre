@@ -6,6 +6,7 @@ import path from "path";
 
 export default defineConfig({
   base: "./",
+  env: false,
   plugins: [
     tsconfigPaths(),
     dts({
@@ -20,13 +21,14 @@ export default defineConfig({
       name: "zaffre",
       fileName: "zaffre",
     },
+    minify: false,
     rollupOptions: {
       //external: [path.resolve(__dirname, "../../packages/zaffre/test/core/*")], 
     },
   },
   resolve: {
     alias: {
-      ":foundation": path.resolve(__dirname, "../../packages/zaffre/src/core/Foundation"),
+      ":foundation": path.resolve(__dirname, "../../packages/zaffre/src/foundation"),
       ":uifoundation": path.resolve(__dirname, "../../packages/zaffre/src/core/UIFoundation"),
       ":attributes": path.resolve(__dirname, "../../packages/zaffre/src/core/Attributes"),
       ":effect": path.resolve(__dirname, "../../packages/zaffre/src/core/Effects"),

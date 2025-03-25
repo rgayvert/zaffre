@@ -1,4 +1,4 @@
-import { stringColumn, LocalTableStore, TableRecordList, TableColumns, TableModel } from "zaffre";
+import { stringColumn, LocalTableStore, TableRecordList, TableColumns, TableModel, arrayAtom, TableColumnList } from "zaffre";
 import { DemoUserRecord } from "./DemoUserRecord";
 
 export class DemoUserModel {
@@ -19,7 +19,7 @@ export class DemoUserModel {
       value: (r) => r.role,
       alignment: "left", 
     }),
-  ] as TableColumns<DemoUserRecord>;
+  ] as TableColumnList<DemoUserRecord>;
 
   get allUsers(): TableRecordList<DemoUserRecord> {
     return this.store.getAllRecords();

@@ -1,4 +1,4 @@
-import { BasicAction, Point2D, point2D, Rect2D, vector2D, atom } from ":foundation";
+import { BasicAction, Point2D, point2D, Rect2D, vector2D, atom, Vector2D } from ":foundation";
 
 //
 // An AnimationItem is an object which implements the step() method. 
@@ -24,8 +24,14 @@ export class SimpleAnimationItem implements AnimationItem {
   constructor(public initialLocation = point2D(0, 0), public initialVelocity = vector2D(0, 0)) {
     this.setToInitialValues();
   }
+  getLocation(): Point2D {
+    return this.location.get();
+  }
   setLocation(pt: Point2D): void {
     this.location.set(pt.clampToRect(this.bounds));
+  }
+  getVelocity(): Vector2D {
+    return this.velocity.get();
   }
   setVelocity(vx: number, vy: number): void {
     this.velocity.set(vector2D(vx, vy));

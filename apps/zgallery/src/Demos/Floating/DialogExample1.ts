@@ -17,6 +17,7 @@ export function DialogExample1(): View {
     return Button({
       label: label,
       padding: core.space.s3,
+      rounding: core.rounding.pill,
       ripple: false,
       action: () => hideDialog.set(false),
     }).append(AlertDialog(hideDialog, title, defaultAction, dialogOptions));

@@ -3,7 +3,8 @@ import { rect2D, point2D, Point2D, RouteAtom, zlog, zutil, lazyinit, znumber, zb
 import { ZType, zstring, BasicAction, TAction, reactiveAction, ReactiveAction, SanitizeService } from ":foundation";
 import { PlacementOption, ZWindow, placementOffsetAndSize } from ":uifoundation";
 import { Attributes, AttrTarget, AttrBundle, ITheme, ZStyleSheet, ZStyle, ztheme } from ":attributes";
-import { AnimationSpec, AnimationTarget, EffectTarget, EffectsBundle, InteractionState, isInteractionState } from ":effect";
+import { AnimationSpec, AnimationTarget, EffectTarget, EffectsBundle } from ":effect";
+import { InteractionState, isInteractionState } from ":effect";
 import { EventAction, Events, Listener, ListenerTarget, EventType, MouseAction, handleEvents } from ":events";
 import { EventsKey, isEventActionsKey, GenericEventHandlerOptions, InputHandlerOptions } from ":events";
 import { DropHandlerOptions, PointerHandlerOptions, ClipboardHandlerOptions, Handler } from ":events";
@@ -16,14 +17,14 @@ import { DragHandlerOptions } from ":events";
 
 //
 // A View is the primary object in the Zaffre UI. All components create a View, and component
-// options are translated into View properties. A View will have either an HTMLDelegate or an 
-// SVGDelegate, which handles the behavioral differences between HTML and SVG. 
+// options are translated into View properties. A View will have either an HTMLDelegate or an
+// SVGDelegate, which handles the behavioral differences between HTML and SVG.
 //
 // TODO:
 //  - refactor this monster module; nontrivial, since there are so many dependencies among View, VList & ViewDelegate
 //  - can we move observers into delegates?
 //  - should be have more interfaces like AttrTarget to limit how much clients need to see
-// 
+//
 
 export type ViewCreator = (options?: ViewOptions) => View;
 export type ViewAction = (view: View) => void;
@@ -40,14 +41,12 @@ export interface SharedViewState {
   hovered?: Atom<boolean>;
 }
 
-
 export interface OptionBundle {
   [key: string]: any;
-} 
+}
 export interface OptionSheet {
   [key: string]: OptionBundle;
 }
-
 
 export interface ViewOptionsRecord {
   name?: string;
@@ -77,9 +76,11 @@ export interface ViewOptionsRecord {
   events?: Events;
   //capture?: Events;
   clickAction?: MouseAction;
+  hotKeys?: Map<string, BasicAction>;
 
   model?: unknown; // for debugging
 
+  onIntersectionHidden?: ViewAction;
   onIntersectionVisible?: ViewAction;
   onResize?: ViewAction;
   onSelect?: ViewAction;
@@ -98,8 +99,8 @@ export interface ViewOptionsRecord {
   onUndo?: BasicAction;
   onRedo?: BasicAction;
 
-  origin?: zpoint2D; 
-  extent?: zsize2D; 
+  origin?: zpoint2D;
+  extent?: zsize2D;
   fitToParent?: zboolean;
   scaleToParent?: zboolean;
   animations?: AnimationSpec[];
@@ -113,6 +114,8 @@ export interface ViewOptionsRecord {
   placement?: PlacementOption;
   tabIndex?: znumber;
   isDialog?: boolean;
+  scrollIntoViewWhen?: Atom<boolean>;
+  scrollToTopWhen?: Atom<boolean>;
 
   resolveResource?: ResolveResourceFn;
 
@@ -240,6 +243,10 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     return reactiveAction(() => this.applyStyle());
   }
 
+  get model(): unknown {
+    return this.options.model;
+  }
+
   // Delegate methods
 
   createElement(tagName: string): ZElement {
@@ -271,14 +278,17 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
   ////////////////////////////////////////////////////////////////////////////////////
 
   routePoint?: RouteAtom;
-  findEnsembleWithRoutePoint(routeName: string): View | undefined {
-    return this.findDescendant((v) => v.routePoint?.name === routeName);
+  fullRoutePath(): string {
+    const base = this.parent?.fullRoutePath() || "";
+    const routePointName = this.routePoint?.name || "";
+    const routePointValue = this.routePoint?.get() || "";
+    return zutil.joinPathComponents(base, routePointName, routePointValue);
   }
-  findParentWithRoutePoint(): View | undefined {
-    return this.parent?.routePoint ? this.parent : this.parent?.findParentWithRoutePoint();
-  }
-  findRoutePath(): string {
-    return (this.parent?.findRoutePath() || "") + (this.routePoint?.pathComponent() || "");
+  routePath(): string {
+    const base = this.parent?.fullRoutePath() || "";
+    const routePointName = this.routePoint?.name || "";
+    //zlog.info("routePath=" + zutil.joinPathComponents(base, routePointName));
+    return zutil.joinPathComponents(base, routePointName);
   }
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -337,8 +347,15 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     this.setZaffreData();
   }
 
+  childAt(index: number): View | undefined {
+    return this.children.at(index);
+  }
+
   @lazyinit get floatingChildren(): ArrayAtom<View> {
     return arrayAtom<View>([]);
+  }
+  floatingParent(): View | undefined {
+    return this.parent?.isFloating() ? this.parent : this.parent?.floatingParent();
   }
   isFloating(): boolean {
     return Boolean(this.options.floating);
@@ -384,7 +401,10 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
       );
     }
     if (this.options.onIntersectionVisible) {
-      this.addIntersectionAction(() => this.options.onIntersectionVisible!(this));
+      this.addIntersectionAction((visible) => visible && this.options.onIntersectionVisible!(this));
+    }
+    if (this.options.onIntersectionHidden) {
+      this.addIntersectionAction((visible) => !visible && this.options.onIntersectionHidden!(this));
     }
     if (this.options.onResize) {
       this.addResizeAction(() => this.options.onResize!(this));
@@ -401,9 +421,19 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
   }
   initialize(): void {
     this.initializeEvents(this.options.events || {});
+    this.initializeHotKeys();
     this.initializeEffects(this.options.effects || {});
     this.initializeHandlers();
     this.initializeAnimations();
+
+    // add scrollIntoViewAndSelectWhen
+
+    if (this.options.scrollIntoViewWhen) {
+      this.options.scrollIntoViewWhen.addAction(() => this.scrollIntoViewIfNeeded());
+    }
+    if (this.options.scrollToTopWhen) {
+      this.options.scrollToTopWhen.addAction(() => this.scrollToTop());
+    }
   }
 
   initialized = false;
@@ -425,6 +455,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     this.attributeBundle.apply();
     this.applyStyleAction.perform();
     this.setMountedState(true);
+    this.interactionState.set("enabled");
     this.options.afterMount?.(this);
   }
 
@@ -520,6 +551,44 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
       this.addClipboardHandler({ cut: evts.cut, copy: evts.copy, paste: evts.paste });
     }
   }
+
+  hotKeyViews?: Set<View>;
+  initializeHotKeys(): void {
+    const hotKeys = this.options.hotKeys;
+    if (hotKeys) {
+      this.addIntersectionAction((visible) => {
+        if (visible) {
+          View.rootView.addHotKeyListener(this);
+        } else {
+          View.rootView.removeHotKeyListener(this);
+        }
+      })
+    }
+  }
+  ignoreHotKey(): boolean {
+    const activeElt = document.activeElement;
+    if (activeElt instanceof HTMLElement && activeElt.isContentEditable) {
+      return true;
+    }
+    const activeTag = activeElt?.tagName.toLowerCase() || "";
+    return ["input", "select", "textarea"].includes(activeTag);
+  }
+  handleHotKey(evt: KeyboardEvent): void {
+    if (!this.ignoreHotKey()) {
+      Array.from(this.hotKeyViews || []).forEach((view) => view.options.hotKeys?.get(evt.key)?.());
+    }
+   }
+  addHotKeyListener(view: View): void {
+    if (!this.hotKeyViews) {
+      this.hotKeyViews = new Set();
+      this.addEventListener("keydown", (evt) => this.handleHotKey(<KeyboardEvent>evt));
+    }
+    this.hotKeyViews.add(view);
+  }
+  removeHotKeyListener(view: View): void {
+    this.hotKeyViews?.delete(view);
+  }
+
 
   addHandler(actor: Handler<unknown>): void {
     this.actors.push(actor);
@@ -628,7 +697,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
   // TODO: handle focus/blur
 
   setInteractionState(state: InteractionState, action?: BasicAction): void {
-    zlog.debug(`### ${this} setInteractionState: ${state} (was ${this.currentInteractionState})`);
+    //zlog.info(`### ${this} setInteractionState: ${state} (was ${this.currentInteractionState})`);
     if (state !== this.currentInteractionState) {
       // TODO: canceling results in an abort on a ripple
       //this.cancelRunningAnimations();
@@ -665,6 +734,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     } else {
       this.elt.classList.remove("hidden");
     }
+    this.interactionState.set("enabled");
   }
 
   @lazyinit public get selectedState(): Atom<boolean> {
@@ -944,6 +1014,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
     } else {
       this.setOffset(finalOffset);
     }
+    // TODO: this isn't right for a drop-down menu
     if (size.width) {
       this.setWidth(size.width);
     }
@@ -1109,7 +1180,7 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
   renderChild(childView: View): void {
     let child = childView;
     if (!child.rendered) {
-      child.setParent(this); 
+      child.setParent(this);
       child.beforeAddedToDOM();
       child.render();
       this.addChildToDOM(child);
@@ -1344,6 +1415,19 @@ export class View implements AttrTarget, ListenerTarget, AnimationTarget, Effect
       ? this.parent.vScrollParent()
       : undefined;
   }
+  
+  public scrollToTop(): void {
+    const scrollParent = this.vScrollParent();
+    if (this.height === 0 || !scrollParent) {
+      return;
+    }
+    const r = this.clientRect();
+    const pr = scrollParent.clientRect();
+    //console.log("label="+(this.options as any).label);
+    //console.log("r="+r.toString()+", pr="+pr.toString()+", dy="+(r.y - pr.y));
+    scrollParent.elt.scrollBy(0, r.y - pr.y);
+  }
+
   public scrollIntoViewIfNeeded(offset = 20): void {
     const scrollParent = this.vScrollParent();
     if (this.height === 0 || !scrollParent) {

@@ -1,7 +1,7 @@
-import { atom, Sz2D, zget, zset, zstring, ZType } from ":foundation";
-import { View, core } from ":core";
+import { Atom, atom, Sz2D, zget, zset, zstring, ZType } from ":foundation";
+import { View, addOptionEvents, core, em, px } from ":core";
 import { Button, ButtonOptions } from "../Controls";
-import { Floating } from "../HTML";
+import { Floating, FloatingOptions } from "../HTML";
 import { MenuOptions, SimpleMenu } from "./Menu";
 
 //
@@ -14,25 +14,41 @@ import { MenuOptions, SimpleMenu } from "./Menu";
 //  - allow title to be fixed
 //
 export interface DropDownButtonOptions extends ButtonOptions {
-  initialValue?: string;
+  //initialValue?: string;
 }
-export function DropDownButton(
-  selectedValue: zstring,
-  choices: ZType<string[]>,
+export function DropDownButton<T>(
+  selectedValue: Atom<T>,
+  choices: ZType<Iterable<T>>,
+  titleFn: (t: T) => string,
+  initialValue?: T,
   options: DropDownButtonOptions = {}
 ): View {
-  zset(selectedValue, options.initialValue || zget(selectedValue) || zget(choices)[0]);
+  zset(selectedValue, initialValue || zget(selectedValue)); //  || Array.from(zget(choices))[0]);
+  options.model ??= [choices, selectedValue];
+  options.alignItems = "stretch";
+  options.tabIndex = 0;
+  addOptionEvents(options, {
+    focus: () => {},
+    blur: () => {},
+  });
 
   const buttonOptions: ButtonOptions = {
-    ...options,
     rounding: core.rounding.none,
     padding: core.space.s0,
-    label: atom(() => title(zget(selectedValue))),
-    justifyContent: "end",
+    label: atom(() => titleFn(zget(selectedValue))),
+    justifyContent: "start",
+    textLabelOptions: {
+      padding: px(0),
+    },
     trailingIconURI: "icon.chevron-down",
+    trailingIconOptions: {
+      marginTop: em(0.25),
+    },
     componentName: "DropDownButton",
+    ...options,
   };
   const menuOptions: MenuOptions = {
+    //paddingInline: em(0.5),
     placement: {
       referencePt: "xcenter-yend",
       viewPt: "xcenter-ystart",
@@ -41,8 +57,25 @@ export function DropDownButton(
     font: options.font,
     rounding: core.rounding.none,
   };
-  function title(s: string): string {
+  const floatingOptions: FloatingOptions = {
+    toggleOnReferenceEnter: true,
+    //maxHeight: px(600),
+    //overflowY: "auto",
+  }
+
+  return Button(buttonOptions).append(Floating(SimpleMenu(selectedValue, choices, (s) => titleFn(s), menuOptions), floatingOptions));
+}
+
+export interface SimpleDropDownButtonOptions extends DropDownButtonOptions {
+  initialValue?: string;
+}
+export function SimpleDropDownButton(  
+  selectedValue: Atom<string>,
+  choices: string[],
+  options: SimpleDropDownButtonOptions = {}
+): View {
+  function simpleTitle(s: string): string {
     return s === "" ? "&nbsp;" : s;
   }
-  return Button(buttonOptions).append(Floating(SimpleMenu(selectedValue, choices, (s) => title(s), menuOptions)));
+  return DropDownButton(selectedValue, choices, simpleTitle, options.initialValue, options);
 }

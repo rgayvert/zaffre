@@ -7,6 +7,7 @@ import { ToolbarExample } from "./ToolbarExample";
 import { LabelBoxExample } from "./LabelBoxExample";
 import { CarouselExample } from "./CarouselExample";
 import { EnsembleExample } from "./EnsembleExample";
+import { LoaderExample } from "./LoaderExample";
 
 export function LayoutsDemo(): View {
   return GalleryDemo(topic);
@@ -56,6 +57,12 @@ const topic: GalleryTopic = {
       componentFn: ToolbarExample,
       sources: ["ToolbarExample.ts"],
       markdown: "ToolbarExample.md",
+    },
+    {
+      title: "Loader",
+      componentFn: LoaderExample,
+      sources: ["LoaderExample.ts"],
+      markdown: "LoaderExample.md",
     },
 
   ]

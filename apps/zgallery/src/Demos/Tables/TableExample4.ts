@@ -13,7 +13,7 @@ export function TableExample4(): View {
     return Boolean(tableModel4.selectedColumn.get() && tableModel4.columns.length > 1);
   }
   function addRow(): void {
-    tableModel4.addRowAfterSelection(loremTable.tableRow(tableModel4.columns));
+    tableModel4.addRowAfterSelection(loremTable.tableRow(tableModel4.columns.get()));
   }
   function deleteRow(): void {
     tableModel4.deleteSelectedRow();

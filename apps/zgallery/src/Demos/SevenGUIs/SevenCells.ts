@@ -12,7 +12,7 @@ export function SevenCells(): View {
   const opts: TableOptions = {
     editable: true,
     dataCellViewOptions: {
-      minWidth: ch(7),
+        minWidth: ch(7),
     },
   };
 

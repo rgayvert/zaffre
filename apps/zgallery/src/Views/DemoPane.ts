@@ -1,4 +1,4 @@
-import { core, View, Ensemble, pct, Box, ScrollPane } from "zaffre";
+import { core, View, Ensemble, pct, Box, ScrollPane, zlog } from "zaffre";
 import { GalleryModel, galleryTopics, DemoTopicComponent, infoPages } from "../Model";
 
 //
@@ -9,6 +9,8 @@ import { GalleryModel, galleryTopics, DemoTopicComponent, infoPages } from "../M
 function DemoContentView(key: string): View {
   const topic = galleryTopics.get(key);
   const info = infoPages.find((info) => info.key === key);
+  //zlog.info("DemoContentView: "+key);
+
   if (topic) {
     return DemoTopicComponent(topic);
   } else if (info) {

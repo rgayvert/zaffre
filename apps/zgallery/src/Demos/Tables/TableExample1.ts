@@ -8,7 +8,7 @@ export function TableExample1(): View {
     border: core.border.thin,
   };
   const tableOptions: TableOptions = {
-    sortable: true
+    sortable: true,
   }
   return ScrollPane(scrollOptions).append(
     Table(tableModel1, tableOptions)

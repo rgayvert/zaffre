@@ -1,4 +1,4 @@
-import { booleanColumn, numericColumn, simpleTableModel, stringColumn } from "zaffre";
+import { booleanColumn, numericColumn, simpleTableModel, stringColumn, TableColumnList } from "zaffre";
 import { NumericFormatter, TableColumns, TableModel } from "zaffre";
 
 export interface Fruit {
@@ -21,7 +21,7 @@ export class ExampleTableModel3 {
     numericColumn({ title: "Qty", value: (r) => r.quantity }),
     numericColumn({ title: "Price", value: (r) => r.price, formatter: NumericFormatter({ intl: this.dollars }) }),
     booleanColumn({ title: "On Sale", value: (r) => r.onSale }),
-  ] as TableColumns<Fruit>;
+  ] as TableColumnList<Fruit>;
 
   tableModel3: TableModel<Fruit>;
 

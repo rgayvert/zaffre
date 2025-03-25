@@ -1,4 +1,4 @@
-import { atom, zget, Rect2D, ArrayAtom, arrayAtom } from ":foundation";
+import { atom, zget, Rect2D, ArrayAtom, arrayAtom, emptyArrayAtom } from ":foundation";
 import { place, View, em, core, defineComponentBundle, mergeComponentOptions, BV, restoreOptions } from ":core";
 import { Floating } from "../HTML";
 import { Stack, StackOptions } from "../Layout";
@@ -53,7 +53,7 @@ export function Toolbar(inOptions: BV<ToolbarOptions> = {}): View {
   options.onResize = (view: View): void => barResized(view);
 
   // gather the buttons as they are added and apply a hidden atom
-  const buttons: ArrayAtom<View> = arrayAtom([]);
+  const buttons = emptyArrayAtom<View>();
   options.afterAppendChild = (_view, child): void => {
     if (child !== menuButton) {
       child.options.hidden = collapsed;

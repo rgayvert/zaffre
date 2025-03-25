@@ -1,12 +1,15 @@
 import { atom } from ":foundation";
-import { core, em, pct } from ":core";
+import { calc, core, em, pct } from ":core";
 import { TextArea, TextAreaOptions } from "../Content";
-import { EmailInput, NumberInput, PasswordInput, TextInput, TextInputOptions } from "../Inputs";
+import { DateInput, EmailInput, NumberInput, PasswordInput, TextInput } from "../Inputs";
+import { ChronoInputOptions, TextInputOptions } from "../Inputs";
 import { FormField, FormFieldCreator } from "./FormField";
-import { DropDownButton } from "../Floating";
+import { DropDownButton, SimpleDropDownButton } from "../Floating";
+import { Switch } from "../Controls";
+import { URLInputBox } from "../Composite";
 
 //
-// Default field creators. These will be referenced when defining the set of
+// Default field creators. These will be ref//erenced when defining the set of
 // form fields in a form.
 //
 
@@ -21,11 +24,22 @@ const textAreaOptions: TextAreaOptions = {
   border: core.border.thin,
   width: pct(100),
   padding: core.space.s2,
+  fluidHeight: true, 
+  rows: 3,
+  font: core.font.body_medium, 
+  resize: "none" 
+};
+const dateInputOptions: ChronoInputOptions = {
+  border: core.border.thin,
+};
+const booleanInputOptions: ChronoInputOptions = {
+  controlSize: "xs",
 };
 
 const defaultStringFieldFn = (field: FormField<string>) =>
   TextInput(field.value, {
     borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+    firstFocus: field.firstFocus,
     ...textInputOptions,
   });
 
@@ -47,15 +61,47 @@ const defaultEmailFieldFn = (field: FormField<string>) =>
     ...textInputOptions,
   });
 
+  const defaultURLFieldFn = (field: FormField<string>) =>
+    URLInputBox(field.value, {
+      width: pct(100),
+      action: () => field.openAction?.(field.value.get()),
+      textInputOptions: {
+        ...textInputOptions,
+        width: calc("100% - 2ch"),
+        borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+      }
+    });
+
 const defaultPasswordFieldFn = (field: FormField<string>) =>
   PasswordInput(field.value, {
     borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
     ...textInputOptions,
   });
 
-const defaultSelectFieldFn = (field: FormField<string>) =>
-  DropDownButton(field.value, field.choices || [], {
+const defaultDateFieldFn = (field: FormField<Date>) =>
+  DateInput(field.value, {
     borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+    ...dateInputOptions,
+  });
+
+const defaultBooleanFieldFn = (field: FormField<boolean>) =>
+  Switch(field.value, {
+    borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+    ...booleanInputOptions,
+  });
+
+const defaultSelectFieldFn = (field: FormField<string>) =>
+  SimpleDropDownButton(field.value, field.choices || [], {
+    borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+    padding: core.space.s2,
+    ...textInputOptions,
+    minHeight: em(1),
+  });
+
+const defaultObjectListFieldFn = (field: FormField<Object>) =>
+  DropDownButton(field.value, field.objects || [], field.objectTitleFn!, undefined, {
+    borderColor: atom(() => (field.isValid.get() ? undefined : core.color.red)),
+    padding: core.space.s2,
     ...textInputOptions,
     minHeight: em(1),
   });
@@ -66,5 +112,9 @@ export const DefaultFormFieldFns: Map<string, FormFieldCreator<unknown>> = new M
   ["number", defaultNumberFieldFn],
   ["email", defaultEmailFieldFn],
   ["password", defaultPasswordFieldFn],
+  ["date", defaultDateFieldFn],
   ["select", defaultSelectFieldFn],
+  ["object", defaultObjectListFieldFn],
+  ["boolean", defaultBooleanFieldFn],
+  ["url", defaultURLFieldFn],
 ]);

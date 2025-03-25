@@ -31,6 +31,7 @@ export type BasicAction = () => void;
 export type TAction<T> = (arg: T) => void;
 export type AtomAction<T> = (newVal: T, atom?: Atom<T>) => void;
 export type AsyncAtomAction<T, R> = (newVal: T) => Promise<R>;
+export const noOp: BasicAction = () => undefined;
 
 //
 // TODO: eliminate SimpleAction; this is tricky because all sorts of actions are thrown
@@ -187,7 +188,14 @@ export class Atom<T> {
   private printDebugValue(val: T): string {
     return this.options.debugPrint ? this.options.debugPrint(val) : `${val}`;
   }
+  private inSet = false;
   public setNow(value: T, skipReactions = false): void {
+    if (this.inSet) {
+      // prevent circular update
+      return;
+    }
+    this.inSet = true;
+    this.waitingForDebounce = false;
     if (value !== this.val || this.options.alwaysFire) {
       if (zget(this.options.debug)) {
         zlog.info(
@@ -198,6 +206,7 @@ export class Atom<T> {
       this.performActionsAndDerivations(skipReactions);
       this.options.parent?.options.childChanged?.(this);
     }
+    this.inSet = false;
   }
 
   private waitingForDebounce = false;
@@ -394,6 +403,7 @@ export function atom<T>(val: T | Atom<T> | AtomFn<T>, options: AtomOptions = {})
     return new Atom(val, options);
   }
 }
+
 export function touch(...values: any[]): void {
   values.forEach((value) => value instanceof Atom && value.get());
 }
@@ -450,4 +460,12 @@ export function performAction(action: ReactiveAction | SimpleAction | undefined)
   } else if (action) {
     action();
   }
+}
+
+export type Atomized<R extends {}> = {
+  [k in keyof R]: Atom<R[k]>
+}
+export function atomize<R extends {}>(r: R): Atomized<R> {
+  const entries = Object.entries(r);
+  return <Atomized<R>>Object.fromEntries(entries.map(([k, v]) => [k as keyof R, atom(r[k  as keyof R])]));
 }

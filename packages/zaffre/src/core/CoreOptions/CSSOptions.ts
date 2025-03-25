@@ -1,5 +1,5 @@
 import { znumber, zstring } from ":foundation";
-import { css_border, css_color, css_font, css_space, css_margin, css_width, css_rounding, css_backfaceVisibility, css_fontWeight } from ":attributes";
+import { css_border, css_color, css_font, css_space, css_margin, css_width, css_rounding, css_backfaceVisibility, css_fontWeight, css_verticalAlign } from ":attributes";
 import { css_background, css_gridAutoFlow, css_textTransform, css_padding } from ":attributes";
 import { css_viewOffset, css_aspectRatio, css_clipPath, css_content, css_cursor, css_filter } from ":attributes";
 import { css_flexGrow, css_flexShrink, css_flexBasis, css_flex, css_flexWrap, css_display, css_fontSize } from ":attributes";
@@ -80,6 +80,7 @@ export interface CSSAttributeOptions {
   minInlineSize?: css_width;
   minWidth?: css_width;
   opacity?: znumber;
+  order?: znumber;
   outline?: css_border;
   overflow?: css_overflow;
   overflowX?: css_overflow;
@@ -111,7 +112,7 @@ export interface CSSAttributeOptions {
   transformStyle?: css_transformStyle;
   transition?: zstring;
   userSelect?: css_userSelect;
-  verticalAlign?: css_length;
+  verticalAlign?: css_verticalAlign | css_length;
   visibility?: css_visibility;
   whiteSpace?: css_whiteSpace;
   width?: css_width;
@@ -185,6 +186,7 @@ export const cssOptionKeys = [
   "minInlineSize",
   "minWidth",
   "opacity",
+  "order",
   "outline",
   "overflow",
   "overflowX",

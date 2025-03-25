@@ -1,4 +1,4 @@
-import { ZArray } from "../Atom";
+import { ArrayAtom, Atom, ZArray, zboolean } from "../Atom";
 import { DefaultDateFormatter, DefaultStringFormatter, Formatter } from "../Support";
 
 //
@@ -28,6 +28,8 @@ export type PartialTableColumn<R, S> = {
   compareFn?: TableValueCompareFn<S>;
   setter?: TableValueSetter<R, S>;
   subtype?: string;
+  hidden?: Atom<boolean>;
+  minWidth?: number;
 }
 
 export type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
@@ -36,7 +38,9 @@ type extraColumnProperties = "type" | "formatter" | "alignment" | "sortDirection
 
 export type TableColumn<R, S> = WithRequired<PartialTableColumn<R, S>, extraColumnProperties>;
 
-export type TableColumns<R> = ZArray<TableColumn<R, unknown>>;
+//export type TableColumns<R> = TableColumn<R, unknown>[]; // ZArray<TableColumn<R, unknown>>;
+export type TableColumnList<R> = TableColumn<R, unknown>[];
+export type TableColumns<R> = ArrayAtom<TableColumn<R, unknown>>;
 
 export interface TableColumnType<S> {
   type: string;

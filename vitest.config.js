@@ -7,7 +7,7 @@ export default {
   },
   resolve: {
     alias: {
-      ":foundation": path.resolve(__dirname, "./packages/zaffre/src/core/Foundation"),
+      ":foundation": path.resolve(__dirname, "./packages/zaffre/src/foundation"),
       ":uifoundation": path.resolve(__dirname, "./packages/zaffre/src/core/UIFoundation"),
       ":attributes": path.resolve(__dirname, "./packages/zaffre/src/core/Attributes"),
       ":effect": path.resolve(__dirname, "./packages/zaffre/src/core/Effects"),

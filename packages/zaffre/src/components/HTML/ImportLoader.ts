@@ -4,28 +4,29 @@ import { core, defineComponentBundle, mergeComponentOptions } from ":core";
 import { Box, BoxOptions } from "./Box";
 
 //
-// A Loading component works with an ImportAtom to dynamically import a component. When the
-// import atom is set, it calls back to the Loading component with replaceWithImport(), and
-// the Loading element is replaced with the new element.
+// An ImportLoader works with an ImportAtom to dynamically import a component. When the
+// import atom is set, it calls back to the ImportLoader component with replaceWithImport(), and
+// the ImportLoader element is replaced with the new element.
 //
 // TODO:
 //   - provide some feedback while the import is being retrieved
 //   - display some kind of error message if the import fails
+//   - use timeout
 //
 
-export interface LoadingOptions extends BoxOptions {
+export interface ImportLoaderOptions extends BoxOptions {
   delay?: number;
   timeout?: number;
 }
-defineComponentBundle<LoadingOptions>("Loading", "Box", {
+defineComponentBundle<ImportLoaderOptions>("ImportLoader", "Box", {
   timeout: 2000,
   width: pct(100),
   height: pct(100),
   background: core.color.secondaryContainer,
 });
 
-export function Loading(importComponent: ImportAtom<ViewCreator>, inOptions: BV<LoadingOptions> = {}): View {
-  const options = mergeComponentOptions("Loading", inOptions);
+export function ImportLoader(importComponent: ImportAtom<ViewCreator>, inOptions: BV<ImportLoaderOptions> = {}): View {
+  const options = mergeComponentOptions("ImportLoader", inOptions);
 
   function replaceWithImport(view: View, component: ViewCreator | undefined): void {
     const viewOptions = view.options;

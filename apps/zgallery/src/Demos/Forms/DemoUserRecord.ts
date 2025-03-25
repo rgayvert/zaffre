@@ -1,4 +1,4 @@
-import { TableRecord, TableRecordList, TableStore } from "zaffre";
+import { TableRecord, TableRecordList, TableStore, uniqueRecordID } from "zaffre";
 
 export const DemoUserRoles = ["", "User", "Admin"] as const;
 export type DemoUserRole = typeof DemoUserRoles[number];
@@ -7,7 +7,10 @@ export const DemoUserTitles = ["", "Mr", "Mrs", "Miss", "Ms"] as const;
 export type DemoUserTitle = typeof DemoUserTitles[number];
 
 export class DemoUserRecord extends TableRecord {
-  recordID = -1;
+  persistentFields(): string[] {
+    return ["title", "firstName", "lastName", "email", "password", "role"];
+  }
+  recordID = uniqueRecordID();
   constructor(
     store: TableStore<DemoUserRecord> | undefined,
     public title = "",
