@@ -22,6 +22,15 @@ export function Stack(inOptions: BV<StackOptions> = {}): View {
   return restoreOptions(Box(options));
 }
 
+// export function StackX(): View {
+//   return Box()
+//     .display("flex")
+//     .flexWrap("nowrap")
+//     .alignItems("center")
+//     .justifyContent("center")
+//     .background(core.color.background);
+// }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 defineComponentBundle<StackOptions>("HStack", "Stack", {

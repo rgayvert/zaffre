@@ -4,10 +4,10 @@ import { AnimationItem } from "./AnimationItem";
 //
 // An Animator runs an Animation using window.requestAnimationFrame(). It contains a list
 // of items, each of which gets called with step() for each animation frame.
-// 
+//
 // An animator maintains a state (running/stopped/paused), so it will only request a
-// frame when it in a running state. 
-// 
+// frame when it in a running state.
+//
 
 export interface AnimatorOptions {
   duration?: number;
@@ -17,7 +17,6 @@ export interface AnimatorOptions {
 }
 export type AnimatorState = "running" | "stopped" | "paused";
 
-
 export class BasicAnimator {
   startTimestamp = 0;
   previousTimestamp = 0;
@@ -25,7 +24,7 @@ export class BasicAnimator {
   duration: number;
   items: Set<AnimationItem> = new Set([]);
   state: Atom<AnimatorState> = atom("stopped");
-  running = toggleAtom(false, { action: (b) => b ? this.start(): this.stop() });
+  running = toggleAtom(false, { action: (b) => (b ? this.start() : this.stop()) });
 
   constructor(public options: AnimatorOptions = {}) {
     this.duration = options.duration || Number.MAX_VALUE;
@@ -49,20 +48,22 @@ export class BasicAnimator {
     return this.state.get() === "running";
   }
   start(): void {
-    if (this.state.get() !== "running") {
+    if (!this.isRunning) {
       this.state.set("running");
       this.running.set(true);
+      this.options.onStart?.();
       this.items.forEach((item) => item.begin?.());
       this.requestFrame();
-      this.options.onStart?.();
     }
   }
   stop(): void {
-    this.state.set("stopped");
-    this.running.set(false);
-    this.startTimestamp = 0;
-    this.items.forEach((item) => item.end?.());
-    this.options.onStop?.();
+    if (this.isRunning) {
+      this.state.set("stopped");
+      this.running.set(false);
+      this.startTimestamp = 0;
+      this.items.forEach((item) => item.end?.());
+      this.options.onStop?.();
+    }
   }
   pause(): void {
     this.state.set("paused");
