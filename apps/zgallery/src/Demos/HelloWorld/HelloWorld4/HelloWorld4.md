@@ -1,0 +1,3 @@
+Reactive DOM structure
+  
+Elements in the DOM may be added or deleted in response to changes in reactive values. The key to this mechanism is the *ViewList()* function, which creates a ViewList object rather than a View. A ViewList consists of a reactive array along with a childID function and a childCreator function. As the array changes, the viewList will update the list of children to match the array, preserving children with matching ids.

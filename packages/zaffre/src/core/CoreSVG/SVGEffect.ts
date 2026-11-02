@@ -1,0 +1,71 @@
+import { Effect, EffectTarget, EffectDirection, EffectPromise } from ":effect";
+import { css_color } from ":attributes";
+import { zcolor } from ":theme";
+import { View, BaseView } from ":view";
+import { SVGCircle } from "./SVGShape";
+import { isSVGView, SVGDelegate } from "./SVGDelegate";
+import { SVG } from "./SVG";
+
+//
+// Base class for SVG effects.
+//
+
+export class SVGEffect extends Effect {
+
+    public static ripple(duration = 0.3, maxDiameter = 0, rippleColor: css_color = zcolor.gray): SVGEffect {
+      return new SVGEffect(duration, maxDiameter, rippleColor);
+    }
+  
+    constructor(public duration: number, public maxDiameter = 0, public color: css_color) {
+      super("in", { name: "ripple" });
+    }
+    async applyToTarget(target: EffectTarget, direction: EffectDirection): EffectPromise {
+      if (!target.clickPoint) {
+        // too early to apply (e.g., route expansion)
+        return Promise.resolve(true);
+      }
+      const rect = target.clientRect();
+      const pt = target.clickPoint.subtract(rect.origin);
+      let diameter = Math.max(rect.width, rect.height);
+      if (this.maxDiameter) {
+        diameter = Math.min(this.maxDiameter, diameter);
+      }
+  
+      const svg = SVG({ bounds: rect });   // is this right?
+      const circle = SVGCircle({ cx: pt.x, cy: pt.y, fill: this.color });
+      svg.elt.style.position = "absolute";
+      svg.append(circle);
+
+      let overflow;
+  
+      if (target instanceof BaseView && isSVGView(target)) {
+        const delegate = <SVGDelegate>(<View>target).delegate;
+        if (delegate.isContainer()) {
+          delegate.view.append(svg);
+          delegate.view.renderChild(svg);
+        } else {
+          delegate.container()?.append(svg);
+          delegate.container()?.renderChild(svg);
+        }
+      } else if (target instanceof BaseView) {
+        target.append(svg);
+        target.renderChild(svg);
+        overflow = target.elt.style.overflow;
+        target.elt.style.overflow = "hidden";
+      }
+  
+      const keyFrames = [{ r: 0 }, { r: diameter, opacity: 0 }];
+      const options: KeyframeAnimationOptions = {
+        duration: this.duration * 1000,
+        fill: "none",
+      };
+      await circle.elt.animate(keyFrames, options).finished;
+      svg.remove();
+      if (target instanceof BaseView) {
+        target.elt.style.overflow = overflow || "";
+      }
+  
+      return Promise.resolve(true);
+    }
+  }
+  

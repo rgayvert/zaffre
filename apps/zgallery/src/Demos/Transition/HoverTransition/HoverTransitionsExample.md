@@ -1,0 +1,2 @@
+
+Each HTML component has an overlay view (created lazily), which is transparent by default. This overlay is used for standard interaction effect like hovered and pressed. It is also convenient for implementating custom effects. In this example, we show four different types of overlay transitions that are triggered by the hovered state change.

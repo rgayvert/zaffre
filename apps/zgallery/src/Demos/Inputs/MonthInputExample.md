@@ -1,0 +1,1 @@
+A MonthInput uses a Month object, which contains a year and month number, which as a string is in the form YYYY-MM.

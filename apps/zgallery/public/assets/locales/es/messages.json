@@ -1,0 +1,31 @@
+{
+    "hello": {
+      "message": "Hola Mundo",
+      "description": "Hello world title"
+    },
+    "Containers": {
+      "message": "Contenedores"
+    },
+    "Basic Example": {
+      "message": "Ejemplo básico"
+    },
+    "spinning_newspaper": {
+      "message": "Periódico giratorio<br>provoca mareos"
+    },
+    "primary": {
+      "message": "primaria"
+    },
+    "blue": {
+      "message": "azul"
+    },
+    "Tic-Tac-Toe": {
+      "message": "Tres en Raya"
+    },
+    "History": {
+      "message": "Historia"
+    },
+    "Next player:": {
+      "message": "Próxima jugadora:"
+    }
+  }
+  

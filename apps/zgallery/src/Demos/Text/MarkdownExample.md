@@ -1,0 +1,1 @@
+A Markdown component is a TextBox with a text transform that will convert markdown content into HTML. This requires a MarkdownService to be installed. For the gallery application, the MarkdownIt service is used.

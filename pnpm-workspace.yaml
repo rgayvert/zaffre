@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+  fsevents: true
+  sqlite3: true
+peerDependencyRules:
+  allowedVersions:
+    tsconfck: "3.1.6"

@@ -1,0 +1,19 @@
+{
+  "name": "hello",
+  "version": "1.0.0",
+  "description": "Sample hello application",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc --build",
+    "build": "pnpm vite build",
+    "circles": "npx dpdm src/hello.ts",
+    "clean": "rimraf dist lib"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "0.27.4",
+    "path": "^0.12.7",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "vite": "8.0.16"
+  }
+}

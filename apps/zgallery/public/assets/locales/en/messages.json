@@ -1,0 +1,13 @@
+{
+  "hello": {
+    "message": "Hello World",
+    "description": "Hello world title"
+  },
+  "Basic Example": {
+    "message": "Basic Example",
+    "description": "examples title"
+  },
+  "spinning_newspaper": {
+    "message": "Spinning newspaper<br>causes dizziness"
+  }
+}

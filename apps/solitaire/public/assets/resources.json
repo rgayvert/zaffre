@@ -1,0 +1,12 @@
+{
+  "url.google-fonts": "https://fonts.googleapis.com/css2?family=",
+  "url.codicons": "css/codicon.css",
+  "url.highlight": "css/highlight.min.css",
+  "url.dompurify": "js/purify.min.js",
+  "url.markdownit": "js/markdown-it.13.0.1.min.js",
+
+  "icon.search": "material-symbols-outlined-search",
+  "icon.bold": "codicon codicon-bold",
+
+  "image.zaffre": "image/zaffre.png"
+}

@@ -1,0 +1,1 @@
+An AsyncAtom is similar to a TimerAtom, but does not actually have a value; it simply evaluates an async function every N msec until it is stopped.

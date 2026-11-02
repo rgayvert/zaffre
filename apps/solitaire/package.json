@@ -1,0 +1,21 @@
+{
+  "name": "solitaire",
+  "version": "1.0.0",
+  "description": "Sample application",
+  "type": "module",
+  "scripts": {
+    "compile": "tsc --build",
+    "build": "vite build",
+    "buildprod": "vite --config vite.prod.config.js build",
+    "circles": "npx dpdm src/solitaire.ts"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "path": "^0.12.7",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "vite": "8.0.16"
+  },
+  "dependencies": {
+    "esbuild": "0.27.4"
+  }
+}

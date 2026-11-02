@@ -1,0 +1,3 @@
+A DisclosureList is a VStack of Disclosure items. In a SimpleDisclosureList, the title of a Disclosure item will always be a TextLabel, but a detailCreator function must be provided.
+
+This is very similar to the Disclosure example, but an array of title/detail values must be provided. In a basic DisclosureList, items may be expanded or collapsed independently, but only one may be in a selected state.

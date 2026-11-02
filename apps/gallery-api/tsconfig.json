@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig-base.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "target": "es2022",
+    "emitDeclarationOnly": false,
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@express-router": ["@types/express-serve-static-core"],
+
+    }
+
+  }
+}

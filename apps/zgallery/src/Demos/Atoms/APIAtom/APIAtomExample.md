@@ -1,0 +1,1 @@
+In addition to fetching remote data, an APIAtom can be used to encapsulate the extraction of structured data. In this example, we extract the temperature and description from JSON data obtained from a call to a weather API.

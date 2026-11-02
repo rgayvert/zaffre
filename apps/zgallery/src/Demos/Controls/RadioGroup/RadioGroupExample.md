@@ -1,0 +1,1 @@
+A RadioGroup component contains a collection of toggle components

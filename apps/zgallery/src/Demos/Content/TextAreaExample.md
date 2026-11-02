@@ -1,0 +1,1 @@
+A TextArea is a wrapper around an HTML textarea element. It can be configured to be a fixed size, allowed to grow, or have a height which increases as the content is extended.

@@ -1,0 +1,3 @@
+The Zaffre core component library contains a variety of stanard controls. This example shows a few variations on the Button component. The options to a button should include at least a label or icon and an action to perform when the button is clicked. 
+
+The size will be based on the current font. You can alter the size by specifying a control size (xs, sm, med, lg, xl, xxl), which modifies the font size.

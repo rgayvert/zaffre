@@ -1,0 +1,1 @@
+An HStack is a horizontal flexbox. Here we use a Spacer with a numeric value to consume the space between the second and third items (i.e., a div with a flex-grow value of 1).

@@ -1,0 +1,3 @@
+A SimpleDisclosure is a component which contains a title and a detail view inside a stack. The title is shown in an HStack which contains a toggle button (typically right/down chevrons). When the component is in a collapsed state, only the title bar is visible. When toggled, the detail view expands or collapses with an in&out collapse transition.
+
+In a SimpleDisclosure, the title is always a TextLabel, but a detailCreator function must be provided to create the detail view.

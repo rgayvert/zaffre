@@ -1,0 +1,28 @@
+{
+  "hello": {
+    "message": "Bonjour le monde",
+    "description": "Hello world title"
+  },
+  "Containers": {
+    "message": "Conteneurs"
+  },
+  "Basic Example": {
+    "message": "Exemple de base"
+  },
+  "spinning_newspaper": {
+    "message": "Le journal qui tourne<br>provoque des étourdissements"
+  },
+  "blue": {
+    "message": "bleu"
+  },
+  "Tic-Tac-Toe": {
+    "message": "Morpion"
+  },
+  "History": {
+    "message": "Histoire"
+  },
+  "Next player:": {
+    "message": "Prochain joueur:"
+  }
+  
+}

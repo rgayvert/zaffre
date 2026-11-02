@@ -1,0 +1,52 @@
+{
+  "name": "zaffre",
+  "description": "",
+  "version": "0.0.1",
+  "license": "ISC",
+  "sideEffects": false,
+  "scripts": {
+    "compile": "tsc -p .",
+    "build": "vite build",
+    "pack": "npm pack",
+    "circles": "npx dpdm src/zgallery.ts",
+    "create-app": "node scripts/create-zaffre-app.js",
+    "zg": "pnpm run vite -w apps/zgallery",
+    "clean": "rimraf apps/*/dist apps/*/lib extensions/*/dist extensions/*/lib",
+    "cleanall": "rimraf apps/*/dist apps/*/lib extensions/*/dist extensions/*/lib node_modules */*/node_modules",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@material/material-color-utilities": "^0.4.0",
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^25.9.3",
+    "@types/vscode": "^1.120.0",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "@vscode/codicons": "^0.0.45",
+    "dompurify": "^3.4.10",
+    "dpdm": "^4.2.0",
+    "esbuild": "0.27.4",
+    "eslint": "^10.5.0",
+    "express": "^5.2.1",
+    "highlight.js": "^11.11.1",
+    "jsdom": "^29.1.1",
+    "markdown-it": "^14.2.0",
+    "npm-check-updates": "^22.2.3",
+    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
+    "rimraf": "^6.1.3",
+    "rollup-plugin-visualizer": "^7.0.1",
+    "ts-jest": "^29.4.11",
+    "ts-loader": "^9.6.0",
+    "tslib": "^2.8.1",
+    "typescript": "^6.0.3",
+    "vite": "8.0.16",
+    "vitest": "^4.1.9"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "extensions/*"
+  ],
+  "packageManager": "pnpm@10.33.0"
+}

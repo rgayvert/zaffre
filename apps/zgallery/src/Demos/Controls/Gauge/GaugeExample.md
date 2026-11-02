@@ -1,0 +1,3 @@
+A (linear) Gauge is a nested pair of boxes, where the length of the inner box (done) is a fraction of the outer box (pending). This is typically used to display a completion percentage.
+
+This example shows a fixed gauge along with an animated gauge. Note that the gauge knows nothing about the animation; it simply updates when the percentage changes, which in this case is controlled by a timer atom. The timer atom, in turn, is controlled by the switch.

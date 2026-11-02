@@ -1,0 +1,25 @@
+{
+  "name": "todo-client",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "rm -f dist.zip; vite --config vite.config.prod.js build; zip -r dist.zip dist; rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.9.3",
+    "cors": "^2.8.6",
+    "esbuild": "0.27.4",
+    "nodemon": "^3.1.14",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "sequelize": "^6.37.8",
+    "sqlite3": "^6.0.1",
+    "tsx": "^4.22.4",
+    "vite-express": "^0.22.1"
+  }
+}
