@@ -39,7 +39,7 @@
 
       ":cards": ["./packages/cards"],
       ":todo": ["./packages/todo"],
-      ":plugins": ["./packages/plugins"],
+      ":plugins": ["./packages/zaffre/src/plugins"],
 
       ":components": ["./packages/zaffre/src/components"],
       ":core": ["./packages/zaffre/src/core"],
@@ -53,7 +53,6 @@
       ":events": ["./packages/zaffre/src/core/Events"],
       ":uifoundation": ["./packages/zaffre/src/core/UIFoundation"],
       ":corehtml": ["./packages/zaffre/src/core/CoreHTML"],
-      ":coreplugins": ["./packages/zaffre/src/core/Plugins"],
       ":routing": ["./packages/zaffre/src/core/Routing"],
       ":svg": ["./packages/zaffre/src/core/SVG"],
       ":theme": ["./packages/zaffre/src/core/Theme"],

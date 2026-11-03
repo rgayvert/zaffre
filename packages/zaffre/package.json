@@ -16,7 +16,11 @@
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.58.9",
+    "@types/youtube": "^0.3.0",
+    "convert-csv-to-json": "^4.97.0",
+    "dayjs": "^1.11.21",
     "esbuild": "0.27.4",
+    "jszip": "^3.10.2",
     "unplugin-dts": "^1.0.2",
     "vite-plugin-dts": "^5.0.2",
     "vitest": "^4.1.9"

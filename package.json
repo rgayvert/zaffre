@@ -14,8 +14,7 @@
     "clean": "rimraf apps/*/dist apps/*/lib extensions/*/dist extensions/*/lib",
     "cleanall": "rimraf apps/*/dist apps/*/lib extensions/*/dist extensions/*/lib node_modules */*/node_modules",
     "test": "vitest",
-    "publish-zaffre": "cd ./packages/plugins; pnpm build; cd ../..; pnpm --filter \"./packages/zaffre\" publish --access public",
-    "publish-plugins": "cd ./packages/plugins; pnpm build; cd ../..; pnpm --filter \"./packages/plugins\" publish --access public"
+    "publish-zaffre": "cd ./packages/zaffre; pnpm build; cd ../..; pnpm --filter \"./packages/zaffre\" publish --access public"
   },
   "devDependencies": {
     "@material/material-color-utilities": "^0.4.0",

@@ -1,5 +1,4 @@
 import { CsvToJsonService } from "zaffre";
-import { zutil } from ":foundation";
 import { ConvertCsvToJson } from "convert-csv-to-json";
 
 export class CsvToJson extends CsvToJsonService {

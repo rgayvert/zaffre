@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig-base.json",
-  "compilerOptions": {
-    "outDir": "lib",
-    "typeRoots": ["node_modules/@types"],
-    "types": ["youtube"]
-  }
-}

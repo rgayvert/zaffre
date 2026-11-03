@@ -1,5 +1,5 @@
-import { HighlightJS } from "./HighlightJS/HighlightJS";
-import { MarkdownIt } from "./MarkdownIt/MarkdownIt";
+import { HighlightJS } from "../HighlightJS";
+import { MarkdownIt } from "../MarkdownIt";
 
 export const highlightSourceText = (source: string) => {
   return `<pre>${HighlightJS.defaultInstance.highlight(source)}</pre>`;

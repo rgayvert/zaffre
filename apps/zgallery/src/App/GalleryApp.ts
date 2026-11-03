@@ -27,9 +27,6 @@ export class GalleryApp extends App {
   constructor(context = AppContext.Web) {
     super(context, galleryOptions);
 
-    //setInitialRoutePath();
-    console.log(zutil.maskEmail("court@zaffre.io"));
-
     this.startWith(() => Gallery(), context);
   }
 
