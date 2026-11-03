@@ -1,5 +1,5 @@
 import { zget, App, AppContext, ZStyleSheet, zstring, AppOptions, resolveURI, ResourceMap, zutil } from "zaffre";
-import { DayJS, DomPurify, HighlightJS, MarkdownIt } from ":services";
+import { DayJS, DomPurify, HighlightJS, MarkdownIt } from ":plugins";
 import { Gallery } from "../Views";
 import { zaffreDefaults, galleryDefaults } from ":resources";
 
@@ -41,7 +41,7 @@ export class GalleryApp extends App {
   }
 
   //
-  // install services needed for the demos
+  // install plugins needed for the demos
   //   - DOMPurify for sanitization
   //   - HighlightJS for source highlighting
   //   - MarkdownIt for markdown convertion

@@ -1,7 +1,7 @@
 import { zutil, atom, pct, css_length, em, toggleAtom, ToastButton, zcolor, zborder, zfont, zspace, pickList } from "zaffre";
 import { VStack, HDivider, URLText, StackOptions, SegmentedButtonOptions } from "zaffre";
 import { SegmentedTextButton, HStack, Spacer, Button } from "zaffre";
-import { highlightSourceText } from ":services";
+import { highlightSourceText } from ":plugins";
 
 /**
  * #DemoSourceView

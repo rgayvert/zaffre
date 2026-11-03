@@ -1,6 +1,6 @@
 import { timerAtom, StackOptions, pct, ch, DownButton, zfont, zrounding, zspace } from "zaffre";
 import { HStack, Spacer, TextLabel, VStack, atom,px, zutil } from "zaffre";
-import { ytPlayer, YouTubeIFrame, YouTubeIFrameOptions } from ":services";
+import { ytPlayer, YouTubeIFrame, YouTubeIFrameOptions } from ":plugins";
 
 export const YouTubeExample = () => {
   const player = ytPlayer();

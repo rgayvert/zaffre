@@ -1,7 +1,7 @@
 {
-  "name": "services",
+  "name": "@zaffre.io/plugins",
   "version": "1.0.0",
-  "description": "Zaffre services",
+  "description": "Zaffre plugins",
   "directories": {
     "lib": "lib"
   },

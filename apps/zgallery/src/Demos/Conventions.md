@@ -65,7 +65,7 @@ To follow the source code, it's helpful to know some of the naming conventions t
   - each package has index.ts, package.json, tsconfig.json
   - each src subfolder has index.ts
 - external dependencies
-  - limited to services
+  - limited to plugins
 - internal dependencies
   - folders are arranged to avoid circular dependencies (checked with dpdm)
   - only a few class interfaces (ITheme, IToken) are currently required

@@ -4,7 +4,7 @@ export * from "./Geometry";
 export * from "./Graph";
 export * from "./Misc";
 export * from "./Repository";
-export * from "./Services";
+export * from "./Plugins";
 export * from "./Support";
 export * from "./Testing";
 export * from "./Tree";

@@ -1,5 +1,5 @@
 import { URLText, em, ScrollPane, pct, zborder, zspace } from "zaffre";
-import { highlightSourceText } from ":services";
+import { highlightSourceText } from ":plugins";
 
 export const URLTextExample = () => {
   return ScrollPane({ width: pct(100), height: pct(100) }).append(

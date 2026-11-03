@@ -6,7 +6,7 @@
       "path": "./packages/zaffre"
     },
     {
-      "path": "./packages/services"
+      "path": "./packages/plugins"
     },
     {
       "path": "./apps/hello"

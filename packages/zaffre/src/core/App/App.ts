@@ -20,7 +20,7 @@ import { RouteNode } from "./RouteNode";
 //   - establishing the default theme
 //   - setting up window breakpoints
 //   - adding initial header links (e.g. fonts)
-//   - creating any necessary services
+//   - creating any necessary plugins
 //
 
 export enum AppContext {
