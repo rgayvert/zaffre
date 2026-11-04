@@ -26,15 +26,15 @@ const appName = process.argv[2];
 const lowerName = appName.toLowerCase();
 const upperName = appName[0].toUpperCase() + appName.slice(1);
 const appDir = `./apps/${lowerName}`;
-try {
-  if (fs.existsSync(`${appDir}`)) {
-    console.error(`Directory ${appDir} already exists.`);
-    process.exit(-1);
-  }
-} catch (err) {
-  console.error(err);
-  process.exit(-1);
-}
+// try {
+//   if (fs.existsSync(`${appDir}`)) {
+//     console.error(`Directory ${appDir} already exists.`);
+//     process.exit(-1);
+//   }
+// } catch (err) {
+//   console.error(err);
+//   process.exit(-1);
+// }
 
 const srcDir = `${appDir}/src`;
 const publicDir = `${appDir}/public`;
