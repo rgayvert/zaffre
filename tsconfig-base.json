@@ -39,7 +39,7 @@
 
       ":cards": ["./packages/cards"],
       ":todo": ["./packages/todo"],
-      ":plugins": ["./packages/zaffre/src/plugins"],
+      ":plugins": ["./packages/plugins"],
 
       ":components": ["./packages/zaffre/src/components"],
       ":core": ["./packages/zaffre/src/core"],
